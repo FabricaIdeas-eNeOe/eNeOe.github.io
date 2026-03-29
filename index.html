@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Waterpolo Gallery</title>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/css/lightgallery-bundle.min.css" />
+
+<style>
+body { font-family: Arial; margin:0; background:#111; color:white; }
+h1 { text-align:center; padding:20px; }
+.gallery { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:10px; padding:10px; }
+.gallery img { width:100%; height:200px; object-fit:cover; cursor:pointer; border-radius:8px; }
+.gallery img:hover { opacity:0.8; }
+</style>
+
+</head>
+
+<body>
+
+<h1>Waterpolo Team Gallery</h1>
+
+<div id="lightgallery" class="gallery">
+
+<a href="images/photo1.jpg"><img src="images/photo1.jpg"></a> <a href="images/photo2.jpg"><img src="images/photo2.jpg"></a> <a href="images/photo3.jpg"><img src="images/photo3.jpg"></a>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/lightgallery.min.js"></script>
+
+<script>
+lightGallery(document.getElementById('lightgallery'));
+</script>
+
+</body>
+</html>
