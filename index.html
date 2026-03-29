@@ -5,32 +5,50 @@
 <meta charset="UTF-8">
 <title>Waterpolo Gallery</title>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/css/lightgallery-bundle.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/css/lightgallery-bundle.min.css"/>
 
 <style>
 body { font-family: Arial; margin:0; background:#111; color:white; }
 h1 { text-align:center; padding:20px; }
 .gallery { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:10px; padding:10px; }
-.gallery img { width:100%; height:200px; object-fit:cover; cursor:pointer; border-radius:8px; }
-.gallery img:hover { opacity:0.8; }
+.gallery img { width:100%; height:200px; object-fit:cover; border-radius:8px; cursor:pointer; }
 </style>
 
 </head>
 
 <body>
 
-<h1>Waterpolo Team Gallery</h1>
+<h1>U12 - Game 1</h1>
 
-<div id="lightgallery" class="gallery">
-
-<a href="images/photo1.jpg"><img src="images/photo1.jpg"></a> <a href="images/photo2.jpg"><img src="images/photo2.jpg"></a> <a href="images/photo3.jpg"><img src="images/photo3.jpg"></a>
-
-</div>
+<div id="gallery" class="gallery"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/lightgallery.min.js"></script>
 
 <script>
-lightGallery(document.getElementById('lightgallery'));
+const cloudName = "du4pmuch7";
+const folder = "WP 2026";
+
+fetch(`https://res.cloudinary.com/${cloudName}/image/list/${folder}.json`)
+  .then(res => res.json())
+  .then(data => {
+    const gallery = document.getElementById("gallery");
+
+    data.resources.forEach(img => {
+      const full = `https://res.cloudinary.com/${cloudName}/image/upload/${img.public_id}.jpg`;
+      const thumb = `https://res.cloudinary.com/${cloudName}/image/upload/w_400/${img.public_id}.jpg`;
+
+      const a = document.createElement("a");
+      a.href = full;
+
+      const image = document.createElement("img");
+      image.src = thumb;
+
+      a.appendChild(image);
+      gallery.appendChild(a);
+    });
+
+    lightGallery(gallery);
+  });
 </script>
 
 </body>
