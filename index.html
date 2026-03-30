@@ -1,171 +1,213 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AOFM Waterpolo</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
+* {
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
 body {
-  margin: 0;
   font-family: 'Inter', sans-serif;
-  background: #020617;
   color: white;
+  min-height:100vh;
+  background:
+    linear-gradient(rgba(0,20,40,0.85), rgba(0,20,40,0.95)),
+    url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e');
+  background-size: cover;
+  background-attachment: fixed;
 }
 
-/* Background */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: url("background.jpg") center/cover no-repeat;
-  filter: blur(80px) brightness(0.5);
-  opacity: 0.8;
-  z-index: -1;
+/* HEADER */
+.header {
+  text-align:center;
+  padding:100px 20px 60px;
 }
 
-/* Header */
-header {
-  text-align: center;
-  padding: 60px 20px 30px;
-}
-
-h1 {
-  font-family: 'Orbitron';
-  font-size: 48px;
-
-  background: linear-gradient(90deg,#7dd3fc,#38bdf8);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.title {
+  font-family:'Orbitron', sans-serif;
+  font-size:64px;
+  letter-spacing:2px;
+  background: linear-gradient(90deg, #4fd1ff, #00e0ff);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
 }
 
 .subtitle {
-  margin-top: 10px;
-  opacity: 0.7;
-  font-size: 16px;
+  margin-top:10px;
+  font-size:18px;
+  color: rgba(255,255,255,0.7);
 }
 
-/* Container */
-.container {
-  max-width: 1200px;
-  margin: auto;
-  padding: 20px;
+/* SECTION */
+.section {
+  max-width:1200px;
+  margin:auto;
+  padding:40px 20px;
 }
 
-/* Section */
 .section-title {
-  font-size: 20px;
-  margin-bottom: 20px;
-  text-align: center;
-  opacity: 0.9;
+  font-size:22px;
+  margin-bottom:20px;
+  color:#aeefff;
 }
 
-/* Grid */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px,1fr));
-  gap: 30px;
+/* CARDS */
+.cards {
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));
+  gap:25px;
 }
 
-/* Card */
 .card {
-  position: relative;
-  border-radius: 20px;
-  overflow: hidden;
-  cursor: pointer;
-
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position:relative;
+  border-radius:20px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:0.3s;
 }
 
-.card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 20px 40px rgba(0,200,255,0.4);
-}
-
-/* Image */
 .card img {
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
+  width:100%;
+  height:220px;
+  object-fit:cover;
+  transition:0.5s;
 }
 
-/* Overlay */
-.card-content {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent, rgba(0,0,0,0.8));
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 20px;
+.card:hover img {
+  transform:scale(1.05);
 }
 
-/* Title */
+.card-overlay {
+  position:absolute;
+  bottom:0;
+  width:100%;
+  padding:20px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.85));
+}
+
 .card-title {
-  font-size: 20px;
-  font-weight: 600;
+  font-size:20px;
+  font-weight:600;
 }
 
-/* Subtitle */
 .card-sub {
-  font-size: 14px;
-  opacity: 0.75;
+  font-size:14px;
+  opacity:0.7;
 }
 
-/* Badge */
+/* BADGE */
 .badge {
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  background: rgba(0,200,255,0.9);
-  padding: 6px 12px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 600;
+  position:absolute;
+  top:15px;
+  left:15px;
+  padding:6px 12px;
+  font-size:12px;
+  border-radius:20px;
+  background: rgba(0,200,255,0.8);
+  backdrop-filter: blur(6px);
+}
+
+/* LOGOS SECTION */
+.logos {
+  margin-top:60px;
+  text-align:center;
+}
+
+.logos h3 {
+  margin-bottom:20px;
+  font-weight:400;
+  color:#9edcff;
+}
+
+.logo-row {
+  display:flex;
+  justify-content:center;
+  gap:40px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+
+.logo-row img {
+  height:80px;
+  opacity:0.85;
+  transition:0.3s;
+}
+
+.logo-row img:hover {
+  transform:scale(1.1);
+  opacity:1;
+}
+
+/* FOOTER */
+.footer {
+  text-align:center;
+  padding:40px;
+  font-size:12px;
+  opacity:0.5;
 }
 </style>
-
 </head>
 
 <body>
 
-<header>
-  <h1>AOFM Waterpolo</h1>
+<!-- HERO -->
+<div class="header">
+  <div class="title">AOFM WATERPOLO</div>
   <div class="subtitle">Official Photo Gallery Platform</div>
-</header>
+</div>
 
-<div class="container">
+<!-- TOURNAMENTS -->
+<div class="section">
 
   <div class="section-title">Tournaments</div>
 
-  <div class="grid">
+  <div class="cards">
 
-```
-<!-- Campeonato Nacional -->
-<a href="campeonato2026.html" class="card">
-  <img src="https://res.cloudinary.com/du4pmuch7/image/upload/w_800/Ags/Campeonato_-_InfMayor_AGS-69.jpg">
-  <div class="badge">2026</div>
-  <div class="card-content">
-    <div class="card-title">Campeonato Nacional</div>
-    <div class="card-sub">CDMX • 4 Categories</div>
-  </div>
-</a>
+    <!-- Campeonato -->
+    <div class="card" onclick="location.href='campeonato2026.html'">
+      <span class="badge">2026</span>
+      <img src="https://res.cloudinary.com/du4pmuch7/image/upload/w_800/infmayor2026/Campeonato_-_InfMayor_QRoo-8219_yqxgg8.jpg">
+      <div class="card-overlay">
+        <div class="card-title">Campeonato Nacional</div>
+        <div class="card-sub">CDMX • 4 Categories</div>
+      </div>
+    </div>
 
-<!-- Olimpiada -->
-<div class="card">
-  <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e">
-  <div class="badge">Upcoming</div>
-  <div class="card-content">
-    <div class="card-title">Olimpiada CONADE</div>
-    <div class="card-sub">Coming soon</div>
+    <!-- Olimpiada -->
+    <div class="card">
+      <span class="badge">Upcoming</span>
+      <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e">
+      <div class="card-overlay">
+        <div class="card-title">Olimpiada CONADE</div>
+        <div class="card-sub">Coming soon</div>
+      </div>
+    </div>
+
   </div>
+
+  <!-- LOGOS -->
+  <div class="logos">
+    <h3>Affiliated & Competition Teams</h3>
+
+    <div class="logo-row">
+      <img src="YOUR_LOGO_1.png">
+      <img src="YOUR_LOGO_2.png">
+      <img src="YOUR_LOGO_3.png">
+    </div>
+  </div>
+
 </div>
-```
 
-  </div>
-
+<div class="footer">
+© 2026 AOFM Waterpolo — CDMX
 </div>
 
 </body>
