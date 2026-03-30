@@ -11,7 +11,10 @@
 <style>
 
 /* BASE */
-html, body { margin:0; height:100%; }
+html, body {
+  margin:0;
+  height:100%;
+}
 
 body {
   font-family:'Montserrat',sans-serif;
@@ -19,12 +22,13 @@ body {
   flex-direction:column;
   min-height:100vh;
 
+  /* 🔥 BACKGROUND MOVED UP */
   background:
-    linear-gradient(rgba(255,255,255,0.35), rgba(255,255,255,0.25)),
+    linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.15)),
     url('background.png');
 
   background-size:cover;
-  background-position:center;
+  background-position: center top; /* 👈 KEY CHANGE */
   background-attachment:fixed;
 }
 
@@ -34,84 +38,61 @@ body {
 /* HEADER */
 .header {
   text-align:center;
-  padding:80px 20px 60px;
-  position:relative;
+  padding:60px 20px 40px; /* less top padding */
 }
 
-/* TITLE GLASS */
+/* 🔥 IOS GLASS TITLE */
 .title {
   position:relative;
   display:inline-block;
-  font-size:54px;
+
+  font-size:52px;
   font-weight:800;
   color:#0a4f73;
 
-  padding:20px 50px;
+  padding:18px 50px;
 
-  background:rgba(255,255,255,0.25);
-  backdrop-filter:blur(14px);
+  /* GLASS */
+  background:rgba(255,255,255,0.35);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
 
   border-radius:25px;
-  border:1px solid rgba(255,255,255,0.5);
+  border:1px solid rgba(255,255,255,0.6);
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.1),
+    inset 0 1px 0 rgba(255,255,255,0.6);
 
   overflow:hidden;
 }
 
-/* RIPPLE EFFECT */
-.title::before,
-.title::after {
+/* 🌊 RIPPLE EFFECT (REFINED) */
+.title::before {
   content:"";
   position:absolute;
+  width:250px;
+  height:250px;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
   border-radius:50%;
-  background:rgba(0,150,255,0.15);
-  animation:ripple 6s infinite;
-}
 
-.title::before {
-  width:200px;
-  height:200px;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-}
-
-.title::after {
-  width:300px;
-  height:300px;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  animation-delay:2s;
+  background:radial-gradient(circle, rgba(0,150,255,0.15), transparent 70%);
+  animation:ripple 5s infinite;
 }
 
 @keyframes ripple {
-  0% { transform:translate(-50%,-50%) scale(0.6); opacity:0.5; }
+  0% { transform:translate(-50%,-50%) scale(0.8); opacity:0.4; }
   100% { transform:translate(-50%,-50%) scale(1.6); opacity:0; }
 }
 
-/* SUBTITLE BAND */
+/* SUBTITLE */
 .subtitle {
-  margin-top:30px;
+  margin-top:25px;
   font-size:26px;
   font-weight:700;
   color:#0a4f73;
-  position:relative;
-  display:inline-block;
-  padding:10px 25px;
-  overflow:hidden;
-}
-
-.subtitle::before {
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(90deg, transparent, rgba(0,150,255,0.2), transparent);
-  animation:slide 4s infinite;
-}
-
-@keyframes slide {
-  0% { transform:translateX(-100%); }
-  100% { transform:translateX(100%); }
 }
 
 /* SECTION */
@@ -137,21 +118,11 @@ body {
   border-radius:18px;
   background-size:cover;
   background-position:center;
-  position:relative;
-  overflow:hidden;
   transition:0.3s;
 }
 
 .card:hover {
   transform:translateY(-8px) scale(1.04);
-}
-
-/* OVERLAY */
-.card::after {
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(to top, rgba(0,0,0,0.3), transparent);
 }
 
 /* TAG */
@@ -214,26 +185,22 @@ footer {
 
     <div class="grid">
 
-      <!-- FIXED LINK -->
-      <div onclick="window.location.href='https://res.cloudinary.com/your-account/folder/infantil-menor/'">
-        <div class="card" style="background-image:url('portada-campeonato.jpg')">
-          <div class="tag">2026</div>
-        </div>
+      <!-- MAIN -->
+      <div onclick="window.location.href='https://res.cloudinary.com/YOUR-CLOUD/folder/infantil-menor/'">
+        <div class="card" style="background-image:url('portada-campeonato.jpg')"></div>
         <div class="card-info">
           <h3>Campeonato Nacional</h3>
           <p>CDMX • 4 Categories</p>
         </div>
       </div>
 
-      <!-- TEST CARDS -->
+      <!-- TEST -->
       <script>
         const container = document.currentScript.parentElement;
         for(let i=1;i<=10;i++){
           container.innerHTML += `
           <div>
-            <div class="card" style="background-image:url('waterpolo.jpg')">
-              <div class="tag">Upcoming</div>
-            </div>
+            <div class="card" style="background-image:url('waterpolo.jpg')"></div>
             <div class="card-info">
               <h3>Event ${i}</h3>
               <p>Next week</p>
