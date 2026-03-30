@@ -5,26 +5,32 @@
 <meta charset="UTF-8">
 <title>AOFM Waterpolo Gallery</title>
 
+<!-- Google Font -->
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<!-- LightGallery -->
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/css/lightgallery-bundle.min.css"/>
 
 <style>
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Inter', sans-serif;
   margin: 0;
-  background: #0d0d0d;
-  color: white;
+  color: #f1f1f1;
   max-width: 1400px;
   margin: auto;
+  background: radial-gradient(circle at top, #1a1a1a, #0a0a0a 70%);
 }
 
-/* Sticky Header */
+/* Sticky Header (Glass Effect) */
 .topbar {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: linear-gradient(to bottom, #111, #0d0d0d);
-  padding-bottom: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  background: rgba(15,15,15,0.85);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
 /* Header */
@@ -36,12 +42,14 @@ header {
 h1 {
   margin: 0;
   font-size: 28px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
 .subtitle {
-  opacity: 0.7;
+  opacity: 0.6;
+  font-size: 13px;
   margin-top: 5px;
-  font-size: 14px;
 }
 
 /* Tabs */
@@ -51,22 +59,25 @@ h1 {
   gap: 10px;
   flex-wrap: wrap;
   margin-top: 10px;
+  padding-bottom: 10px;
 }
 
 .tab {
   padding: 10px 18px;
   border-radius: 20px;
-  background: #222;
+  background: rgba(255,255,255,0.05);
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.25s;
+  font-weight: 500;
 }
 
 .tab:hover {
-  background: #444;
+  background: rgba(255,255,255,0.12);
 }
 
 .tab.active {
-  background: #00aaff;
+  background: #0077ff;
+  color: white;
   transform: scale(1.05);
 }
 
@@ -173,7 +184,7 @@ function showLoading() {
         width:40px;
         height:40px;
         border:4px solid #444;
-        border-top:4px solid #00aaff;
+        border-top:4px solid #0077ff;
         border-radius:50%;
         margin:auto;
         animation:spin 1s linear infinite;
@@ -222,7 +233,7 @@ function loadGallery(tag) {
     });
 }
 
-// Default load
+// Load default
 loadGallery("infmayor2026");
 
 // Tab active state
