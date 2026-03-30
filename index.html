@@ -15,9 +15,11 @@ body {
   color: white;
 }
 
+/* Header */
 header {
   text-align: center;
-  padding: 30px 10px 10px;
+  padding: 40px 10px 20px;
+  background: linear-gradient(to bottom, #111, #0d0d0d);
 }
 
 h1 {
@@ -31,12 +33,17 @@ h1 {
   font-size: 14px;
 }
 
+/* Tabs */
 .tabs {
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin: 20px;
   flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  background: #0d0d0d;
+  z-index: 10;
+  padding: 10px 0;
 }
 
 .tab {
@@ -56,25 +63,30 @@ h1 {
   transform: scale(1.05);
 }
 
+/* Masonry Gallery */
 .gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 12px;
+  column-count: 4;
+  column-gap: 12px;
   padding: 15px;
+}
+
+.gallery a {
+  display: block;
+  margin-bottom: 12px;
+  break-inside: avoid;
 }
 
 .gallery img {
   width: 100%;
-  height: 220px;
-  object-fit: cover;
+  height: auto;
   border-radius: 10px;
-  transition: transform 0.25s ease, opacity 0.25s ease;
   box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  transition: transform 0.25s ease, opacity 0.25s ease;
 }
 
 .gallery img:hover {
-  transform: scale(1.05);
-  opacity: 0.85;
+  transform: scale(1.03);
+  opacity: 0.9;
 }
 
 /* Spinner */
@@ -83,11 +95,12 @@ h1 {
   100% { transform: rotate(360deg); }
 }
 
-/* Mobile optimization */
+/* Responsive */
+@media (max-width: 1000px) {
+  .gallery { column-count: 3; }
+}
 @media (max-width: 600px) {
-  .gallery {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  }
+  .gallery { column-count: 2; }
 }
 </style>
 
@@ -148,8 +161,11 @@ function loadGallery(tag) {
       }
 
       data.resources.forEach(img => {
-        const full = `https://res.cloudinary.com/${cloudName}/image/upload/${img.public_id}.jpg`;
-        const thumb = `https://res.cloudinary.com/${cloudName}/image/upload/w_400/${img.public_id}.jpg`;
+        // FULL image (with optional watermark)
+        const full = `https://res.cloudinary.com/${cloudName}/image/upload/l_text:Arial_20:NoeRuizPuon,o_40,g_south_east,x_10,y_10/${img.public_id}.jpg`;
+
+        // Thumbnail (fast loading)
+        const thumb = `https://res.cloudinary.com/${cloudName}/image/upload/w_500/${img.public_id}.jpg`;
 
         const a = document.createElement("a");
         a.href = full;
@@ -161,14 +177,19 @@ function loadGallery(tag) {
         gallery.appendChild(a);
       });
 
-      lightGallery(gallery);
+      lightGallery(gallery, {
+        speed: 400,
+        download: false,
+        counter: true,
+        zoom: true
+      });
     })
     .catch(() => {
       gallery.innerHTML = "<p style='text-align:center;'>Error loading images</p>";
     });
 }
 
-// Load default gallery
+// Default load
 loadGallery("infmayor2026");
 
 // Tab active state
