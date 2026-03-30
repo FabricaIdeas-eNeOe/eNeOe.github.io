@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AOFM Waterpolo</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: white;
+  background: #020617;
+  overflow-x: hidden;
+}
+
+/* BACKGROUND */
+body::before {
+  content:"";
+  position:fixed;
+  inset:0;
+  background: url("background.png") center/cover no-repeat;
+  filter: blur(80px) brightness(0.5);
+  opacity:0.7;
+  z-index:-1;
+}
+
+/* HERO */
+header {
+  text-align:center;
+  padding:120px 20px 80px;
+}
+
+/* TITLE */
+h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size:90px;
+  letter-spacing:4px;
+
+  background: linear-gradient(90deg, #8be9ff, #3aa6ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  text-shadow:
+    0 0 30px rgba(0,200,255,0.8),
+    0 0 80px rgba(0,120,255,0.4);
+}
+
+/* SUBTITLE */
+.subtitle {
+  margin-top:20px;
+  font-size:20px;
+  opacity:0.7;
+}
+
+/* SECTION */
+.section {
+  padding:40px 10%;
+}
+
+/* SCROLL ROW (NEW) */
+.scroll-row {
+  display:flex;
+  gap:25px;
+  overflow-x:auto;
+  padding-bottom:10px;
+}
+
+.scroll-row::-webkit-scrollbar {
+  height:6px;
+}
+
+.scroll-row::-webkit-scrollbar-thumb {
+  background:#0ea5e9;
+  border-radius:10px;
+}
+
+/* CARD */
+.card {
+  min-width:360px;
+  position:relative;
+  border-radius:20px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:0.4s;
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.5),
+    0 0 0 rgba(0,150,255,0);
+}
+
+.card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow:
+    0 30px 60px rgba(0,0,0,0.7),
+    0 0 30px rgba(0,150,255,0.4);
+}
+
+/* IMAGE */
+.card img {
+  width:100%;
+  height:240px;
+  object-fit:cover;
+}
+
+/* OVERLAY */
+.card::after {
+  content:"";
+  position:absolute;
+  inset:0;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+}
+
+/* CONTENT */
+.card-content {
+  position:absolute;
+  bottom:0;
+  padding:20px;
+  z-index:2;
+}
+
+/* BADGE */
+.badge {
+  position:absolute;
+  top:15px;
+  left:15px;
+  background:#0ea5e9;
+  color:#001;
+  padding:5px 12px;
+  border-radius:12px;
+  font-size:12px;
+  font-weight:bold;
+  z-index:2;
+}
+
+/* LOGO BAND */
+.logo-band {
+  margin-top:120px;
+  padding:80px 20px;
+  background:white;
+}
+
+/* LOGOS */
+.logos {
+  display:flex;
+  justify-content:center;
+  gap:100px;
+  flex-wrap:wrap;
+}
+
+.logos img {
+  height:130px;
+}
+
+/* FOOTER */
+footer {
+  text-align:center;
+  padding:30px;
+  font-size:12px;
+  opacity:0.5;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>AOFM WATERPOLO</h1>
+  <div class="subtitle">Official Photo Gallery Platform</div>
+</header>
+
+<section class="section">
+
+  <h2>Tournaments</h2>
+
+  <!-- SCROLLABLE ROW -->
+  <div class="scroll-row">
+
+    <a href="campeonato2026.html" class="card">
+      <span class="badge">2026</span>
+      <img src="Portada-campeonato.jpg">
+      <div class="card-content">
+        <h3>Campeonato Nacional</h3>
+        <p>CDMX • 4 Categories</p>
+      </div>
+    </a>
+
+    <div class="card">
+      <span class="badge">Upcoming</span>
+      <img src="Portada-campeonato.jpg">
+      <div class="card-content">
+        <h3>Olimpiada CONADE</h3>
+        <p>Coming soon</p>
+      </div>
+    </div>
+
+    <!-- EXTRA DEMO CARDS -->
+    <div class="card">
+      <span class="badge">Upcoming</span>
+      <img src="Portada-campeonato.jpg">
+      <div class="card-content">
+        <h3>Juvenil Varonil</h3>
+        <p>Next week</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="badge">Upcoming</span>
+      <img src="Portada-campeonato.jpg">
+      <div class="card-content">
+        <h3>Junior Varonil</h3>
+        <p>Next week</p>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+<!-- LOGOS -->
+<div class="logo-band">
+  <div class="logos">
+    <img src="logo-aofm.png">
+    <img src="logo-club.png">
+    <img src="logo-olimpicos.png">
+  </div>
+</div>
+
+<footer>
+  © 2026 AOFM Waterpolo
+</footer>
+
+</body>
+</html>
