@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inf Mayor CDMX 2026</title>
+
+<style>
+body{
+  margin:0;
+  font-family:system-ui;
+  color:white;
+  background:url('background.png') no-repeat center/cover fixed;
+}
+
+/* overlay */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.65);
+  backdrop-filter:blur(10px);
+  z-index:-1;
+}
+
+/* header */
+.header{
+  text-align:center;
+  padding:40px 20px;
+}
+
+.header h1{font-size:42px;margin:0;}
+.header p{opacity:.7;margin-top:10px;}
+
+/* back */
+.back{
+  position:absolute;
+  top:20px;
+  left:20px;
+  color:white;
+  text-decoration:none;
+  font-size:14px;
+}
+
+/* filters */
+.filters{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin:20px;
+}
+
+.filter-btn{
+  padding:10px 16px;
+  border-radius:20px;
+  border:none;
+  background:#1c2330;
+  color:white;
+  cursor:pointer;
+}
+
+.filter-btn.active{
+  background:#1da1f2;
+}
+
+/* gallery */
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:15px;
+  padding:20px;
+}
+
+.card img{
+  width:100%;
+  border-radius:12px;
+  cursor:pointer;
+}
+
+/* lightbox */
+#lightbox{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.9);
+  justify-content:center;
+  align-items:center;
+}
+
+#lightbox img{
+  max-width:90%;
+  max-height:80%;
+}
+
+.nav{
+  position:absolute;
+  top:50%;
+  font-size:30px;
+  cursor:pointer;
+}
+
+.prev{left:20px;}
+.next{right:20px;}
+</style>
+</head>
+
+<body>
+
+<a href="campeonato2026.html" class="back">← Back</a>
+
+<div class="header">
+  <h1>AOFM Waterpolo</h1>
+  <p>Inf Mayor CDMX 2026</p>
+</div>
+
+<div class="filters">
+  <button class="filter-btn active" onclick="filterGallery('all',event)">ALL</button>
+  <button class="filter-btn" onclick="filterGallery('ags',event)">vs Aguascalientes</button>
+  <button class="filter-btn" onclick="filterGallery('coahuila',event)">vs Coahuila</button>
+  <button class="filter-btn" onclick="filterGallery('edomex',event)">vs EdoMex</button>
+  <button class="filter-btn" onclick="filterGallery('guerrero',event)">vs Guerrero</button>
+  <button class="filter-btn" onclick="filterGallery('nuevoleon',event)">vs Nuevo León</button>
+  <button class="filter-btn" onclick="filterGallery('qroo',event)">vs QRoo</button>
+</div>
+
+<div id="gallery" class="gallery"></div>
+
+<div id="lightbox">
+  <span class="nav prev" onclick="prevImage()">❮</span>
+  <img id="lightbox-img">
+  <span class="nav next" onclick="nextImage()">❯</span>
+</div>
+
+<script>
+const CLOUD_NAME = "du4pmuch7";
+const TAG = "infmayor2026";
+
+let allImages = [];
+let filteredImages = [];
+let currentIndex = 0;
+
+async function loadImages(){
+  const res = await fetch(`https://res.cloudinary.com/${CLOUD_NAME}/image/list/${TAG}.json`);
+  const data = await res.json();
+  allImages = data.resources;
+  filteredImages = allImages;
+  displayImages(filteredImages);
+}
+
+function displayImages(list){
+  const gallery = document.getElementById("gallery");
+  gallery.innerHTML = "";
+
+  list.forEach((img,i)=>{
+    const url = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_600,q_auto,f_auto/${img.public_id}`;
+
+    gallery.innerHTML += `
+      <div class="card">
+        <img src="${url}" loading="lazy" onclick="openLightbox(${i})">
+      </div>
+    `;
+  });
+}
+
+function filterGallery(tag,e){
+  document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+  e.target.classList.add("active");
+
+  if(tag==="all"){
+    filteredImages = allImages;
+  } else {
+    filteredImages = allImages.filter(img =>
+      img.public_id.toLowerCase().includes(tag)
+    );
+  }
+
+  displayImages(filteredImages);
+}
+
+function openLightbox(i){
+  currentIndex=i;
+  document.getElementById("lightbox").style.display="flex";
+  updateLightbox();
+}
+
+function updateLightbox(){
+  const img = filteredImages[currentIndex];
+  document.getElementById("lightbox-img").src =
+    `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/q_auto,f_auto/${img.public_id}`;
+}
+
+function nextImage(){
+  currentIndex=(currentIndex+1)%filteredImages.length;
+  updateLightbox();
+}
+
+function prevImage(){
+  currentIndex=(currentIndex-1+filteredImages.length)%filteredImages.length;
+  updateLightbox();
+}
+
+document.getElementById("lightbox").onclick=()=>document.getElementById("lightbox").style.display="none";
+
+loadImages();
+</script>
+
+</body>
+</html>
