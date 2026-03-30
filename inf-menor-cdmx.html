@@ -13,7 +13,6 @@ body{
   background:url('background.png') no-repeat center/cover fixed;
 }
 
-/* overlay */
 body::before{
   content:"";
   position:fixed;
@@ -23,36 +22,16 @@ body::before{
   z-index:-1;
 }
 
-/* header */
-.header{
-  text-align:center;
-  padding:40px 20px;
-}
+.header{text-align:center;padding:40px 20px;}
+.header h1{font-size:42px;margin:0;}
+.header p{opacity:.7;margin-top:10px;font-size:18px;}
 
-.header h1{
-  font-size:42px;
-  margin:0;
-}
-
-.header p{
-  opacity:.7;
-  margin-top:10px;
-  font-size:18px;
-}
-
-/* back button */
 .back{
   position:absolute;
   top:20px;
   left:20px;
   color:white;
   text-decoration:none;
-  font-size:14px;
-  opacity:0.8;
-}
-
-.back:hover{
-  opacity:1;
 }
 
 /* filters */
@@ -71,16 +50,10 @@ body::before{
   background:#1c2330;
   color:white;
   cursor:pointer;
-  transition:0.2s;
-}
-
-.filter-btn:hover{
-  transform:translateY(-2px);
 }
 
 .filter-btn.active{
   background:#1da1f2;
-  box-shadow:0 0 10px rgba(29,161,242,0.6);
 }
 
 /* gallery */
@@ -95,11 +68,6 @@ body::before{
   width:100%;
   border-radius:14px;
   cursor:pointer;
-  transition:0.3s;
-}
-
-.card img:hover{
-  transform:scale(1.03);
 }
 
 /* lightbox */
@@ -110,28 +78,22 @@ body::before{
   background:rgba(0,0,0,.9);
   justify-content:center;
   align-items:center;
-  z-index:100;
 }
 
 #lightbox img{
   max-width:90%;
   max-height:80%;
-  border-radius:10px;
 }
 
-/* navigation */
 .nav{
   position:absolute;
   top:50%;
-  transform:translateY(-50%);
   font-size:40px;
   cursor:pointer;
-  padding:10px;
 }
 
 .prev{left:20px;}
 .next{right:20px;}
-
 </style>
 </head>
 
@@ -149,12 +111,11 @@ body::before{
   <button class="filter-btn" onclick="filterGallery('guanajuato',event)">vs Guanajuato</button>
   <button class="filter-btn" onclick="filterGallery('guerrero',event)">vs Guerrero</button>
   <button class="filter-btn" onclick="filterGallery('michoacan',event)">vs Michoacán</button>
-  <button class="filter-btn" onclick="filterGallery('nuevoleon',event)">vs Nuevo León</button>
+  <button class="filter-btn" onclick="filterGallery('leon',event)">vs Nuevo León</button>
 </div>
 
 <div id="gallery" class="gallery"></div>
 
-<!-- LIGHTBOX -->
 <div id="lightbox">
   <span class="nav prev" onclick="prevImage()">❮</span>
   <img id="lightbox-img">
@@ -169,7 +130,6 @@ let allImages = [];
 let filteredImages = [];
 let currentIndex = 0;
 
-// LOAD IMAGES
 async function loadImages(){
   const res = await fetch(`https://res.cloudinary.com/${CLOUD_NAME}/image/list/${TAG}.json`);
   const data = await res.json();
@@ -180,7 +140,6 @@ async function loadImages(){
   displayImages(filteredImages);
 }
 
-// DISPLAY
 function displayImages(list){
   const gallery = document.getElementById("gallery");
   gallery.innerHTML = "";
@@ -196,7 +155,6 @@ function displayImages(list){
   });
 }
 
-// FILTER
 function filterGallery(tag,e){
   document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
   e.target.classList.add("active");
@@ -204,18 +162,22 @@ function filterGallery(tag,e){
   if(tag==="all"){
     filteredImages = allImages;
   } else {
-    filteredImages = allImages.filter(img =>
-      img.public_id.toLowerCase().includes(tag)
-    );
+    filteredImages = allImages.filter(img => {
+      const id = img.public_id.toLowerCase();
+
+      return (
+        id.includes(tag) ||
+        id.includes("gto") && tag==="guanajuato"
+      );
+    });
   }
 
   displayImages(filteredImages);
 }
 
-// LIGHTBOX
 function openLightbox(i){
-  currentIndex = i;
-  document.getElementById("lightbox").style.display = "flex";
+  currentIndex=i;
+  document.getElementById("lightbox").style.display="flex";
   updateLightbox();
 }
 
@@ -226,20 +188,17 @@ function updateLightbox(){
 }
 
 function nextImage(){
-  currentIndex = (currentIndex + 1) % filteredImages.length;
+  currentIndex=(currentIndex+1)%filteredImages.length;
   updateLightbox();
 }
 
 function prevImage(){
-  currentIndex = (currentIndex - 1 + filteredImages.length) % filteredImages.length;
+  currentIndex=(currentIndex-1+filteredImages.length)%filteredImages.length;
   updateLightbox();
 }
 
-// CLOSE
-document.getElementById("lightbox").onclick = () =>
-  document.getElementById("lightbox").style.display = "none";
+document.getElementById("lightbox").onclick=()=>document.getElementById("lightbox").style.display="none";
 
-// INIT
 loadImages();
 </script>
 
