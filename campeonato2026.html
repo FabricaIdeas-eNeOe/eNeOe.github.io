@@ -1,215 +1,187 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>AOFM Waterpolo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Fonts -->
+<title>Campeonato Nacional 2026</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/css/lightgallery-bundle.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
 
 <style>
+
+/* BASE */
 body {
-  margin: 0;
-  font-family: 'Inter', sans-serif;
-  background: #020617;
-  color: white;
-  max-width: 1400px;
-  margin: auto;
+  margin:0;
+  font-family:'Montserrat',sans-serif;
+
+  background:
+    linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.15)),
+    url('background.png');
+
+  background-size:cover;
+  background-position:center top;
+  background-attachment:fixed;
 }
 
-/* ===== BACKGROUND ===== */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: url("background.jpg") center/cover no-repeat;
-  filter: blur(70px) brightness(0.6);
-  opacity: 0.7;
-  z-index: -1;
+/* HEADER */
+.header {
+  text-align:center;
+  padding:60px 20px 30px;
 }
 
-/* ===== HEADER ===== */
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 100;
+/* TITLE GLASS */
+.title {
+  display:inline-block;
+  font-size:42px;
+  font-weight:800;
+  color:#0a4f73;
 
-  background: linear-gradient(180deg,
-    rgba(0,150,255,0.25),
-    rgba(0,40,80,0.6)
-  );
+  padding:16px 40px;
 
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(0,200,255,0.3);
+  background:rgba(255,255,255,0.35);
+  backdrop-filter:blur(18px);
+
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,0.6);
+
+  box-shadow:0 10px 30px rgba(0,0,0,0.1);
 }
 
-/* ===== TITLE BLOCK ===== */
-.header-content {
-  text-align: center;
-  padding: 30px 10px 10px;
+/* SUBTITLE */
+.subtitle {
+  margin-top:20px;
+  font-size:20px;
+  font-weight:600;
+  color:#0a4f73;
 }
 
-/* Team */
-.team {
-  font-family: 'Orbitron';
-  font-size: 40px;
-  letter-spacing: 2px;
-
-  background: linear-gradient(90deg,#7dd3fc,#38bdf8);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+/* BACK BUTTON */
+.back {
+  position:absolute;
+  left:20px;
+  top:20px;
+  font-size:14px;
+  color:#0a4f73;
+  text-decoration:none;
 }
 
-/* Event */
-.event {
-  font-size: 16px;
-  opacity: 0.8;
-  margin-top: 6px;
+/* SECTION */
+.section {
+  padding:40px 60px;
 }
 
-/* Category */
-.category {
-  font-size: 14px;
-  opacity: 0.6;
-  margin-top: 4px;
+.section h2 {
+  color:#0a4f73;
 }
 
-/* ===== TABS ===== */
-.tabs {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  padding: 15px 0 20px;
+/* GRID */
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:35px;
 }
 
-.tab {
-  padding: 10px 18px;
-  border-radius: 25px;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 600;
-
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
-
-  transition: all 0.25s ease;
+/* CARD */
+.card {
+  height:220px;
+  border-radius:18px;
+  background-size:cover;
+  background-position:center;
+  position:relative;
+  overflow:hidden;
+  cursor:pointer;
+  transition:0.3s;
 }
 
-.tab:hover {
-  background: rgba(0,200,255,0.25);
+.card:hover {
+  transform:translateY(-8px) scale(1.05);
 }
 
-.tab.active {
-  background: linear-gradient(90deg,#0ea5e9,#38bdf8);
-  color: white;
-  box-shadow: 0 0 20px rgba(0,200,255,0.6);
+/* OVERLAY */
+.card::after {
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to top, rgba(0,0,0,0.4), transparent);
 }
 
-/* ===== GALLERY ===== */
-.gallery {
-  column-count: 4;
-  column-gap: 12px;
-  padding: 25px;
+/* TAG */
+.tag {
+  position:absolute;
+  top:10px;
+  left:10px;
+  background:#003f5c;
+  color:white;
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:12px;
+  z-index:2;
 }
 
-.gallery a {
-  display: block;
-  margin-bottom: 12px;
-  break-inside: avoid;
+/* TEXT */
+.card-info h3 {
+  margin:10px 0 0;
+  color:#0a4f73;
 }
 
-.gallery img {
-  width: 100%;
-  border-radius: 12px;
-  transition: transform 0.3s ease;
+.card-info p {
+  margin:4px 0 0;
+  color:#3c6a80;
 }
 
-.gallery img:hover {
-  transform: scale(1.05);
+/* FOOTER */
+footer {
+  text-align:center;
+  padding:20px;
+  color:#5c7f91;
 }
 
-/* Responsive */
-@media (max-width: 1000px) {
-  .gallery { column-count: 3; }
-}
-@media (max-width: 600px) {
-  .gallery { column-count: 2; }
-}
 </style>
-
 </head>
 
 <body>
 
-<div class="topbar">
+<a class="back" href="index.html">← Back</a>
 
-  <div class="header-content">
-    <div class="team">AOFM Waterpolo</div>
-    <div class="event">Campeonato Nacional 2026</div>
-    <div class="category">Infantil Mayor Varonil • CDMX</div>
-  </div>
+<div class="header">
+  <div class="title">Campeonato Nacional 2026</div>
+  <div class="subtitle">Select Category</div>
+</div>
 
-  <div class="tabs">
-    <div class="tab active" onclick="loadGallery('infmayor2026')">All Games</div>
-    <div class="tab" onclick="loadGallery('infmayor2026_ags')">vs Ags</div>
-    <div class="tab" onclick="loadGallery('infmayor2026_qroo')">vs QRoo</div>
-    <div class="tab" onclick="loadGallery('infmayor2026_coahuila')">vs Coahuila</div>
-    <div class="tab" onclick="loadGallery('infmayor2026_edomex')">vs EdoMex</div>
-    <div class="tab" onclick="loadGallery('infmayor2026_guerrero')">vs Guerrero</div>
-    <div class="tab" onclick="loadGallery('infmayor2026_nuevoleon')">vs Nvo León</div>
+<div class="section">
+
+  <div class="grid">
+
+    <!-- INF MAYOR -->
+    <div onclick="window.location.href='inf-mayor-cdmx.html'">
+      <div class="card" style="background-image:url('waterpolo.jpg')">
+        <div class="tag">CDMX</div>
+      </div>
+      <div class="card-info">
+        <h3>Infantil Mayor</h3>
+        <p>CDMX Teams</p>
+      </div>
+    </div>
+
+    <!-- INF MENOR -->
+    <div onclick="window.location.href='inf-menor-cdmx.html'">
+      <div class="card" style="background-image:url('waterpolo.jpg')">
+        <div class="tag">CDMX</div>
+      </div>
+      <div class="card-info">
+        <h3>Infantil Menor</h3>
+        <p>CDMX Teams</p>
+      </div>
+    </div>
+
   </div>
 
 </div>
 
-<div id="gallery" class="gallery"></div>
-
-<script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/lightgallery.min.js"></script>
-
-<script>
-const cloudName = "du4pmuch7";
-
-function loadGallery(tag) {
-  const gallery = document.getElementById("gallery");
-  gallery.innerHTML = "Loading...";
-
-  fetch(`https://res.cloudinary.com/${cloudName}/image/list/${tag}.json`)
-    .then(res => res.json())
-    .then(data => {
-      gallery.innerHTML = "";
-
-      data.resources.forEach(img => {
-        const full = `https://res.cloudinary.com/${cloudName}/image/upload/${img.public_id}.jpg`;
-        const thumb = `https://res.cloudinary.com/${cloudName}/image/upload/w_500/${img.public_id}.jpg`;
-
-        const a = document.createElement("a");
-        a.href = full;
-
-        const image = document.createElement("img");
-        image.src = thumb;
-
-        a.appendChild(image);
-        gallery.appendChild(a);
-      });
-
-      lightGallery(gallery);
-    });
-}
-
-loadGallery("infmayor2026");
-
-/* Active tab */
-document.querySelectorAll(".tab").forEach(tab => {
-  tab.addEventListener("click", () => {
-    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-    tab.classList.add("active");
-  });
-});
-</script>
+<footer>
+  © 2026 AOFM Waterpolo
+</footer>
 
 </body>
 </html>
