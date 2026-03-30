@@ -9,34 +9,64 @@
 
 <style>
 body {
-  font-family: Arial;
+  font-family: Arial, sans-serif;
   margin: 0;
-  background: #111;
+  background: #0d0d0d;
   color: white;
 }
 
-h1 {
+header {
   text-align: center;
-  padding: 20px;
+  padding: 30px 10px 10px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px;
+  flex-wrap: wrap;
+}
+
+.tab {
+  padding: 10px 18px;
+  border-radius: 20px;
+  background: #222;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.tab:hover {
+  background: #444;
+}
+
+.tab.active {
+  background: #00aaff;
 }
 
 .gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 10px;
-  padding: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  padding: 15px;
 }
 
 .gallery img {
   width: 100%;
-  height: 200px;
+  height: 220px;
   object-fit: cover;
-  border-radius: 8px;
-  cursor: pointer;
+  border-radius: 10px;
+  transition: transform 0.25s ease, opacity 0.25s ease;
 }
 
 .gallery img:hover {
-  opacity: 0.8;
+  transform: scale(1.05);
+  opacity: 0.85;
 }
 </style>
 
@@ -44,7 +74,19 @@ h1 {
 
 <body>
 
-<h1>Inf Mayor CDMX 2026</h1>
+<header>
+  <h1>Inf Mayor CDMX 2026</h1>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="loadGallery('infmayor2026')">All</div>
+  <div class="tab" onclick="loadGallery('infmayor2026_ags')">Ags</div>
+  <div class="tab" onclick="loadGallery('infmayor2026_qroo')">QRoo</div>
+  <div class="tab" onclick="loadGallery('infmayor2026_coahuila')">Coahuila</div>
+  <div class="tab" onclick="loadGallery('infmayor2026_edomex')">EdoMex</div>
+  <div class="tab" onclick="loadGallery('infmayor2026_guerrero')">Guerrero</div>
+  <div class="tab" onclick="loadGallery('infmayor2026_nuevoleon')">Nvo León</div>
+</div>
 
 <div id="gallery" class="gallery"></div>
 
@@ -52,39 +94,44 @@ h1 {
 
 <script>
 const cloudName = "du4pmuch7";
-const tag = "infmayor2026"; // ⚠️ MUST match your Cloudinary tag
 
-fetch(`https://res.cloudinary.com/${cloudName}/image/list/${tag}.json`)
-  .then(response => response.json())
-  .then(data => {
-    const gallery = document.getElementById("gallery");
+function loadGallery(tag) {
+  const gallery = document.getElementById("gallery");
+  gallery.innerHTML = "<p style='text-align:center;'>Loading...</p>";
 
-    if (!data.resources || data.resources.length === 0) {
-      gallery.innerHTML = "<p style='text-align:center;'>No images found. Check your tag.</p>";
-      return;
-    }
+  fetch(`https://res.cloudinary.com/${cloudName}/image/list/${tag}.json`)
+    .then(res => res.json())
+    .then(data => {
+      gallery.innerHTML = "";
 
-    data.resources.forEach(img => {
-      const full = `https://res.cloudinary.com/${cloudName}/image/upload/${img.public_id}.jpg`;
-      const thumb = `https://res.cloudinary.com/${cloudName}/image/upload/w_400/${img.public_id}.jpg`;
+      data.resources.forEach(img => {
+        const full = `https://res.cloudinary.com/${cloudName}/image/upload/${img.public_id}.jpg`;
+        const thumb = `https://res.cloudinary.com/${cloudName}/image/upload/w_400/${img.public_id}.jpg`;
 
-      const a = document.createElement("a");
-      a.href = full;
+        const a = document.createElement("a");
+        a.href = full;
 
-      const image = document.createElement("img");
-      image.src = thumb;
+        const image = document.createElement("img");
+        image.src = thumb;
 
-      a.appendChild(image);
-      gallery.appendChild(a);
+        a.appendChild(image);
+        gallery.appendChild(a);
+      });
+
+      lightGallery(gallery);
     });
+}
 
-    lightGallery(gallery);
-  })
-  .catch(error => {
-    document.getElementById("gallery").innerHTML =
-      "<p style='text-align:center;'>Error loading images. Check Cloudinary setup.</p>";
-    console.error(error);
+// Load default gallery
+loadGallery("infmayor2026");
+
+// Tab active state
+document.querySelectorAll(".tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    tab.classList.add("active");
   });
+});
 </script>
 
 </body>
