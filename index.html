@@ -39,33 +39,57 @@ body {
 /* HEADER */
 .header {
   text-align: center;
-  padding: 80px 20px 40px;
+  padding: 80px 20px 50px;
 }
 
+/* TITLE with breathing glow */
 .title {
   font-size: 64px;
   font-weight: 800;
   letter-spacing: 3px;
-
   color: #0a4f73;
 
-  text-shadow:
-    0 4px 12px rgba(0,0,0,0.15);
+  animation: breathingGlow 4s ease-in-out infinite;
 }
 
+@keyframes breathingGlow {
+  0%, 100% {
+    text-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  }
+  50% {
+    text-shadow:
+      0 6px 20px rgba(0,150,255,0.4),
+      0 0 25px rgba(0,200,255,0.25);
+  }
+}
+
+/* BIGGER animated subtitle band */
 .subtitle {
   display: inline-block;
-  margin-top: 20px;
-  padding: 12px 30px;
+  margin-top: 25px;
+  padding: 16px 50px;
 
-  font-size: 18px;
+  font-size: 22px;
+  font-weight: 500;
 
   color: #0a4f73;
 
-  background: rgba(255,255,255,0.6);
-  backdrop-filter: blur(8px);
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.4),
+    rgba(0,200,255,0.25),
+    rgba(255,255,255,0.4)
+  );
 
-  border-radius: 30px;
+  backdrop-filter: blur(10px);
+  border-radius: 40px;
+
+  animation: slideBand 1.2s ease;
+}
+
+@keyframes slideBand {
+  from { opacity: 0; transform: translateX(-60px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 /* SECTION */
@@ -79,16 +103,16 @@ body {
   color: #0a4f73;
 }
 
-/* GRID (NEW STRUCTURE) */
+/* GRID */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 40px;
+  gap: 45px;
 }
 
-/* CARD */
+/* CARD (taller now) */
 .card {
-  height: 170px;
+  height: 210px;
   border-radius: 18px;
 
   background-size: cover;
@@ -98,15 +122,15 @@ body {
   overflow: hidden;
 
   box-shadow:
-    0 10px 25px rgba(0,0,0,0.15);
+    0 12px 30px rgba(0,0,0,0.15);
 
   transition: all 0.3s ease;
 }
 
 .card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-8px) scale(1.02);
   box-shadow:
-    0 20px 40px rgba(0,0,0,0.2);
+    0 20px 45px rgba(0,0,0,0.25);
 }
 
 /* LIGHT OVERLAY */
@@ -114,37 +138,38 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.25), transparent);
+  background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
 }
 
-/* TAG */
+/* TAG (marine blue now) */
 .tag {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 12px;
+  left: 12px;
 
-  background: #00cfff;
+  background: #003f5c;
   color: white;
 
-  padding: 5px 10px;
+  padding: 6px 12px;
   font-size: 12px;
-  border-radius: 15px;
+  border-radius: 20px;
+  font-weight: 600;
 }
 
-/* TEXT OUTSIDE (NEW) */
+/* TEXT OUTSIDE */
 .card-info {
-  margin-top: 10px;
+  margin-top: 12px;
 }
 
 .card-info h3 {
   margin: 0;
-  font-size: 18px;
+  font-size: 19px;
   font-weight: 600;
   color: #0a4f73;
 }
 
 .card-info p {
-  margin: 4px 0 0;
+  margin: 5px 0 0;
   font-size: 14px;
   color: #3c6a80;
 }
@@ -152,13 +177,13 @@ body {
 /* LOGOS */
 .logos-section {
   background: white;
-  padding: 25px 0;
+  padding: 20px 0;
   text-align: center;
 }
 
 .logos img {
   height: 50px;
-  margin: 0 30px;
+  margin: 0 25px;
 }
 
 /* FOOTER */
