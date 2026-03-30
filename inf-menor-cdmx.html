@@ -10,17 +10,32 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #0b0f14;
+  background: url('background.png') center/cover no-repeat fixed;
   color: white;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 15, 25, 0.75);
+  backdrop-filter: blur(6px);
+  z-index: -1;
+}
+
+.back {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  opacity: 0.7;
 }
 
 .header {
   text-align: center;
-  padding: 40px 20px 20px;
-}
-
-.header h1 {
-  margin: 0;
+  padding: 30px 20px 10px;
 }
 
 .filters {
@@ -57,7 +72,6 @@ body {
   cursor: pointer;
 }
 
-/* LIGHTBOX */
 #lightbox {
   display: none;
   position: fixed;
@@ -85,6 +99,8 @@ body {
 
 <body>
 
+<a href="campeonato2026.html" class="back">← Back</a>
+
 <div class="header">
   <h1>AOFM Waterpolo</h1>
   <p>Infantil Menor CDMX 2026</p>
@@ -92,10 +108,10 @@ body {
 
 <div class="filters">
   <button class="filter-btn active" onclick="filterGallery('all', event)">ALL</button>
-  <button class="filter-btn" onclick="filterGallery('guanajuato', event)">Guanajuato</button>
-  <button class="filter-btn" onclick="filterGallery('guerrero', event)">Guerrero</button>
-  <button class="filter-btn" onclick="filterGallery('michoacan', event)">Michoacán</button>
-  <button class="filter-btn" onclick="filterGallery('nvoleon', event)">Nvo León</button>
+  <button class="filter-btn" onclick="filterGallery('guanajuato', event)">vs Guanajuato</button>
+  <button class="filter-btn" onclick="filterGallery('guerrero', event)">vs Guerrero</button>
+  <button class="filter-btn" onclick="filterGallery('michoacan', event)">vs Michoacán</button>
+  <button class="filter-btn" onclick="filterGallery('nvoleon', event)">vs Nuevo León</button>
 </div>
 
 <div class="gallery" id="gallery"></div>
@@ -107,13 +123,12 @@ body {
 
 <script>
 const CLOUD_NAME = "du4pmuch7";
+const TAG = "infmenor2026";
 
 let images = [];
 
 async function loadImages() {
-  const res = await fetch(
-    `https://res.cloudinary.com/${CLOUD_NAME}/image/list/infmenor2026.json`
-  );
+  const res = await fetch(`https://res.cloudinary.com/${CLOUD_NAME}/image/list/${TAG}.json`);
   const data = await res.json();
   images = data.resources;
   displayImages(images);
@@ -124,15 +139,11 @@ function displayImages(list) {
   gallery.innerHTML = "";
 
   list.forEach(img => {
-
     const url = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/f_auto,q_auto/${img.public_id}`;
 
     const div = document.createElement("div");
     div.className = "card";
-
-    div.innerHTML = `
-      <img src="${url}" onclick="openLightbox('${url}')">
-    `;
+    div.innerHTML = `<img src="${url}" onclick="openLightbox('${url}')">`;
 
     gallery.appendChild(div);
   });
