@@ -14,7 +14,6 @@ body {
   color: white;
 }
 
-/* HEADER */
 .header {
   text-align: center;
   padding: 40px 20px 20px;
@@ -22,20 +21,14 @@ body {
 
 .header h1 {
   margin: 0;
-  font-size: 32px;
 }
 
-.header p {
-  opacity: 0.7;
-}
-
-/* FILTERS */
 .filters {
   display: flex;
   justify-content: center;
-  flex-wrap: wrap;
   gap: 10px;
   margin: 20px;
+  flex-wrap: wrap;
 }
 
 .filter-btn {
@@ -45,15 +38,12 @@ body {
   background: #1c2430;
   color: white;
   cursor: pointer;
-  transition: 0.3s;
 }
 
-.filter-btn.active,
-.filter-btn:hover {
+.filter-btn.active {
   background: #00aaff;
 }
 
-/* GALLERY */
 .gallery {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -65,11 +55,6 @@ body {
   width: 100%;
   border-radius: 12px;
   cursor: pointer;
-  transition: 0.3s;
-}
-
-.card img:hover {
-  transform: scale(1.05);
 }
 
 /* LIGHTBOX */
@@ -86,7 +71,6 @@ body {
 #lightbox img {
   max-width: 90%;
   max-height: 90%;
-  border-radius: 12px;
 }
 
 #close {
@@ -94,7 +78,6 @@ body {
   top: 20px;
   right: 30px;
   font-size: 40px;
-  color: white;
   cursor: pointer;
 }
 </style>
@@ -108,16 +91,15 @@ body {
 </div>
 
 <div class="filters">
-  <button class="filter-btn active" onclick="filterGallery('all')">ALL</button>
-  <button class="filter-btn" onclick="filterGallery('guanajuato')">Guanajuato</button>
-  <button class="filter-btn" onclick="filterGallery('guerrero')">Guerrero</button>
-  <button class="filter-btn" onclick="filterGallery('michoacan')">Michoacán</button>
-  <button class="filter-btn" onclick="filterGallery('nvoleon')">Nvo León</button>
+  <button class="filter-btn active" onclick="filterGallery('all', event)">ALL</button>
+  <button class="filter-btn" onclick="filterGallery('guanajuato', event)">Guanajuato</button>
+  <button class="filter-btn" onclick="filterGallery('guerrero', event)">Guerrero</button>
+  <button class="filter-btn" onclick="filterGallery('michoacan', event)">Michoacán</button>
+  <button class="filter-btn" onclick="filterGallery('nvoleon', event)">Nvo León</button>
 </div>
 
 <div class="gallery" id="gallery"></div>
 
-<!-- LIGHTBOX -->
 <div id="lightbox">
   <span id="close">&times;</span>
   <img id="lightbox-img">
@@ -128,7 +110,6 @@ const CLOUD_NAME = "du4pmuch7";
 
 let images = [];
 
-/* LOAD FROM CLOUDINARY */
 async function loadImages() {
   const res = await fetch(
     `https://res.cloudinary.com/${CLOUD_NAME}/image/list/infmenor2026.json`
@@ -138,29 +119,28 @@ async function loadImages() {
   displayImages(images);
 }
 
-/* DISPLAY IMAGES */
 function displayImages(list) {
   const gallery = document.getElementById("gallery");
   gallery.innerHTML = "";
 
   list.forEach(img => {
+
+    const url = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/f_auto,q_auto/${img.public_id}`;
+
     const div = document.createElement("div");
     div.className = "card";
 
-    const imageUrl = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${img.public_id}.jpg`;
-
     div.innerHTML = `
-      <img src="${imageUrl}" onclick="openLightbox('${imageUrl}')">
+      <img src="${url}" onclick="openLightbox('${url}')">
     `;
 
     gallery.appendChild(div);
   });
 }
 
-/* FILTER */
-function filterGallery(tag) {
+function filterGallery(tag, e) {
   document.querySelectorAll(".filter-btn").forEach(btn => btn.classList.remove("active"));
-  event.target.classList.add("active");
+  e.target.classList.add("active");
 
   if (tag === "all") {
     displayImages(images);
@@ -172,7 +152,6 @@ function filterGallery(tag) {
   }
 }
 
-/* LIGHTBOX */
 function openLightbox(src) {
   document.getElementById("lightbox").style.display = "flex";
   document.getElementById("lightbox-img").src = src;
@@ -186,7 +165,6 @@ document.getElementById("lightbox").onclick = () => {
   document.getElementById("lightbox").style.display = "none";
 };
 
-/* INIT */
 loadImages();
 </script>
 
