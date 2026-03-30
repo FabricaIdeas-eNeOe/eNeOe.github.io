@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Waterpolo Gallery</title>
+<title>AOFM Waterpolo Gallery</title>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/css/lightgallery-bundle.min.css"/>
 
@@ -23,6 +23,12 @@ header {
 h1 {
   margin: 0;
   font-size: 28px;
+}
+
+.subtitle {
+  opacity: 0.7;
+  margin-top: 5px;
+  font-size: 14px;
 }
 
 .tabs {
@@ -47,6 +53,7 @@ h1 {
 
 .tab.active {
   background: #00aaff;
+  transform: scale(1.05);
 }
 
 .gallery {
@@ -62,11 +69,25 @@ h1 {
   object-fit: cover;
   border-radius: 10px;
   transition: transform 0.25s ease, opacity 0.25s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
 }
 
 .gallery img:hover {
   transform: scale(1.05);
   opacity: 0.85;
+}
+
+/* Spinner */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Mobile optimization */
+@media (max-width: 600px) {
+  .gallery {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
 }
 </style>
 
@@ -75,7 +96,8 @@ h1 {
 <body>
 
 <header>
-  <h1>Inf Mayor CDMX 2026</h1>
+  <h1>AOFM Waterpolo</h1>
+  <div class="subtitle">Inf Mayor CDMX 2026</div>
 </header>
 
 <div class="tabs">
@@ -95,14 +117,35 @@ h1 {
 <script>
 const cloudName = "du4pmuch7";
 
+function showLoading() {
+  return `
+    <div style="text-align:center; padding:40px;">
+      <div style="
+        width:40px;
+        height:40px;
+        border:4px solid #444;
+        border-top:4px solid #00aaff;
+        border-radius:50%;
+        margin:auto;
+        animation:spin 1s linear infinite;
+      "></div>
+    </div>
+  `;
+}
+
 function loadGallery(tag) {
   const gallery = document.getElementById("gallery");
-  gallery.innerHTML = "<p style='text-align:center;'>Loading...</p>";
+  gallery.innerHTML = showLoading();
 
   fetch(`https://res.cloudinary.com/${cloudName}/image/list/${tag}.json`)
     .then(res => res.json())
     .then(data => {
       gallery.innerHTML = "";
+
+      if (!data.resources || data.resources.length === 0) {
+        gallery.innerHTML = "<p style='text-align:center;'>No images found</p>";
+        return;
+      }
 
       data.resources.forEach(img => {
         const full = `https://res.cloudinary.com/${cloudName}/image/upload/${img.public_id}.jpg`;
@@ -119,6 +162,9 @@ function loadGallery(tag) {
       });
 
       lightGallery(gallery);
+    })
+    .catch(() => {
+      gallery.innerHTML = "<p style='text-align:center;'>Error loading images</p>";
     });
 }
 
