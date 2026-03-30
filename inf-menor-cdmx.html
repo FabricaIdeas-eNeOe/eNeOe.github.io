@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Infantil Menor CDMX 2026</title>
 
 <style>
@@ -13,120 +14,180 @@ body {
   color: white;
 }
 
-h1 {
+/* HEADER */
+.header {
   text-align: center;
-  margin-top: 40px;
+  padding: 40px 20px 20px;
 }
 
-.subtitle {
-  text-align: center;
+.header h1 {
+  margin: 0;
+  font-size: 32px;
+}
+
+.header p {
   opacity: 0.7;
-  margin-bottom: 30px;
 }
 
 /* FILTERS */
 .filters {
   display: flex;
   justify-content: center;
-  gap: 10px;
   flex-wrap: wrap;
-  margin-bottom: 30px;
+  gap: 10px;
+  margin: 20px;
 }
 
 .filter-btn {
   padding: 10px 18px;
   border-radius: 20px;
-  background: #1f2937;
+  border: none;
+  background: #1c2430;
+  color: white;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: 0.3s;
 }
 
-.filter-btn.active {
-  background: #00AEEF;
-  box-shadow: 0 0 12px rgba(0,174,239,0.6);
+.filter-btn.active,
+.filter-btn:hover {
+  background: #00aaff;
 }
 
 /* GALLERY */
 .gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px,1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
   padding: 20px;
 }
 
-.gallery-item img {
+.card img {
   width: 100%;
   border-radius: 12px;
-  transition: transform 0.3s ease;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-.gallery-item:hover img {
+.card img:hover {
   transform: scale(1.05);
+}
+
+/* LIGHTBOX */
+#lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.95);
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+#lightbox img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 12px;
+}
+
+#close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 40px;
+  color: white;
+  cursor: pointer;
 }
 </style>
 </head>
 
 <body>
 
-<h1>AOFM Waterpolo</h1>
-<div class="subtitle">Infantil Menor CDMX 2026</div>
-
-<!-- FILTERS -->
-<div class="filters">
-  <div class="filter-btn active" onclick="filterImages('all')">ALL</div>
-  <div class="filter-btn" onclick="filterImages('guanajuato')">Guanajuato</div>
-  <div class="filter-btn" onclick="filterImages('guerrero')">Guerrero</div>
-  <div class="filter-btn" onclick="filterImages('michoacan')">Michoacán</div>
-  <div class="filter-btn" onclick="filterImages('nuevoleon')">Nvo León</div>
+<div class="header">
+  <h1>AOFM Waterpolo</h1>
+  <p>Infantil Menor CDMX 2026</p>
 </div>
 
-<!-- GALLERY -->
+<div class="filters">
+  <button class="filter-btn active" onclick="filterGallery('all')">ALL</button>
+  <button class="filter-btn" onclick="filterGallery('guanajuato')">Guanajuato</button>
+  <button class="filter-btn" onclick="filterGallery('guerrero')">Guerrero</button>
+  <button class="filter-btn" onclick="filterGallery('michoacan')">Michoacán</button>
+  <button class="filter-btn" onclick="filterGallery('nvoleon')">Nvo León</button>
+</div>
+
 <div class="gallery" id="gallery"></div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <span id="close">&times;</span>
+  <img id="lightbox-img">
+</div>
 
 <script>
 const CLOUD_NAME = "du4pmuch7";
 
-// 👉 CHANGE THIS if needed
-const BASE_TAG = "infmenor2026";
+let images = [];
 
-const TAGS = {
-  all: BASE_TAG,
-  guanajuato: "infmenor2026_guanajuato",
-  guerrero: "infmenor2026_guerrero",
-  michoacan: "infmenor2026_michoacan",
-  nuevoleon: "infmenor2026_nuevoleon"
-};
-
-async function loadImages(tag) {
-  const url = `https://res.cloudinary.com/${CLOUD_NAME}/image/list/${tag}.json`;
-
-  const res = await fetch(url);
+/* LOAD FROM CLOUDINARY */
+async function loadImages() {
+  const res = await fetch(
+    `https://res.cloudinary.com/${CLOUD_NAME}/image/list/infmenor2026.json`
+  );
   const data = await res.json();
+  images = data.resources;
+  displayImages(images);
+}
 
+/* DISPLAY IMAGES */
+function displayImages(list) {
   const gallery = document.getElementById("gallery");
   gallery.innerHTML = "";
 
-  data.resources.forEach(img => {
+  list.forEach(img => {
     const div = document.createElement("div");
-    div.className = "gallery-item";
+    div.className = "card";
+
+    const imageUrl = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${img.public_id}.jpg`;
 
     div.innerHTML = `
-      <img src="https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${img.public_id}.jpg">
+      <img src="${imageUrl}" onclick="openLightbox('${imageUrl}')">
     `;
 
     gallery.appendChild(div);
   });
 }
 
-function filterImages(team) {
+/* FILTER */
+function filterGallery(tag) {
   document.querySelectorAll(".filter-btn").forEach(btn => btn.classList.remove("active"));
   event.target.classList.add("active");
 
-  loadImages(TAGS[team]);
+  if (tag === "all") {
+    displayImages(images);
+  } else {
+    const filtered = images.filter(img =>
+      img.public_id.toLowerCase().includes(tag)
+    );
+    displayImages(filtered);
+  }
 }
 
-// INIT
-loadImages(BASE_TAG);
+/* LIGHTBOX */
+function openLightbox(src) {
+  document.getElementById("lightbox").style.display = "flex";
+  document.getElementById("lightbox-img").src = src;
+}
+
+document.getElementById("close").onclick = () => {
+  document.getElementById("lightbox").style.display = "none";
+};
+
+document.getElementById("lightbox").onclick = () => {
+  document.getElementById("lightbox").style.display = "none";
+};
+
+/* INIT */
+loadImages();
 </script>
 
 </body>
