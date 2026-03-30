@@ -3,25 +3,22 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>AOFM Waterpolo Gallery</title>
+<title>AOFM Waterpolo</title>
 
 <!-- Fonts -->
 
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
-
-<!-- LightGallery -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/css/lightgallery-bundle.min.css"/>
 
 <style>
 body {
-  font-family: 'Space Grotesk', sans-serif;
   margin: 0;
-  color: #eaeaea;
+  font-family: 'Inter', sans-serif;
+  background: #020617;
+  color: white;
   max-width: 1400px;
   margin: auto;
-  background: #020617;
-  position: relative;
 }
 
 /* ===== BACKGROUND ===== */
@@ -30,8 +27,8 @@ body::before {
   position: fixed;
   inset: 0;
   background: url("background.jpg") center/cover no-repeat;
-  filter: blur(80px) brightness(0.35) saturate(1.3);
-  opacity: 0.65;
+  filter: blur(70px) brightness(0.6);
+  opacity: 0.7;
   z-index: -1;
 }
 
@@ -40,33 +37,45 @@ body::before {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(5,10,20,0.95);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid rgba(0,170,255,0.2);
-  box-shadow: 
-    0 8px 30px rgba(0,0,0,0.6),
-    0 0 40px rgba(0,170,255,0.15);
+
+  background: linear-gradient(180deg,
+    rgba(0,150,255,0.25),
+    rgba(0,40,80,0.6)
+  );
+
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0,200,255,0.3);
 }
 
-/* Header */
-header {
+/* ===== TITLE BLOCK ===== */
+.header-content {
   text-align: center;
-  padding: 35px 10px 12px;
+  padding: 30px 10px 10px;
 }
 
-/* Title hierarchy */
-h1 {
-  margin: 0;
-  font-size: 34px;
-  font-weight: 600;
-  letter-spacing: 1px;
+/* Team */
+.team {
+  font-family: 'Orbitron';
+  font-size: 40px;
+  letter-spacing: 2px;
+
+  background: linear-gradient(90deg,#7dd3fc,#38bdf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.subtitle {
-  opacity: 0.55;
-  font-size: 14px;
+/* Event */
+.event {
+  font-size: 16px;
+  opacity: 0.8;
   margin-top: 6px;
-  letter-spacing: 0.5px;
+}
+
+/* Category */
+.category {
+  font-size: 14px;
+  opacity: 0.6;
+  margin-top: 4px;
 }
 
 /* ===== TABS ===== */
@@ -75,113 +84,53 @@ h1 {
   justify-content: center;
   gap: 10px;
   flex-wrap: wrap;
-  margin-top: 14px;
-  padding-bottom: 14px;
+  padding: 15px 0 20px;
 }
 
-/* Rounded font for tabs */
 .tab {
-  font-family: 'Nunito', sans-serif;
-
   padding: 10px 18px;
   border-radius: 25px;
   cursor: pointer;
+  font-size: 13px;
   font-weight: 600;
-  font-size: 14px;
-  color: #cbd5f5;
 
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
 
   transition: all 0.25s ease;
 }
 
 .tab:hover {
-  background: rgba(0,170,255,0.15);
-  border: 1px solid rgba(0,170,255,0.4);
-  transform: translateY(-1px);
+  background: rgba(0,200,255,0.25);
 }
 
 .tab.active {
-  background: rgba(0,170,255,0.25);
-  border: 1px solid rgba(0,170,255,0.7);
+  background: linear-gradient(90deg,#0ea5e9,#38bdf8);
   color: white;
-  box-shadow: 0 0 20px rgba(0,170,255,0.6);
-  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(0,200,255,0.6);
 }
 
 /* ===== GALLERY ===== */
 .gallery {
   column-count: 4;
   column-gap: 12px;
-  padding: 22px;
-  margin-top: 25px;
+  padding: 25px;
 }
 
 .gallery a {
   display: block;
   margin-bottom: 12px;
   break-inside: avoid;
-  position: relative;
 }
 
-/* Hover overlay */
-.gallery a::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.25);
-  opacity: 0;
-  transition: 0.3s;
-  border-radius: 12px;
-}
-
-.gallery a::after {
-  content: "View";
-  position: absolute;
-  bottom: 12px;
-  left: 12px;
-  background: rgba(0,0,0,0.6);
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 12px;
-  opacity: 0;
-  transition: 0.3s;
-}
-
-.gallery a:hover::before {
-  opacity: 1;
-}
-
-.gallery a:hover::after {
-  opacity: 1;
-}
-
-/* Images */
 .gallery img {
   width: 100%;
-  height: auto;
   border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.5);
-  transition: transform 0.25s ease, opacity 0.25s ease;
-  opacity: 0;
-  animation: fadeIn 0.4s ease forwards;
+  transition: transform 0.3s ease;
 }
 
 .gallery img:hover {
-  transform: scale(1.06);
-  opacity: 0.95;
-}
-
-/* Animations */
-@keyframes fadeIn {
-  to { opacity: 1; }
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  transform: scale(1.05);
 }
 
 /* Responsive */
@@ -198,20 +147,23 @@ h1 {
 <body>
 
 <div class="topbar">
-  <header>
-    <h1>AOFM Waterpolo</h1>
-    <div class="subtitle">Inf Mayor CDMX 2026</div>
-  </header>
+
+  <div class="header-content">
+    <div class="team">AOFM Waterpolo</div>
+    <div class="event">Campeonato Nacional 2026</div>
+    <div class="category">Infantil Mayor Varonil • CDMX</div>
+  </div>
 
   <div class="tabs">
-    <div class="tab active" onclick="loadGallery('infmayor2026')">All</div>
-    <div class="tab" onclick="loadGallery('infmayor2026_ags')">Ags</div>
-    <div class="tab" onclick="loadGallery('infmayor2026_qroo')">QRoo</div>
-    <div class="tab" onclick="loadGallery('infmayor2026_coahuila')">Coahuila</div>
-    <div class="tab" onclick="loadGallery('infmayor2026_edomex')">EdoMex</div>
-    <div class="tab" onclick="loadGallery('infmayor2026_guerrero')">Guerrero</div>
-    <div class="tab" onclick="loadGallery('infmayor2026_nuevoleon')">Nvo León</div>
+    <div class="tab active" onclick="loadGallery('infmayor2026')">All Games</div>
+    <div class="tab" onclick="loadGallery('infmayor2026_ags')">vs Ags</div>
+    <div class="tab" onclick="loadGallery('infmayor2026_qroo')">vs QRoo</div>
+    <div class="tab" onclick="loadGallery('infmayor2026_coahuila')">vs Coahuila</div>
+    <div class="tab" onclick="loadGallery('infmayor2026_edomex')">vs EdoMex</div>
+    <div class="tab" onclick="loadGallery('infmayor2026_guerrero')">vs Guerrero</div>
+    <div class="tab" onclick="loadGallery('infmayor2026_nuevoleon')">vs Nvo León</div>
   </div>
+
 </div>
 
 <div id="gallery" class="gallery"></div>
@@ -221,35 +173,14 @@ h1 {
 <script>
 const cloudName = "du4pmuch7";
 
-function showLoading() {
-  return `
-    <div style="text-align:center; padding:50px;">
-      <div style="
-        width:40px;
-        height:40px;
-        border:4px solid #1e293b;
-        border-top:4px solid #00aaff;
-        border-radius:50%;
-        margin:auto;
-        animation:spin 1s linear infinite;
-      "></div>
-    </div>
-  `;
-}
-
 function loadGallery(tag) {
   const gallery = document.getElementById("gallery");
-  gallery.innerHTML = showLoading();
+  gallery.innerHTML = "Loading...";
 
   fetch(`https://res.cloudinary.com/${cloudName}/image/list/${tag}.json`)
     .then(res => res.json())
     .then(data => {
       gallery.innerHTML = "";
-
-      if (!data.resources || data.resources.length === 0) {
-        gallery.innerHTML = "<p style='text-align:center;'>No images found</p>";
-        return;
-      }
 
       data.resources.forEach(img => {
         const full = `https://res.cloudinary.com/${cloudName}/image/upload/${img.public_id}.jpg`;
@@ -265,22 +196,13 @@ function loadGallery(tag) {
         gallery.appendChild(a);
       });
 
-      lightGallery(gallery, {
-        speed: 400,
-        download: false,
-        counter: true,
-        zoom: true
-      });
-    })
-    .catch(() => {
-      gallery.innerHTML = "<p style='text-align:center;'>Error loading images</p>";
+      lightGallery(gallery);
     });
 }
 
-// Load default
 loadGallery("infmayor2026");
 
-// Tab active state
+/* Active tab */
 document.querySelectorAll(".tab").forEach(tab => {
   tab.addEventListener("click", () => {
     document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
