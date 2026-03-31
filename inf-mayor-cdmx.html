@@ -9,257 +9,252 @@
 <style>
 body{
   margin:0;
-  font-family:system-ui;
-  background:#0b1220 url('background.png') center/cover fixed;
+  font-family:-apple-system,system-ui;
+  background:url('background.png') center/cover fixed;
   color:white;
 }
 
-.overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(10,20,40,0.75);
-  backdrop-filter:blur(8px);
-  z-index:-1;
+/* GLASS HEADER */
+header{
+  position:sticky;
+  top:0;
+  backdrop-filter:blur(14px);
+  background:rgba(0,0,0,0.4);
+  padding:20px;
+  text-align:center;
 }
 
-header{text-align:center;padding:40px;}
-.back{position:absolute;left:20px;top:20px;color:white;text-decoration:none;}
+h1{
+  margin:0;
+  font-size:32px;
+  text-shadow:0 0 20px rgba(0,150,255,0.6);
+  animation:breath 3s infinite;
+}
+
+@keyframes breath{
+  0%,100%{text-shadow:0 0 10px rgba(0,150,255,0.5);}
+  50%{text-shadow:0 0 30px rgba(0,150,255,1);}
+}
+
+.subtitle{
+  font-size:18px;
+  font-weight:bold;
+}
+
+/* CATEGORY NAV */
+.nav{
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  margin:10px;
+}
+
+.nav a{
+  color:white;
+  text-decoration:none;
+  opacity:0.7;
+}
+.nav a.active{opacity:1;font-weight:bold;}
 
 /* FILTERS */
-.filters{display:flex;overflow-x:auto;gap:10px;padding:10px 16px;}
-.filters button{padding:10px 18px;border-radius:20px;background:#1e293b;color:white;border:none;}
-.filters button.active{background:#38bdf8;}
+.filters{
+  display:flex;
+  overflow-x:auto;
+  gap:10px;
+  padding:10px;
+}
+
+.filters button{
+  padding:10px 18px;
+  border-radius:25px;
+  border:none;
+  background:#0f2a44;
+  color:white;
+  font-weight:bold;
+}
+
+.filters button.active{
+  background:#003b66;
+}
 
 /* GALLERY */
 .gallery{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
   gap:12px;
-  padding:16px;
+  padding:12px;
 }
 
-.card{position:relative;border-radius:12px;overflow:hidden;background:#111;}
-.card img{width:100%;opacity:0;transition:0.4s;}
-.card img.loaded{opacity:1;}
-
-.skeleton{
-  position:absolute;
-  inset:0;
-  background:linear-gradient(90deg,#222,#333,#222);
-  animation:shimmer 1.2s infinite;
+.card{
+  border-radius:16px;
+  overflow:hidden;
+  position:relative;
 }
-@keyframes shimmer{0%{background-position:-200px}100%{background-position:200px}}
+
+.card img{
+  width:100%;
+  transition:.4s;
+}
+.card:hover img{transform:scale(1.05);}
 
 /* LIGHTBOX */
 .lightbox{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.95);
+  background:black;
   display:none;
   flex-direction:column;
-  justify-content:center;
   align-items:center;
+  justify-content:center;
 }
 
 .lightbox.active{display:flex;}
 
 .lightbox img{
-  max-width:90%;
+  max-width:95%;
   max-height:70%;
-  transition:0.3s;
+  transition:.3s;
 }
 
-/* CONTROLS */
-.counter{
-  position:absolute;
-  top:20px;
-  font-size:14px;
-  opacity:0.8;
+.controls{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
 }
 
-.nav{
+button.action{
+  padding:10px 16px;
+  border-radius:20px;
+  border:none;
+  background:#0077cc;
+  color:white;
+}
+
+/* NAV ARROWS */
+.arrow{
   position:absolute;
   top:50%;
-  transform:translateY(-50%);
   font-size:40px;
   cursor:pointer;
 }
-
-.prev{left:20px;}
-.next{right:20px;}
-
-.download-btn{
-  margin-top:10px;
-  padding:10px 20px;
-  border-radius:25px;
-  background:#38bdf8;
-  border:none;
-}
+.left{left:10px;}
+.right{right:10px;}
 </style>
 </head>
 
 <body>
 
-<div class="overlay"></div>
-
-<a href="campeonato2026.html" class="back">← Back</a>
-
 <header>
   <h1>AOFM Waterpolo</h1>
-  <p>Inf Mayor CDMX 2026</p>
+  <div class="subtitle">Inf Mayor CDMX 2026</div>
 </header>
+
+<div class="nav">
+  <a href="inf-mayor-cdmx.html" class="active">Inf Mayor</a>
+  <a href="inf-menor-cdmx.html">Inf Menor</a>
+</div>
 
 <div class="filters" id="filters"></div>
 <div class="gallery" id="gallery"></div>
 
-<!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox">
-  <div class="counter" id="counter"></div>
-
-  <div class="nav prev" onclick="prevImage()">❮</div>
-  <div class="nav next" onclick="nextImage()">❯</div>
-
+  <div class="arrow left" onclick="prev()">‹</div>
+  <div class="arrow right" onclick="next()">›</div>
   <img id="lightbox-img">
-
-  <a id="downloadLink" download>
-    <button class="download-btn">Download</button>
-  </a>
+  <div class="controls">
+    <button class="action" onclick="download()">Download</button>
+    <button class="action" onclick="share()">Share</button>
+    <button class="action" onclick="zoom()">Zoom</button>
+  </div>
 </div>
 
 <script>
-const cloudName="du4pmuch7";
+const cloud="du4pmuch7";
 const TAG="infmayor2026";
 
 const teams=[
-  {name:"ALL", tag:TAG},
-  {name:"vs Aguascalientes", tag:"infmayor2026_ags"},
-  {name:"vs Coahuila", tag:"infmayor2026_coahuila"},
-  {name:"vs EdoMex", tag:"infmayor2026_edomex"},
-  {name:"vs Guerrero", tag:"infmayor2026_guerrero"},
-  {name:"vs Nuevo León", tag:"infmayor2026_nuevoleon"},
-  {name:"vs QRoo", tag:"infmayor2026_qroo"}
+["ALL",TAG],
+["vs AGS","infmayor2026_ags"],
+["vs Coahuila","infmayor2026_coahuila"],
+["vs EdoMex","infmayor2026_edomex"],
+["vs Guerrero","infmayor2026_guerrero"],
+["vs Nuevo León","infmayor2026_nuevoleon"],
+["vs QRoo","infmayor2026_qroo"]
 ];
 
-let images=[];
-let currentIndex=0;
+let imgs=[],i=0,zoomed=false;
 
-const gallery=document.getElementById("gallery");
-const filters=document.getElementById("filters");
-const lightbox=document.getElementById("lightbox");
-const lightboxImg=document.getElementById("lightbox-img");
-const counter=document.getElementById("counter");
-const downloadLink=document.getElementById("downloadLink");
+const g=document.getElementById("gallery");
+const f=document.getElementById("filters");
+const lb=document.getElementById("lightbox");
+const lbImg=document.getElementById("lightbox-img");
 
-/* BUTTONS */
-function createButtons(){
-  teams.forEach((t,i)=>{
-    const btn=document.createElement("button");
-    btn.textContent=t.name;
-    if(i===0) btn.classList.add("active");
+teams.forEach((t,idx)=>{
+  const b=document.createElement("button");
+  b.textContent=t[0];
+  if(idx==0) b.classList.add("active");
+  b.onclick=()=>{
+    document.querySelectorAll(".filters button").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+    load(t[1]);
+  };
+  f.appendChild(b);
+});
 
-    btn.onclick=()=>{
-      document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
-      btn.classList.add("active");
-      loadImages(t.tag);
-    };
+async function load(tag){
+  g.innerHTML="";
+  const r=await fetch(`https://res.cloudinary.com/${cloud}/image/list/${tag}.json`);
+  const d=await r.json();
+  imgs=d.resources;
 
-    filters.appendChild(btn);
+  imgs.forEach((im,idx)=>{
+    const el=document.createElement("img");
+    el.src=`https://res.cloudinary.com/${cloud}/image/upload/w_500,q_auto/${im.public_id}.jpg`;
+    el.onclick=()=>open(idx);
+    const c=document.createElement("div");
+    c.className="card";
+    c.appendChild(el);
+    g.appendChild(c);
   });
 }
 
-/* LOAD */
-async function loadImages(tag){
-  gallery.innerHTML="";
-  const res=await fetch(`https://res.cloudinary.com/${cloudName}/image/list/${tag}.json`);
-  const data=await res.json();
-
-  images=data.resources;
-
-  images.forEach((img,i)=>{
-    const card=document.createElement("div");
-    card.className="card";
-
-    const skeleton=document.createElement("div");
-    skeleton.className="skeleton";
-
-    const image=document.createElement("img");
-    const size=window.innerWidth<600?400:800;
-
-    image.src=`https://res.cloudinary.com/${cloudName}/image/upload/w_${size},q_auto,f_auto/${img.public_id}.jpg`;
-    image.loading="lazy";
-
-    image.onload=()=>{
-      image.classList.add("loaded");
-      skeleton.remove();
-    };
-
-    image.onclick=()=>openLightbox(i);
-
-    card.appendChild(skeleton);
-    card.appendChild(image);
-    gallery.appendChild(card);
-  });
+function open(index){
+  i=index;
+  lb.classList.add("active");
+  update();
 }
 
-/* LIGHTBOX */
-function openLightbox(i){
-  currentIndex=i;
-  lightbox.classList.add("active");
-  updateLightbox();
+function update(){
+  lbImg.src=`https://res.cloudinary.com/${cloud}/image/upload/${imgs[i].public_id}.jpg`;
 }
 
-function updateLightbox(){
-  const img=images[currentIndex];
-  const url=`https://res.cloudinary.com/${cloudName}/image/upload/${img.public_id}.jpg`;
+function next(){i=(i+1)%imgs.length;update();}
+function prev(){i=(i-1+imgs.length)%imgs.length;update();}
 
-  lightboxImg.src=url;
-  downloadLink.href=url;
-  counter.innerText=`${currentIndex+1} / ${images.length}`;
-
-  preload();
+function download(){
+  window.open(lbImg.src);
 }
 
-function nextImage(){
-  currentIndex=(currentIndex+1)%images.length;
-  updateLightbox();
+function share(){
+  navigator.share?.({url:lbImg.src});
 }
 
-function prevImage(){
-  currentIndex=(currentIndex-1+images.length)%images.length;
-  updateLightbox();
+function zoom(){
+  zoomed=!zoomed;
+  lbImg.style.transform=zoomed?"scale(2)":"scale(1)";
 }
 
-/* PRELOAD */
-function preload(){
-  const next=new Image();
-  const prev=new Image();
-
-  next.src=`https://res.cloudinary.com/${cloudName}/image/upload/${images[(currentIndex+1)%images.length].public_id}.jpg`;
-  prev.src=`https://res.cloudinary.com/${cloudName}/image/upload/${images[(currentIndex-1+images.length)%images.length].public_id}.jpg`;
-}
-
-/* SWIPE */
-let startX=0;
-lightbox.addEventListener("touchstart",e=>startX=e.touches[0].clientX);
-lightbox.addEventListener("touchend",e=>{
-  let endX=e.changedTouches[0].clientX;
-  if(startX-endX>50) nextImage();
-  if(endX-startX>50) prevImage();
+let start=0;
+lb.addEventListener("touchstart",e=>start=e.touches[0].clientX);
+lb.addEventListener("touchend",e=>{
+  let end=e.changedTouches[0].clientX;
+  if(start-end>50) next();
+  if(end-start>50) prev();
 });
 
-/* KEYBOARD */
-document.addEventListener("keydown",e=>{
-  if(e.key==="ArrowRight") nextImage();
-  if(e.key==="ArrowLeft") prevImage();
-  if(e.key==="Escape") lightbox.classList.remove("active");
-});
+lb.onclick=e=>{if(e.target===lb) lb.classList.remove("active");}
 
-/* CLOSE */
-lightbox.onclick=()=>lightbox.classList.remove("active");
-
-/* INIT */
-createButtons();
-loadImages(TAG);
+load(TAG);
 </script>
 
 </body>
