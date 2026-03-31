@@ -6,71 +6,24 @@
 
 <title>Infantil Menor CDMX 2026</title>
 
-<script src="https://unpkg.com/cloudinary-core/cloudinary-core-shrinkwrap.min.js"></script>
-
 <style>
-body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:#0b1220 url('background.png') center/cover fixed;
-  color:white;
-}
-
-.overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(10,20,40,0.75);
-  backdrop-filter:blur(6px);
-  z-index:-1;
-}
-
-header{text-align:center;padding:40px 20px;}
-
-.back{
-  position:absolute;
-  left:20px;
-  top:20px;
-  text-decoration:none;
-  color:white;
-  font-size:14px;
-}
-
-.filters{
-  display:flex;
-  justify-content:center;
-  flex-wrap:wrap;
-  gap:10px;
-  margin-bottom:20px;
-}
-
-.filters button{
-  border:none;
-  padding:10px 16px;
-  border-radius:20px;
-  background:#1e293b;
-  color:white;
-  cursor:pointer;
-}
-
-.filters button.active{
-  background:#38bdf8;
-}
-
-.gallery{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
-  gap:16px;
-  padding:20px;
-}
-
-.gallery img{
-  width:100%;
-  border-radius:12px;
-  cursor:pointer;
-  transition:.3s;
-}
-
-.gallery img:hover{transform:scale(1.03);}
+/* SAME STYLE */
+body{margin:0;font-family:system-ui;background:#0b1220 url('background.png') center/cover fixed;color:white;}
+.overlay{position:fixed;inset:0;background:rgba(10,20,40,0.75);backdrop-filter:blur(8px);z-index:-1;}
+header{text-align:center;padding:40px;}
+.back{position:absolute;left:20px;top:20px;color:white;text-decoration:none;}
+.filters{display:flex;overflow-x:auto;gap:10px;padding:10px 16px;}
+.filters button{flex:0 0 auto;padding:10px 18px;border-radius:20px;background:#1e293b;color:white;border:none;}
+.filters button.active{background:#38bdf8;}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;padding:16px;}
+.card{position:relative;border-radius:12px;overflow:hidden;background:#111;}
+.card img{width:100%;opacity:0;transition:.4s;}
+.card img.loaded{opacity:1;}
+.skeleton{position:absolute;inset:0;background:linear-gradient(90deg,#222,#333,#222);animation:shimmer 1.2s infinite;}
+@keyframes shimmer{0%{background-position:-200px}100%{background-position:200px}}
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;justify-content:center;align-items:center;}
+.lightbox img{max-width:90%;}
+.lightbox.active{display:flex;}
 </style>
 </head>
 
@@ -87,11 +40,15 @@ header{text-align:center;padding:40px 20px;}
 <div class="filters" id="filters"></div>
 <div class="gallery" id="gallery"></div>
 
-<script>
-const cloudName = "du4pmuch7";
-const TAG = "infmenor2026";
+<div class="lightbox" id="lightbox">
+  <img id="lightbox-img">
+</div>
 
-const teams = [
+<script>
+const cloudName="du4pmuch7";
+const TAG="infmenor2026";
+
+const teams=[
   {name:"ALL", tag:TAG},
   {name:"vs Guanajuato", tag:"infmenor2026_guanajuato"},
   {name:"vs Guerrero", tag:"infmenor2026_guerrero"},
@@ -99,36 +56,64 @@ const teams = [
   {name:"vs Nuevo León", tag:"infmenor2026_nuevoleon"}
 ];
 
-const gallery = document.getElementById("gallery");
-const filters = document.getElementById("filters");
+const gallery=document.getElementById("gallery");
+const filters=document.getElementById("filters");
+const lightbox=document.getElementById("lightbox");
+const lightboxImg=document.getElementById("lightbox-img");
 
 function createButtons(){
   teams.forEach((t,i)=>{
     const btn=document.createElement("button");
     btn.textContent=t.name;
     if(i===0) btn.classList.add("active");
+
     btn.onclick=()=>{
       document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
       btn.classList.add("active");
       loadImages(t.tag);
     };
+
     filters.appendChild(btn);
   });
 }
 
 async function loadImages(tag){
-  gallery.innerHTML="Loading...";
+  gallery.innerHTML="";
+
   const res=await fetch(`https://res.cloudinary.com/${cloudName}/image/list/${tag}.json`);
   const data=await res.json();
 
-  gallery.innerHTML="";
   data.resources.forEach(img=>{
-    const el=document.createElement("img");
-    el.src=`https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q_auto,w_800/${img.public_id}.jpg`;
-    el.onclick=()=>window.open(`https://res.cloudinary.com/${cloudName}/image/upload/${img.public_id}.jpg`);
-    gallery.appendChild(el);
+    const card=document.createElement("div");
+    card.className="card";
+
+    const skeleton=document.createElement("div");
+    skeleton.className="skeleton";
+
+    const image=document.createElement("img");
+
+    const size = window.innerWidth < 600 ? 400 : 800;
+
+    image.src=`https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q_auto,w_${size}/${img.public_id}.jpg`;
+    image.loading="lazy";
+
+    image.onload=()=>{
+      image.classList.add("loaded");
+      skeleton.remove();
+    };
+
+    image.onclick=()=>{
+      lightbox.classList.add("active");
+      lightboxImg.src=`https://res.cloudinary.com/${cloudName}/image/upload/${img.public_id}.jpg`;
+    };
+
+    card.appendChild(skeleton);
+    card.appendChild(image);
+    gallery.appendChild(card);
   });
 }
+
+lightbox.onclick=()=>lightbox.classList.remove("active");
 
 createButtons();
 loadImages(TAG);
