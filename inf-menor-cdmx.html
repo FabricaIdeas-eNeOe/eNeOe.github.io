@@ -23,36 +23,12 @@ body{
 }
 
 header{text-align:center;padding:40px;}
-
-.back{
-  position:absolute;
-  left:20px;
-  top:20px;
-  text-decoration:none;
-  color:white;
-}
+.back{position:absolute;left:20px;top:20px;color:white;text-decoration:none;}
 
 /* FILTERS */
-.filters{
-  display:flex;
-  overflow-x:auto;
-  gap:10px;
-  padding:10px 16px;
-}
-
-.filters button{
-  flex:0 0 auto;
-  padding:10px 18px;
-  border-radius:20px;
-  background:#1e293b;
-  color:white;
-  border:none;
-  cursor:pointer;
-}
-
-.filters button.active{
-  background:#38bdf8;
-}
+.filters{display:flex;overflow-x:auto;gap:10px;padding:10px 16px;}
+.filters button{padding:10px 18px;border-radius:20px;background:#1e293b;color:white;border:none;}
+.filters button.active{background:#38bdf8;}
 
 /* GALLERY */
 .gallery{
@@ -62,21 +38,8 @@ header{text-align:center;padding:40px;}
   padding:16px;
 }
 
-.card{
-  position:relative;
-  border-radius:12px;
-  overflow:hidden;
-  background:#111;
-}
-
-.card img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  opacity:0;
-  transition:0.4s;
-}
-
+.card{position:relative;border-radius:12px;overflow:hidden;background:#111;}
+.card img{width:100%;opacity:0;transition:0.4s;}
 .card img.loaded{opacity:1;}
 
 .skeleton{
@@ -85,11 +48,7 @@ header{text-align:center;padding:40px;}
   background:linear-gradient(90deg,#222,#333,#222);
   animation:shimmer 1.2s infinite;
 }
-
-@keyframes shimmer{
-  0%{background-position:-200px}
-  100%{background-position:200px}
-}
+@keyframes shimmer{0%{background-position:-200px}100%{background-position:200px}}
 
 /* LIGHTBOX */
 .lightbox{
@@ -100,8 +59,6 @@ header{text-align:center;padding:40px;}
   flex-direction:column;
   justify-content:center;
   align-items:center;
-  gap:20px;
-  z-index:100;
 }
 
 .lightbox.active{display:flex;}
@@ -109,16 +66,34 @@ header{text-align:center;padding:40px;}
 .lightbox img{
   max-width:90%;
   max-height:70%;
+  transition:0.3s;
 }
 
-/* DOWNLOAD BUTTON */
+/* CONTROLS */
+.counter{
+  position:absolute;
+  top:20px;
+  font-size:14px;
+  opacity:0.8;
+}
+
+.nav{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:40px;
+  cursor:pointer;
+}
+
+.prev{left:20px;}
+.next{right:20px;}
+
 .download-btn{
+  margin-top:10px;
+  padding:10px 20px;
+  border-radius:25px;
   background:#38bdf8;
   border:none;
-  padding:12px 20px;
-  border-radius:25px;
-  font-size:16px;
-  cursor:pointer;
 }
 </style>
 </head>
@@ -139,9 +114,15 @@ header{text-align:center;padding:40px;}
 
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox">
+  <div class="counter" id="counter"></div>
+
+  <div class="nav prev" onclick="prevImage()">❮</div>
+  <div class="nav next" onclick="nextImage()">❯</div>
+
   <img id="lightbox-img">
+
   <a id="downloadLink" download>
-    <button class="download-btn">Download Image</button>
+    <button class="download-btn">Download</button>
   </a>
 </div>
 
@@ -157,13 +138,17 @@ const teams=[
   {name:"vs Nuevo León", tag:"infmenor2026_nuevoleon"}
 ];
 
+let images=[];
+let currentIndex=0;
+
 const gallery=document.getElementById("gallery");
 const filters=document.getElementById("filters");
 const lightbox=document.getElementById("lightbox");
 const lightboxImg=document.getElementById("lightbox-img");
+const counter=document.getElementById("counter");
 const downloadLink=document.getElementById("downloadLink");
 
-/* CREATE FILTER BUTTONS */
+/* BUTTONS */
 function createButtons(){
   teams.forEach((t,i)=>{
     const btn=document.createElement("button");
@@ -180,14 +165,15 @@ function createButtons(){
   });
 }
 
-/* LOAD IMAGES */
+/* LOAD */
 async function loadImages(tag){
   gallery.innerHTML="";
-
   const res=await fetch(`https://res.cloudinary.com/${cloudName}/image/list/${tag}.json`);
   const data=await res.json();
 
-  data.resources.forEach(img=>{
+  images=data.resources;
+
+  images.forEach((img,i)=>{
     const card=document.createElement("div");
     card.className="card";
 
@@ -195,13 +181,9 @@ async function loadImages(tag){
     skeleton.className="skeleton";
 
     const image=document.createElement("img");
+    const size=window.innerWidth<600?400:800;
 
-    const size = window.innerWidth < 600 ? 400 : 800;
-
-    const thumb=`https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q_auto,w_${size}/${img.public_id}.jpg`;
-    const full=`https://res.cloudinary.com/${cloudName}/image/upload/${img.public_id}.jpg`;
-
-    image.src=thumb;
+    image.src=`https://res.cloudinary.com/${cloudName}/image/upload/w_${size},q_auto,f_auto/${img.public_id}.jpg`;
     image.loading="lazy";
 
     image.onload=()=>{
@@ -209,11 +191,7 @@ async function loadImages(tag){
       skeleton.remove();
     };
 
-    image.onclick=()=>{
-      lightbox.classList.add("active");
-      lightboxImg.src=full;
-      downloadLink.href=full;
-    };
+    image.onclick=()=>openLightbox(i);
 
     card.appendChild(skeleton);
     card.appendChild(image);
@@ -221,7 +199,60 @@ async function loadImages(tag){
   });
 }
 
-/* CLOSE LIGHTBOX */
+/* LIGHTBOX */
+function openLightbox(i){
+  currentIndex=i;
+  lightbox.classList.add("active");
+  updateLightbox();
+}
+
+function updateLightbox(){
+  const img=images[currentIndex];
+  const url=`https://res.cloudinary.com/${cloudName}/image/upload/${img.public_id}.jpg`;
+
+  lightboxImg.src=url;
+  downloadLink.href=url;
+  counter.innerText=`${currentIndex+1} / ${images.length}`;
+
+  preload();
+}
+
+function nextImage(){
+  currentIndex=(currentIndex+1)%images.length;
+  updateLightbox();
+}
+
+function prevImage(){
+  currentIndex=(currentIndex-1+images.length)%images.length;
+  updateLightbox();
+}
+
+/* PRELOAD */
+function preload(){
+  const next=new Image();
+  const prev=new Image();
+
+  next.src=`https://res.cloudinary.com/${cloudName}/image/upload/${images[(currentIndex+1)%images.length].public_id}.jpg`;
+  prev.src=`https://res.cloudinary.com/${cloudName}/image/upload/${images[(currentIndex-1+images.length)%images.length].public_id}.jpg`;
+}
+
+/* SWIPE */
+let startX=0;
+lightbox.addEventListener("touchstart",e=>startX=e.touches[0].clientX);
+lightbox.addEventListener("touchend",e=>{
+  let endX=e.changedTouches[0].clientX;
+  if(startX-endX>50) nextImage();
+  if(endX-startX>50) prevImage();
+});
+
+/* KEYBOARD */
+document.addEventListener("keydown",e=>{
+  if(e.key==="ArrowRight") nextImage();
+  if(e.key==="ArrowLeft") prevImage();
+  if(e.key==="Escape") lightbox.classList.remove("active");
+});
+
+/* CLOSE */
 lightbox.onclick=()=>lightbox.classList.remove("active");
 
 /* INIT */
