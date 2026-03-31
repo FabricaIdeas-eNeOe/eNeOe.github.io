@@ -13,7 +13,6 @@ body{
   color:#0b3c5d;
 }
 
-/* BACK */
 .back{
   position:absolute;
   top:20px;
@@ -23,7 +22,6 @@ body{
   color:#0b3c5d;
 }
 
-/* HEADER */
 .header{
   text-align:center;
   padding:80px 20px 30px;
@@ -33,9 +31,9 @@ body{
   font-size:40px;
   font-weight:800;
   background:rgba(255,255,255,0.7);
-  display:inline-block;
   padding:15px 40px;
   border-radius:20px;
+  display:inline-block;
   backdrop-filter:blur(10px);
 }
 
@@ -43,25 +41,6 @@ body{
   margin-top:10px;
   font-size:18px;
   font-weight:600;
-}
-
-/* NAV */
-.nav{
-  display:flex;
-  justify-content:center;
-  gap:20px;
-  margin-top:20px;
-}
-
-.nav a{
-  text-decoration:none;
-  font-weight:600;
-  opacity:0.6;
-  color:#0b3c5d;
-}
-
-.nav a.active{
-  opacity:1;
 }
 
 /* FILTERS */
@@ -99,18 +78,11 @@ body{
 .card{
   border-radius:18px;
   overflow:hidden;
-  box-shadow:0 8px 20px rgba(0,0,0,0.1);
 }
 
 .card img{
   width:100%;
-  display:block;
   cursor:pointer;
-  transition:.3s;
-}
-
-.card:hover img{
-  transform:scale(1.05);
 }
 
 /* LIGHTBOX */
@@ -124,18 +96,14 @@ body{
   justify-content:center;
 }
 
-.lightbox.active{
-  display:flex;
-}
+.lightbox.active{display:flex;}
 
 .lightbox img{
   max-width:92%;
   max-height:75%;
   border-radius:12px;
-  transition:.2s;
 }
 
-/* BUTTON */
 .controls{
   margin-top:20px;
 }
@@ -147,17 +115,14 @@ body{
   background:#0b3c5d;
   color:white;
   font-weight:600;
-  cursor:pointer;
 }
 
-/* ARROWS */
 .arrow{
   position:absolute;
   top:50%;
   font-size:40px;
   color:white;
   cursor:pointer;
-  user-select:none;
 }
 
 .left{left:20px;}
@@ -172,11 +137,6 @@ body{
 <div class="header">
   <div class="title">AOFM Waterpolo</div>
   <div class="subtitle">Infantil Menor CDMX 2026</div>
-
-  <div class="nav">
-    <a href="inf-mayor-cdmx.html">Inf Mayor</a>
-    <a href="inf-menor-cdmx.html" class="active">Inf Menor</a>
-  </div>
 </div>
 
 <div class="filters" id="filters"></div>
@@ -185,9 +145,7 @@ body{
 <div class="lightbox" id="lightbox">
   <div class="arrow left" onclick="prev()">‹</div>
   <div class="arrow right" onclick="next()">›</div>
-
   <img id="lightbox-img">
-
   <div class="controls">
     <button onclick="downloadImage()">Download</button>
   </div>
@@ -212,25 +170,20 @@ const f=document.getElementById("filters");
 const lb=document.getElementById("lightbox");
 const lbImg=document.getElementById("lightbox-img");
 
-/* FILTER BUTTONS */
 teams.forEach((t,idx)=>{
   const b=document.createElement("button");
   b.textContent=t[0];
   if(idx===0) b.classList.add("active");
-
   b.onclick=()=>{
     document.querySelectorAll(".filters button").forEach(x=>x.classList.remove("active"));
     b.classList.add("active");
     load(t[1]);
   };
-
   f.appendChild(b);
 });
 
-/* LOAD IMAGES */
 async function load(tag){
   g.innerHTML="";
-
   const r=await fetch(`https://res.cloudinary.com/${cloud}/image/list/${tag}.json`);
   const d=await r.json();
   imgs=d.resources;
@@ -239,7 +192,6 @@ async function load(tag){
     const img=document.createElement("img");
     img.loading="lazy";
     img.src=`https://res.cloudinary.com/${cloud}/image/upload/w_600,q_auto,f_auto/${im.public_id}.jpg`;
-
     img.onclick=()=>open(idx);
 
     const c=document.createElement("div");
@@ -249,49 +201,27 @@ async function load(tag){
   });
 }
 
-/* LIGHTBOX */
 function open(index){
   i=index;
   lb.classList.add("active");
   update();
-  preload();
 }
 
 function update(){
-  lbImg.src=`https://res.cloudinary.com/${cloud}/image/upload/q_auto,f_auto/${imgs[i].public_id}.jpg`;
+  lbImg.src=`https://res.cloudinary.com/${cloud}/image/upload/${imgs[i].public_id}.jpg`;
 }
 
-function next(){i=(i+1)%imgs.length;update();preload();}
-function prev(){i=(i-1+imgs.length)%imgs.length;update();preload();}
+function next(){i=(i+1)%imgs.length;update();}
+function prev(){i=(i-1+imgs.length)%imgs.length;update();}
 
-/* PRELOAD */
-function preload(){
-  new Image().src=`https://res.cloudinary.com/${cloud}/image/upload/${imgs[(i+1)%imgs.length].public_id}.jpg`;
-}
-
-/* DOWNLOAD (FORCED) */
 function downloadImage(){
-  const url=lbImg.src;
   const a=document.createElement("a");
-  a.href=url;
+  a.href=lbImg.src;
   a.download="waterpolo.jpg";
-  document.body.appendChild(a);
   a.click();
-  a.remove();
 }
 
-/* SWIPE */
-lb.addEventListener("touchstart",e=>startX=e.touches[0].clientX);
-lb.addEventListener("touchend",e=>{
-  endX=e.changedTouches[0].clientX;
-  if(startX-endX>50) next();
-  if(endX-startX>50) prev();
-});
-
-/* CLOSE */
-lb.onclick=e=>{
-  if(e.target===lb) lb.classList.remove("active");
-};
+lb.onclick=e=>{if(e.target===lb) lb.classList.remove("active");}
 
 load(TAG);
 </script>
