@@ -13,7 +13,7 @@ body{
   color:#0b3c5d;
 }
 
-/* BACK BUTTON */
+/* BACK */
 .back{
   position:absolute;
   top:20px;
@@ -45,7 +45,7 @@ body{
   font-weight:600;
 }
 
-/* CATEGORY NAV */
+/* NAV */
 .nav{
   display:flex;
   justify-content:center;
@@ -100,12 +100,12 @@ body{
   border-radius:18px;
   overflow:hidden;
   box-shadow:0 8px 20px rgba(0,0,0,0.1);
-  cursor:pointer;
 }
 
 .card img{
   width:100%;
   display:block;
+  cursor:pointer;
   transition:.3s;
 }
 
@@ -117,7 +117,7 @@ body{
 .lightbox{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.9);
+  background:rgba(0,0,0,0.95);
   display:none;
   flex-direction:column;
   align-items:center;
@@ -129,34 +129,35 @@ body{
 }
 
 .lightbox img{
-  max-width:90%;
-  max-height:70%;
+  max-width:92%;
+  max-height:75%;
   border-radius:12px;
+  transition:.2s;
 }
 
-/* CONTROLS */
+/* BUTTON */
 .controls{
-  margin-top:15px;
-  display:flex;
-  gap:10px;
+  margin-top:20px;
 }
 
 .controls button{
-  padding:10px 16px;
+  padding:12px 20px;
   border:none;
-  border-radius:20px;
+  border-radius:25px;
   background:#0b3c5d;
   color:white;
+  font-weight:600;
   cursor:pointer;
 }
 
-/* NAV */
+/* ARROWS */
 .arrow{
   position:absolute;
   top:50%;
   font-size:40px;
   color:white;
   cursor:pointer;
+  user-select:none;
 }
 
 .left{left:20px;}
@@ -188,9 +189,7 @@ body{
   <img id="lightbox-img">
 
   <div class="controls">
-    <button onclick="download()">Download</button>
-    <button onclick="share()">Share</button>
-    <button onclick="zoom()">Zoom</button>
+    <button onclick="downloadImage()">Download</button>
   </div>
 </div>
 
@@ -208,13 +207,14 @@ const teams=[
 ["vs QRoo","infmayor2026_qroo"]
 ];
 
-let imgs=[],i=0,zoomed=false;
+let imgs=[],i=0,startX=0,endX=0;
 
 const g=document.getElementById("gallery");
 const f=document.getElementById("filters");
 const lb=document.getElementById("lightbox");
 const lbImg=document.getElementById("lightbox-img");
 
+/* FILTER BUTTONS */
 teams.forEach((t,idx)=>{
   const b=document.createElement("button");
   b.textContent=t[0];
@@ -229,15 +229,19 @@ teams.forEach((t,idx)=>{
   f.appendChild(b);
 });
 
+/* LOAD IMAGES */
 async function load(tag){
   g.innerHTML="";
+
   const r=await fetch(`https://res.cloudinary.com/${cloud}/image/list/${tag}.json`);
   const d=await r.json();
   imgs=d.resources;
 
   imgs.forEach((im,idx)=>{
     const img=document.createElement("img");
-    img.src=`https://res.cloudinary.com/${cloud}/image/upload/w_600,q_auto/${im.public_id}.jpg`;
+    img.loading="lazy";
+    img.src=`https://res.cloudinary.com/${cloud}/image/upload/w_600,q_auto,f_auto/${im.public_id}.jpg`;
+
     img.onclick=()=>open(idx);
 
     const c=document.createElement("div");
@@ -247,27 +251,49 @@ async function load(tag){
   });
 }
 
+/* LIGHTBOX */
 function open(index){
   i=index;
   lb.classList.add("active");
   update();
+  preload();
 }
 
 function update(){
-  lbImg.src=`https://res.cloudinary.com/${cloud}/image/upload/${imgs[i].public_id}.jpg`;
+  lbImg.src=`https://res.cloudinary.com/${cloud}/image/upload/q_auto,f_auto/${imgs[i].public_id}.jpg`;
 }
 
-function next(){i=(i+1)%imgs.length;update();}
-function prev(){i=(i-1+imgs.length)%imgs.length;update();}
+function next(){i=(i+1)%imgs.length;update();preload();}
+function prev(){i=(i-1+imgs.length)%imgs.length;update();preload();}
 
-function download(){window.open(lbImg.src);}
-function share(){navigator.share?.({url:lbImg.src});}
-function zoom(){
-  zoomed=!zoomed;
-  lbImg.style.transform=zoomed?"scale(2)":"scale(1)";
+/* PRELOAD */
+function preload(){
+  new Image().src=`https://res.cloudinary.com/${cloud}/image/upload/${imgs[(i+1)%imgs.length].public_id}.jpg`;
 }
 
-lb.onclick=e=>{if(e.target===lb) lb.classList.remove("active");}
+/* DOWNLOAD */
+function downloadImage(){
+  const url=lbImg.src;
+  const a=document.createElement("a");
+  a.href=url;
+  a.download="waterpolo.jpg";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+/* SWIPE */
+lb.addEventListener("touchstart",e=>startX=e.touches[0].clientX);
+lb.addEventListener("touchend",e=>{
+  endX=e.changedTouches[0].clientX;
+  if(startX-endX>50) next();
+  if(endX-startX>50) prev();
+});
+
+/* CLOSE */
+lb.onclick=e=>{
+  if(e.target===lb) lb.classList.remove("active");
+};
 
 load(TAG);
 </script>
