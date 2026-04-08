@@ -1,222 +1,95 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Infantil Mayor</title>
-
-<style>
-*{margin:0;padding:0;box-sizing:border-box;}
-
-body{
-  font-family:'Segoe UI',sans-serif;
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-
-  background:
-    radial-gradient(circle at 20% 30%, rgba(0,120,255,0.25), transparent 40%),
-    radial-gradient(circle at 80% 70%, rgba(0,120,255,0.25), transparent 40%),
-    linear-gradient(135deg,#eaf4ff,#9fc2e8);
-}
-
-/* BACK */
-.back{
-  position:absolute;
-  top:20px;
-  left:20px;
-  text-decoration:none;
-  color:#0a3d62;
-  font-weight:600;
-}
-
-/* HEADER */
-.header{
-  text-align:center;
-  margin-top:80px;
-}
-
-/* TITLE */
-.title{
-  display:inline-block;
-  padding:15px 40px;
-  border-radius:30px;
-  background:rgba(255,255,255,0.5);
-  backdrop-filter:blur(12px);
-  font-size:32px;
-  font-weight:700;
-  color:#0a3d62;
-  position:relative;
-  overflow:hidden;
-}
-
-/* EXPANDING CIRCLE ANIMATION */
-.title::after{
-  content:"";
-  position:absolute;
-  width:20px;
-  height:20px;
-  background:rgba(255,255,255,0.4);
-  border-radius:50%;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%) scale(1);
-  animation:expandCircle 4s infinite;
-}
-
-@keyframes expandCircle{
-  0%{transform:translate(-50%,-50%) scale(0.5);opacity:0.6;}
-  70%{transform:translate(-50%,-50%) scale(10);opacity:0;}
-  100%{opacity:0;}
-}
-
-/* FILTERS */
-.filters{
-  margin-top:25px;
-  display:flex;
-  justify-content:center;
-  flex-wrap:wrap;
-  gap:10px;
-}
-
-.filters button{
-  border:none;
-  padding:10px 18px;
-  border-radius:20px;
-  background:#dfe6e9;
-  cursor:pointer;
-  font-weight:600;
-}
-
-.filters button.active{
-  background:#0a3d62;
-  color:white;
-}
-
-/* GRID */
-.grid{
-  max-width:1200px;
-  margin:40px auto;
-  padding:0 20px;
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-  gap:25px;
-}
-
-/* CARD */
-.card{
-  background:rgba(255,255,255,0.7);
-  backdrop-filter:blur(10px);
-  border-radius:18px;
-  overflow:hidden;
-  box-shadow:0 10px 25px rgba(0,0,0,0.12);
-  transition:0.25s;
-}
-
-.card:hover{
-  transform:translateY(-5px);
-}
-
-.card img{
-  width:100%;
-  height:160px;
-  object-fit:cover;
-}
-
-.label{
-  padding:12px;
-  text-align:center;
-  font-weight:700;
-  color:#0a3d62;
-  cursor:pointer;
-}
-
-/* FOOTER */
-.footer{
-  margin-top:auto;
-  background:white;
-  padding:15px;
-  text-align:center;
-}
-
-.footer img{
-  height:40px;
-  margin:0 10px;
-}
-</style>
-</head>
-
-<body>
-
-<a href="campeonato2026.html" class="back">← Back</a>
-
-<div class="header">
-  <div class="title">Infantil Mayor</div>
-
-  <div class="filters">
-    <button class="active" onclick="filterTeam(event,'ALL')">ALL</button>
-    <button onclick="filterTeam(event,'AGS')">AGS</button>
-    <button onclick="filterTeam(event,'NL')">NL</button>
-    <button onclick="filterTeam(event,'QROO')">QROO</button>
-    <button onclick="filterTeam(event,'EDOMEX')">EDOMEX</button>
-    <button onclick="filterTeam(event,'COAH')">COAH</button>
-    <button onclick="filterTeam(event,'GRO')">GRO</button>
-  </div>
-</div>
-
-<div class="grid" id="gallery"></div>
-
-<div class="footer">
-  <img src="logo1.png">
-  <img src="logo2.png">
-  <img src="logo3.png">
-</div>
-
 <script>
-const cloudName="du4pmuch7";
+const cloudName = "du4pmuch7";
 
-const base="WP%202026/Campeonato%20Nacional%202026/inf-mayor-cdmx/gallery/";
+// FULL FOLDER PATH (already verified working)
+const base = "WP%202026/Campeonato%20Nacional%202026/inf-mayor-cdmx/gallery/";
 
-const images=[
+// TOTAL IMAGES
+const TOTAL = 425;
 
-// AGS
-{id:"CN2026_InfMyr_CDMX_AGS_0320_025",team:"AGS"},
-{id:"CN2026_InfMyr_CDMX_AGS_0320_024",team:"AGS"},
-{id:"CN2026_InfMyr_CDMX_AGS_0320_023",team:"AGS"},
+// TEAM DETECTION (based on filename)
+function detectTeam(id){
+  if(id.includes("_AGS_")) return "AGS";
+  if(id.includes("_NL_")) return "NL";
+  if(id.includes("_ROO_")) return "QROO";
+  if(id.includes("_EDOMEX_")) return "EDOMEX";
+  if(id.includes("_COAH_")) return "COAH";
+  if(id.includes("_GRO_")) return "GRO";
+  return "OTHER";
+}
 
-// NL
-{id:"CN2026_InfMyr_CDMX_NL_0320_001",team:"NL"},
-{id:"CN2026_InfMyr_CDMX_NL_0320_002",team:"NL"},
+// BUILD LIST AUTOMATICALLY
+const images = [];
 
-// QROO
-{id:"CN2026_InfMyr_CDMX_ROO_0322_060",team:"QROO"},
-{id:"CN2026_InfMyr_CDMX_ROO_0322_059",team:"QROO"},
+// AGS (0320)
+for(let i=1;i<=25;i++){
+  const num = String(i).padStart(3,"0");
+  images.push({
+    id:`CN2026_InfMyr_CDMX_AGS_0320_${num}`,
+    team:"AGS"
+  });
+}
+
+// NL (adjust count if needed)
+for(let i=1;i<=40;i++){
+  const num = String(i).padStart(3,"0");
+  images.push({
+    id:`CN2026_InfMyr_CDMX_NL_0320_${num}`,
+    team:"NL"
+  });
+}
+
+// QROO (ROO)
+for(let i=1;i<=80;i++){
+  const num = String(i).padStart(3,"0");
+  images.push({
+    id:`CN2026_InfMyr_CDMX_ROO_0322_${num}`,
+    team:"QROO"
+  });
+}
 
 // EDOMEX
-{id:"CN2026_InfMyr_CDMX_EDOMEX_001",team:"EDOMEX"},
+for(let i=1;i<=80;i++){
+  const num = String(i).padStart(3,"0");
+  images.push({
+    id:`CN2026_InfMyr_CDMX_EDOMEX_${num}`,
+    team:"EDOMEX"
+  });
+}
 
 // COAH
-{id:"CN2026_InfMyr_CDMX_COAH_001",team:"COAH"},
+for(let i=1;i<=80;i++){
+  const num = String(i).padStart(3,"0");
+  images.push({
+    id:`CN2026_InfMyr_CDMX_COAH_${num}`,
+    team:"COAH"
+  });
+}
 
 // GRO
-{id:"CN2026_InfMyr_CDMX_GRO_001",team:"GRO"}
+for(let i=1;i<=80;i++){
+  const num = String(i).padStart(3,"0");
+  images.push({
+    id:`CN2026_InfMyr_CDMX_GRO_${num}`,
+    team:"GRO"
+  });
+}
 
-];
-
-const gallery=document.getElementById("gallery");
+const gallery = document.getElementById("gallery");
 
 function render(team){
   gallery.innerHTML="";
 
-  const list=team==="ALL"?images:images.filter(i=>i.team===team);
+  const list = team==="ALL" ? images : images.filter(i=>i.team===team);
 
   list.forEach(img=>{
-    const url=`https://res.cloudinary.com/${cloudName}/image/upload/${base}${img.id}.jpg`;
+    const url = `https://res.cloudinary.com/${cloudName}/image/upload/${base}${img.id}.jpg`;
 
-    const card=document.createElement("div");
+    const card = document.createElement("div");
     card.className="card";
 
     card.innerHTML=`
-      <img src="${url}" onerror="this.style.display='none'">
+      <img src="${url}" onerror="this.parentElement.style.display='none'">
       <div class="label" onclick="window.open('${url}')">Full Image</div>
     `;
 
@@ -232,6 +105,3 @@ function filterTeam(e,team){
 
 render("ALL");
 </script>
-
-</body>
-</html>
