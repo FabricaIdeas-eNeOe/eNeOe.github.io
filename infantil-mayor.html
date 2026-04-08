@@ -2,120 +2,161 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Infantil Mayor</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
 
 <style>
 
-/* ===== GLOBAL ===== */
+/* ===== BASE ===== */
 body {
-  margin: 0;
-  font-family: "Segoe UI", Arial, sans-serif;
-  background: url('https://www.transparenttextures.com/patterns/cubes.png'),
-              radial-gradient(circle at 20% 30%, #cfe3f5, #7fa6c9);
-  background-attachment: fixed;
-  min-height: 100vh;
+  margin:0;
+  font-family:'Montserrat',sans-serif;
+
+  background:
+    linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.15)),
+    url('background.png');
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
 }
 
-/* ===== BACK BUTTON ===== */
+/* ===== BACK ===== */
 .back {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  text-decoration: none;
-  font-weight: 600;
-  color: #1b3c59;
-  z-index: 10;
+  position:fixed;
+  top:20px;
+  left:20px;
+  color:#0a4f73;
+  font-weight:600;
+  text-decoration:none;
 }
 
-/* ===== TITLE ===== */
-.title-container {
-  text-align: center;
-  margin-top: 90px;
+/* ===== HEADER ===== */
+.header {
+  text-align:center;
+  padding:80px 20px 40px;
 }
 
+/* ===== TITLE (MATCH INDEX) ===== */
 .title {
-  display: inline-block;
-  padding: 18px 50px;
-  font-size: 34px;
-  font-weight: 800;
-  color: #1b4f6b;
-  background: rgba(255,255,255,0.35);
-  border-radius: 40px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  animation: fadeIn 1s ease;
+  position:relative;
+  display:inline-block;
+  font-size:42px;
+  font-weight:800;
+  color:#0a4f73;
+
+  padding:18px 60px;
+
+  background:rgba(255,255,255,0.25);
+  backdrop-filter:blur(25px);
+
+  border-radius:30px;
+  border:1px solid rgba(255,255,255,0.6);
+  overflow:hidden;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px);}
-  to { opacity: 1; transform: translateY(0);}
+/* ANIMATED WAVE */
+.title::before {
+  content:"";
+  position:absolute;
+  inset:0;
+
+  background:linear-gradient(
+    120deg,
+    transparent 30%,
+    rgba(255,255,255,0.6) 50%,
+    transparent 70%
+  );
+
+  animation:wave 3s infinite linear;
 }
 
-/* ===== FILTERS ===== */
+@keyframes wave {
+  0% { transform:translateX(-100%); }
+  100% { transform:translateX(100%); }
+}
+
+/* ===== FILTERS (GLASS STYLE) ===== */
 .filters {
-  text-align: center;
-  margin: 25px 0;
+  text-align:center;
+  margin:30px 0;
 }
 
 .filters button {
-  margin: 6px;
-  padding: 10px 20px;
-  border-radius: 25px;
-  border: none;
-  background: rgba(255,255,255,0.6);
-  cursor: pointer;
-  font-weight: 600;
-  transition: 0.2s;
+  margin:6px;
+  padding:10px 18px;
+  border-radius:25px;
+  border:1px solid rgba(255,255,255,0.5);
+
+  background:rgba(255,255,255,0.25);
+  backdrop-filter:blur(10px);
+
+  color:#0a4f73;
+  font-weight:600;
+  cursor:pointer;
+
+  transition:0.3s;
 }
 
+/* hover glow */
+.filters button:hover {
+  background:rgba(255,255,255,0.4);
+  box-shadow:0 0 12px rgba(0,168,204,0.3);
+}
+
+/* active */
 .filters button.active {
-  background: #1b3c59;
-  color: white;
+  background:#0a4f73;
+  color:white;
 }
 
 /* ===== GALLERY ===== */
 .gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 22px;
-  padding: 40px 60px 120px;
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(200px,1fr));
+  gap:18px;
+  padding:30px 60px 60px;
 }
 
 .gallery img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: 0.3s;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  width:100%;
+  height:160px;
+  object-fit:cover;
+  border-radius:16px;
+
+  cursor:pointer;
+  transition:0.3s;
+
+  box-shadow:
+    0 10px 25px rgba(0,0,0,0.2),
+    0 0 10px rgba(0,168,204,0.2);
 }
 
 .gallery img:hover {
-  transform: scale(1.05);
+  transform:scale(1.05);
 }
 
-/* ===== FOOTER LOGOS ===== */
-.footer {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background: rgba(255,255,255,0.7);
-  backdrop-filter: blur(10px);
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  padding: 10px;
+/* ===== LOGOS (MATCH INDEX) ===== */
+.logos-section {
+  background:white;
+  text-align:center;
+  padding:20px;
+  margin-top:40px;
 }
 
-.footer img {
-  height: 40px;
-  opacity: 0.8;
-  transition: 0.2s;
+.logos img {
+  height:50px;
+  margin:0 25px;
 }
 
-.footer img:hover {
-  opacity: 1;
+/* ===== FOOTER ===== */
+footer {
+  text-align:center;
+  font-size:12px;
+  padding:10px;
+  color:#5c7f91;
 }
 
 </style>
@@ -125,7 +166,7 @@ body {
 
 <a href="campeonato2026.html" class="back">← Back</a>
 
-<div class="title-container">
+<div class="header">
   <div class="title">Infantil Mayor</div>
 </div>
 
@@ -140,14 +181,21 @@ body {
 
 <div id="gallery" class="gallery"></div>
 
-<!-- FOOTER LOGOS -->
-<div class="footer">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Logo_placeholder.svg/512px-Logo_placeholder.svg.png">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Logo_placeholder.svg/512px-Logo_placeholder.svg.png">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Logo_placeholder.svg/512px-Logo_placeholder.svg.png">
+<!-- LOGOS -->
+<div class="logos-section">
+  <div class="logos">
+    <img src="logo-olimpicos.png">
+    <img src="logo-aofm.png">
+    <img src="logo-club.png">
+  </div>
 </div>
 
+<footer>
+© 2026 AOFM Waterpolo
+</footer>
+
 <script>
+
 const cloudName = "du4pmuch7";
 
 const teamConfig = {
@@ -161,8 +209,6 @@ const teamConfig = {
 
 function generateImages(team) {
   const config = teamConfig[team];
-  if (!config) return [];
-
   let images = [];
 
   for (let i = 1; i <= config.count; i++) {
@@ -185,13 +231,10 @@ function loadTeam(team) {
 
   images.forEach(img => {
     const image = document.createElement("img");
-
     image.src = img.thumb;
     image.loading = "lazy";
 
-    image.onclick = () => {
-      window.open(img.full, "_blank");
-    };
+    image.onclick = () => window.open(img.full, "_blank");
 
     container.appendChild(image);
   });
@@ -204,6 +247,7 @@ function setTeam(button, team) {
 }
 
 loadTeam("AGS");
+
 </script>
 
 </body>
