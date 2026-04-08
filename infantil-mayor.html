@@ -1,107 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Infantil Mayor</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: radial-gradient(circle at 20% 30%, #cfe3f5, #7fa6c9);
+  min-height: 100vh;
+}
+
+/* BACK BUTTON */
+.back {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  text-decoration: none;
+  font-weight: bold;
+  color: #1b3c59;
+}
+
+/* TITLE */
+.title-container {
+  text-align: center;
+  margin-top: 80px;
+}
+
+.title {
+  display: inline-block;
+  padding: 20px 40px;
+  font-size: 28px;
+  font-weight: bold;
+  color: #1b3c59;
+  position: relative;
+  z-index: 2;
+}
+
+.title::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  background: rgba(255,255,255,0.5);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: expandCircle 1.2s ease forwards;
+  z-index: -1;
+}
+
+@keyframes expandCircle {
+  to {
+    width: 300px;
+    height: 300px;
+  }
+}
+
+/* FILTER BUTTONS */
+.filters {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.filters button {
+  margin: 5px;
+  padding: 10px 18px;
+  border-radius: 20px;
+  border: none;
+  background: #d9d9d9;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.filters button.active {
+  background: #1b3c59;
+  color: white;
+}
+
+/* GALLERY GRID */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  padding: 40px;
+}
+
+/* CARD */
+.card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.card a {
+  display: block;
+  padding: 10px;
+  text-decoration: none;
+  font-weight: bold;
+  color: #1b3c59;
+}
+</style>
+</head>
+
+<body>
+
+<a href="campeonato2026.html" class="back">← Back</a>
+
+<div class="title-container">
+  <div class="title">Infantil Mayor</div>
+</div>
+
+<div class="filters">
+  <button onclick="setTeam(this,'AGS')" class="active">AGS</button>
+  <button onclick="setTeam(this,'NL')">NL</button>
+  <button onclick="setTeam(this,'QROO')">QROO</button>
+  <button onclick="setTeam(this,'EDOMEX')">EDOMEX</button>
+  <button onclick="setTeam(this,'COAH')">COAH</button>
+  <button onclick="setTeam(this,'GRO')">GRO</button>
+</div>
+
+<div id="gallery" class="gallery"></div>
+
 <script>
 const cloudName = "du4pmuch7";
 
-// FULL FOLDER PATH (already verified working)
-const base = "WP%202026/Campeonato%20Nacional%202026/inf-mayor-cdmx/gallery/";
+const teamConfig = {
+  AGS: { prefix: "CN2026_InfMyr_CDMX_AGS_0320_", count: 50 },
+  COAH: { prefix: "CN2026_InfMyr_CDMX_COA_0320_", count: 51 },
+  EDOMEX: { prefix: "CN2026_InfMyr_CDMX_EDM_0319_", count: 44 },
+  GRO: { prefix: "CN2026_InfMyr_CDMX_GRO_0319_", count: 113 },
+  NL: { prefix: "CN2026_InfMyr_CDMX_NLE_0321_", count: 107 },
+  QROO: { prefix: "CN2026_InfMyr_CDMX_ROO_0322_", count: 60 }
+};
 
-// TOTAL IMAGES
-const TOTAL = 425;
+function generateImages(team) {
+  const config = teamConfig[team];
+  if (!config) return [];
 
-// TEAM DETECTION (based on filename)
-function detectTeam(id){
-  if(id.includes("_AGS_")) return "AGS";
-  if(id.includes("_NL_")) return "NL";
-  if(id.includes("_ROO_")) return "QROO";
-  if(id.includes("_EDOMEX_")) return "EDOMEX";
-  if(id.includes("_COAH_")) return "COAH";
-  if(id.includes("_GRO_")) return "GRO";
-  return "OTHER";
+  let images = [];
+
+  for (let i = 1; i <= config.count; i++) {
+    let number = String(i).padStart(3, "0");
+
+    images.push({
+      src: `https://res.cloudinary.com/${cloudName}/image/upload/w_500/f_auto/q_auto/WP 2026/Campeonato Nacional 2026/inf-mayor-cdmx/gallery/${config.prefix}${number}.jpg`,
+      full: `https://res.cloudinary.com/${cloudName}/image/upload/f_auto/q_auto/WP 2026/Campeonato Nacional 2026/inf-mayor-cdmx/downloads/${config.prefix}${number}.jpg`
+    });
+  }
+
+  return images;
 }
 
-// BUILD LIST AUTOMATICALLY
-const images = [];
+function loadTeam(team) {
+  const container = document.getElementById("gallery");
+  container.innerHTML = "";
 
-// AGS (0320)
-for(let i=1;i<=25;i++){
-  const num = String(i).padStart(3,"0");
-  images.push({
-    id:`CN2026_InfMyr_CDMX_AGS_0320_${num}`,
-    team:"AGS"
-  });
-}
+  const images = generateImages(team);
 
-// NL (adjust count if needed)
-for(let i=1;i<=40;i++){
-  const num = String(i).padStart(3,"0");
-  images.push({
-    id:`CN2026_InfMyr_CDMX_NL_0320_${num}`,
-    team:"NL"
-  });
-}
-
-// QROO (ROO)
-for(let i=1;i<=80;i++){
-  const num = String(i).padStart(3,"0");
-  images.push({
-    id:`CN2026_InfMyr_CDMX_ROO_0322_${num}`,
-    team:"QROO"
-  });
-}
-
-// EDOMEX
-for(let i=1;i<=80;i++){
-  const num = String(i).padStart(3,"0");
-  images.push({
-    id:`CN2026_InfMyr_CDMX_EDOMEX_${num}`,
-    team:"EDOMEX"
-  });
-}
-
-// COAH
-for(let i=1;i<=80;i++){
-  const num = String(i).padStart(3,"0");
-  images.push({
-    id:`CN2026_InfMyr_CDMX_COAH_${num}`,
-    team:"COAH"
-  });
-}
-
-// GRO
-for(let i=1;i<=80;i++){
-  const num = String(i).padStart(3,"0");
-  images.push({
-    id:`CN2026_InfMyr_CDMX_GRO_${num}`,
-    team:"GRO"
-  });
-}
-
-const gallery = document.getElementById("gallery");
-
-function render(team){
-  gallery.innerHTML="";
-
-  const list = team==="ALL" ? images : images.filter(i=>i.team===team);
-
-  list.forEach(img=>{
-    const url = `https://res.cloudinary.com/${cloudName}/image/upload/${base}${img.id}.jpg`;
-
+  images.forEach(img => {
     const card = document.createElement("div");
-    card.className="card";
+    card.className = "card";
 
-    card.innerHTML=`
-      <img src="${url}" onerror="this.parentElement.style.display='none'">
-      <div class="label" onclick="window.open('${url}')">Full Image</div>
+    card.innerHTML = `
+      <img src="${img.src}" loading="lazy">
+      <a href="${img.full}" target="_blank">Full Image</a>
     `;
 
-    gallery.appendChild(card);
+    container.appendChild(card);
   });
 }
 
-function filterTeam(e,team){
-  document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
-  e.target.classList.add("active");
-  render(team);
+function setTeam(button, team) {
+  document.querySelectorAll(".filters button").forEach(b => b.classList.remove("active"));
+  button.classList.add("active");
+  loadTeam(team);
 }
 
-render("ALL");
+/* DEFAULT LOAD */
+loadTeam("AGS");
 </script>
+
+</body>
+</html>
