@@ -5,11 +5,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Infantil Mayor Gallery</title>
+<title>Infantil Mayor</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
-
-<script src="https://unpkg.com/cloudinary-core/cloudinary-core-shrinkwrap.min.js"></script>
 
 <style>
 
@@ -58,7 +56,6 @@ body{
   overflow:hidden;
 }
 
-/* ripple shine */
 .title::after{
   content:"";
   position:absolute;
@@ -83,8 +80,8 @@ body{
 
 /* FILTERS */
 .filters{
-  margin:30px auto;
   text-align:center;
+  margin:30px;
 }
 
 .filters button{
@@ -176,19 +173,15 @@ body{
 <!-- FILTERS -->
 
 <div class="filters">
-  <button class="active" onclick="filterGallery('all')">ALL</button>
-  <button onclick="filterGallery('AGS')">vs AGS</button>
-  <button onclick="filterGallery('COAH')">vs Coahuila</button>
-  <button onclick="filterGallery('EDOMEX')">vs EdoMex</button>
-  <button onclick="filterGallery('GRO')">vs Guerrero</button>
-  <button onclick="filterGallery('NL')">vs Nuevo León</button>
+  <button class="active" onclick="setFilter('all', event)">ALL</button>
+  <button onclick="setFilter('AGS', event)">vs AGS</button>
+  <button onclick="setFilter('COAH', event)">vs Coahuila</button>
+  <button onclick="setFilter('EDOMEX', event)">vs EdoMex</button>
+  <button onclick="setFilter('GRO', event)">vs Guerrero</button>
+  <button onclick="setFilter('NL', event)">vs Nuevo León</button>
 </div>
 
-<!-- GALLERY -->
-
 <div class="gallery" id="gallery"></div>
-
-<!-- FOOTER -->
 
 <div class="footer">
   <img src="logo-aofm.png">
@@ -198,53 +191,70 @@ body{
 
 <script>
 
-// CONFIG
-const cloudName = "dfaac6gwe"; // 🔴 replace with your cloudinary name
-const basePath = "WP 2026/Campeonato Nacional 2026/inf-mayor-cdmx/gallery";
+const cloudName = "dfaac6gwe"; // ← YOUR CLOUD NAME
+const folder = "WP 2026/Campeonato Nacional 2026/inf-mayor-cdmx/gallery";
 
-// SAMPLE IMAGE LIST (you will replace later with API if needed)
-const images = [
-  "CN2026_InfMyr_CDMX_ROO_0322_060",
-  "CN2026_InfMyr_CDMX_ROO_0322_061",
-  "CN2026_InfMyr_CDMX_ROO_0322_062"
-];
+let allImages = [];
+let currentFilter = "all";
 
-// INIT
-const gallery = document.getElementById("gallery");
+async function loadImages(){
 
-function renderGallery(filter="all"){
-  gallery.innerHTML="";
+  const url = `https://res.cloudinary.com/${cloudName}/image/list/${encodeURIComponent(folder)}.json`;
 
-  images.forEach(id=>{
-    if(filter==="all" || id.includes(filter)){
+  try{
+    const res = await fetch(url);
+    const data = await res.json();
 
-      const url = `https://res.cloudinary.com/${cloudName}/image/upload/${basePath}/${id}.jpg`;
+    allImages = data.resources;
+    renderGallery();
 
-      const div = document.createElement("div");
-      div.className="card";
+  }catch(err){
+    console.error("Cloudinary load error:", err);
+  }
+}
 
-      div.innerHTML=`
-        <img src="${url}">
-        <div class="download">
-          <a href="${url}" download>Download</a>
-        </div>
-      `;
+function renderGallery(){
 
-      gallery.appendChild(div);
-    }
+  const gallery = document.getElementById("gallery");
+  gallery.innerHTML = "";
+
+  const filtered = allImages.filter(img=>{
+    return currentFilter === "all" || img.public_id.includes(currentFilter);
+  });
+
+  filtered.forEach(img=>{
+
+    const imageUrl = `https://res.cloudinary.com/${cloudName}/image/upload/${img.public_id}.jpg`;
+
+    const div = document.createElement("div");
+    div.className = "card";
+
+    div.innerHTML = `
+      <img src="${imageUrl}">
+      <div class="download">
+        <a href="${imageUrl}" download>Download</a>
+      </div>
+    `;
+
+    gallery.appendChild(div);
+
   });
 }
 
-// FILTER
-function filterGallery(team){
-  document.querySelectorAll(".filters button").forEach(btn=>btn.classList.remove("active"));
+function setFilter(filter, event){
+
+  currentFilter = filter;
+
+  document.querySelectorAll(".filters button")
+    .forEach(btn=>btn.classList.remove("active"));
+
   event.target.classList.add("active");
 
-  renderGallery(team);
+  renderGallery();
 }
 
-// INIT LOAD
-renderGallery();
+// INIT
+loadImages();
 
 </script>
 
