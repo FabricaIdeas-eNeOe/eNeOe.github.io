@@ -6,39 +6,48 @@
 
 <style>
 body {
-  font-family: Arial, sans-serif;
-  background: #eaf4ff;
-  text-align: center;
   margin: 0;
+  font-family: Arial, sans-serif;
+  background: url('background.png') no-repeat center center fixed;
+  background-size: cover;
+  text-align: center;
+  color: #1b3b5f;
+}
+
+.overlay {
+  background: rgba(255,255,255,0.75);
+  min-height: 100vh;
+  padding: 40px 20px;
 }
 
 h1 {
-  margin-top: 40px;
-  font-size: 42px;
+  font-size: 48px;
+  margin-bottom: 10px;
 }
 
 h2 {
-  margin-bottom: 40px;
-  color: #555;
+  font-weight: normal;
+  margin-bottom: 50px;
 }
 
 .container {
   display: flex;
   justify-content: center;
-  gap: 30px;
+  gap: 40px;
+  flex-wrap: wrap;
 }
 
 .card {
   width: 320px;
-  background: white;
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  background: white;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
   transition: 0.3s;
 }
 
 .card:hover {
-  transform: scale(1.03);
+  transform: translateY(-5px);
 }
 
 .card img {
@@ -53,12 +62,23 @@ h2 {
 
 a {
   text-decoration: none;
-  color: black;
+  color: inherit;
+}
+
+.footer {
+  margin-top: 60px;
+}
+
+.footer img {
+  height: 50px;
+  margin: 0 15px;
 }
 </style>
 
 </head>
 <body>
+
+<div class="overlay">
 
 <h1>AOFM WATERPOLO</h1>
 <h2>Official Photo Gallery Platform</h2>
@@ -71,6 +91,14 @@ a {
       <h3>Campeonato Nacional 2026</h3>
     </div>
   </a>
+
+</div>
+
+<div class="footer">
+  <img src="logo-aofm.png">
+  <img src="logo-club.png">
+  <img src="logo-olimpicos.png">
+</div>
 
 </div>
 
