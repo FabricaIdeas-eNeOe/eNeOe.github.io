@@ -5,35 +5,67 @@
 <title>Infantil Mayor</title>
 
 <style>
-body{
+*{
   margin:0;
-  font-family:sans-serif;
-  background:linear-gradient(135deg,#e9f3ff,#b9d6ff);
+  padding:0;
+  box-sizing:border-box;
 }
 
-.container{
-  max-width:1200px;
-  margin:auto;
-  padding:40px 20px;
+body{
+  font-family: 'Segoe UI', sans-serif;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  background:
+    radial-gradient(circle at 20% 40%, rgba(0,140,255,0.15), transparent 40%),
+    radial-gradient(circle at 80% 60%, rgba(0,140,255,0.2), transparent 40%),
+    linear-gradient(135deg,#e9f3ff,#b9d6ff);
 }
 
-h1{
+/* BACK BUTTON */
+.back{
+  position:absolute;
+  top:20px;
+  left:20px;
+  color:#0a3d62;
+  font-weight:600;
+  text-decoration:none;
+}
+
+/* HEADER */
+.header{
   text-align:center;
+  margin-top:80px;
+}
+
+.title{
+  display:inline-block;
+  padding:15px 40px;
+  border-radius:30px;
+  background:rgba(255,255,255,0.6);
+  backdrop-filter:blur(10px);
+  font-size:32px;
+  font-weight:700;
   color:#0a3d62;
 }
 
+/* FILTERS */
 .filters{
-  text-align:center;
-  margin:20px 0;
+  margin-top:25px;
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:10px;
 }
 
 .filters button{
-  margin:5px;
-  padding:10px 15px;
   border:none;
+  padding:10px 18px;
   border-radius:20px;
   background:#dfe6e9;
   cursor:pointer;
+  font-weight:600;
+  transition:0.2s;
 }
 
 .filters button.active{
@@ -41,65 +73,117 @@ h1{
   color:white;
 }
 
+/* GRID */
 .grid{
+  max-width:1200px;
+  margin:40px auto;
+  padding:0 20px;
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
-  gap:20px;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:25px;
 }
 
+/* CARD */
 .card{
-  background:white;
-  border-radius:15px;
+  background:rgba(255,255,255,0.75);
+  backdrop-filter:blur(10px);
+  border-radius:18px;
   overflow:hidden;
-  box-shadow:0 10px 20px rgba(0,0,0,0.1);
+  box-shadow:0 10px 25px rgba(0,0,0,0.12);
+  transition:0.25s;
 }
 
+.card:hover{
+  transform:translateY(-5px);
+}
+
+/* IMAGE */
 .card img{
   width:100%;
-  display:block;
+  height:160px;
+  object-fit:cover;
 }
 
+/* DOWNLOAD */
 .download{
-  padding:10px;
+  padding:12px;
   text-align:center;
-  cursor:pointer;
+  font-weight:700;
   color:#0a3d62;
-  font-weight:bold;
+  cursor:pointer;
+}
+
+/* FOOTER */
+.footer{
+  margin-top:auto;
+  background:white;
+  padding:15px;
+  text-align:center;
+}
+
+.footer img{
+  height:40px;
+  margin:0 10px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-  <h1>Infantil Mayor</h1>
+<a href="campeonato2026.html" class="back">← Back</a>
+
+<div class="header">
+  <div class="title">Infantil Mayor</div>
 
   <div class="filters">
-    <button class="active" onclick="filterTeam('ALL')">ALL</button>
-    <button onclick="filterTeam('AGS')">AGS</button>
-    <button onclick="filterTeam('NL')">NL</button>
-    <button onclick="filterTeam('QROO')">QROO</button>
-    <button onclick="filterTeam('EDOMEX')">EDOMEX</button>
-    <button onclick="filterTeam('COAH')">COAH</button>
-    <button onclick="filterTeam('GRO')">GRO</button>
+    <button class="active" onclick="filterTeam(event,'ALL')">ALL</button>
+    <button onclick="filterTeam(event,'AGS')">AGS</button>
+    <button onclick="filterTeam(event,'NL')">NL</button>
+    <button onclick="filterTeam(event,'QROO')">QROO</button>
+    <button onclick="filterTeam(event,'EDOMEX')">EDOMEX</button>
+    <button onclick="filterTeam(event,'COAH')">COAH</button>
+    <button onclick="filterTeam(event,'GRO')">GRO</button>
   </div>
+</div>
 
-  <div class="grid" id="gallery"></div>
+<div class="grid" id="gallery"></div>
+
+<div class="footer">
+  <img src="logo1.png">
+  <img src="logo2.png">
+  <img src="logo3.png">
 </div>
 
 <script>
 const cloudName = "du4pmuch7";
 
-// ✅ SAFE base path (your real structure)
 const BASE_PATH = "WP%202026/Campeonato%20Nacional%202026/inf-mayor-cdmx/gallery/";
 
-// ✅ YOUR REAL FILES (extend later safely)
+/* 🔥 SAFE DATA STRUCTURE */
 const images = [
-  {id:"CN2026_InfMyr_CDMX_AGS_0320_025",team:"AGS"},
-  {id:"CN2026_InfMyr_CDMX_AGS_0320_024",team:"AGS"},
-  {id:"CN2026_InfMyr_CDMX_AGS_0320_023",team:"AGS"},
-  {id:"CN2026_InfMyr_CDMX_AGS_0320_022",team:"AGS"},
-  {id:"CN2026_InfMyr_CDMX_AGS_0320_021",team:"AGS"},
+
+/* AGS */
+{id:"CN2026_InfMyr_CDMX_AGS_0320_025",team:"AGS"},
+{id:"CN2026_InfMyr_CDMX_AGS_0320_024",team:"AGS"},
+{id:"CN2026_InfMyr_CDMX_AGS_0320_023",team:"AGS"},
+{id:"CN2026_InfMyr_CDMX_AGS_0320_022",team:"AGS"},
+{id:"CN2026_InfMyr_CDMX_AGS_0320_021",team:"AGS"},
+
+/* NL */
+{id:"CN2026_InfMyr_CDMX_NL_0320_001",team:"NL"},
+
+/* QROO */
+{id:"CN2026_InfMyr_CDMX_ROO_0322_060",team:"QROO"},
+
+/* EDOMEX */
+{id:"CN2026_InfMyr_CDMX_EDOMEX_0320_001",team:"EDOMEX"},
+
+/* COAH */
+{id:"CN2026_InfMyr_CDMX_COAH_0320_001",team:"COAH"},
+
+/* GRO */
+{id:"CN2026_InfMyr_CDMX_GRO_0320_001",team:"GRO"}
+
 ];
 
 const gallery = document.getElementById("gallery");
@@ -112,13 +196,13 @@ function render(team){
     : images.filter(i=>i.team===team);
 
   list.forEach(img=>{
-    const url = `https://res.cloudinary.com/${cloudName}/image/upload/${BASE_PATH}${img.id}.jpg`;
+    const url=`https://res.cloudinary.com/${cloudName}/image/upload/${BASE_PATH}${img.id}.jpg`;
 
-    const div = document.createElement("div");
+    const div=document.createElement("div");
     div.className="card";
 
-    div.innerHTML = `
-      <img src="${url}" loading="lazy">
+    div.innerHTML=`
+      <img src="${url}">
       <div class="download" onclick="window.open('${url}')">Download</div>
     `;
 
@@ -126,9 +210,9 @@ function render(team){
   });
 }
 
-function filterTeam(team){
+function filterTeam(e,team){
   document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
-  event.target.classList.add("active");
+  e.target.classList.add("active");
   render(team);
 }
 
