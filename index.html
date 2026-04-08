@@ -7,118 +7,192 @@
 
 <title>AOFM Waterpolo</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
+
 <style>
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: url('background.png') no-repeat center center fixed;
-  background-size: cover;
-  color: #1f3b57;
+/* BASE */
+html, body {
+  margin:0;
+  height:100%;
 }
 
-/* OVERLAY */
-.overlay {
-  background: rgba(255,255,255,0.55);
-  min-height: 100vh;
-  padding: 40px 20px;
+body {
+  font-family:'Montserrat',sans-serif;
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+
+  background:
+    linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.15)),
+    url('background.png');
+
+  background-size:cover;
+  background-position:center top;
+  background-attachment:fixed;
+}
+
+/* FLEX */
+.page-content {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
 }
 
 /* HEADER */
 .header {
-  text-align: center;
-  margin-top: 40px;
+  text-align:center;
+  padding:60px 20px 40px;
 }
 
-.header-box {
-  display: inline-block;
-  background: rgba(255,255,255,0.9);
-  padding: 25px 60px;
-  border-radius: 25px;
+/* TITLE */
+.title {
+  position:relative;
+  display:inline-block;
+
+  font-size:52px;
+  font-weight:800;
+  color:#0a4f73;
+
+  padding:18px 50px;
+
+  background:rgba(255,255,255,0.35);
+  backdrop-filter:blur(18px);
+
+  border-radius:25px;
+  border:1px solid rgba(255,255,255,0.6);
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.1),
+    inset 0 1px 0 rgba(255,255,255,0.6);
+
+  overflow:hidden;
 }
 
-.header h1 {
-  margin: 0;
-  font-size: 48px;
-  letter-spacing: 2px;
+.title::before {
+  content:"";
+  position:absolute;
+  width:250px;
+  height:250px;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+
+  background:radial-gradient(circle, rgba(0,150,255,0.15), transparent 70%);
+  animation:ripple 5s infinite;
 }
 
+@keyframes ripple {
+  0% { transform:translate(-50%,-50%) scale(0.8); opacity:0.4; }
+  100% { transform:translate(-50%,-50%) scale(1.6); opacity:0; }
+}
+
+/* SUBTITLE */
 .subtitle {
-  margin-top: 15px;
-  font-size: 20px;
+  margin-top:25px;
+  font-size:26px;
+  font-weight:700;
+  color:#0a4f73;
 }
 
-/* SECTION */
+/* SECTION (CENTERED FIX) */
 .section {
-  margin-top: 80px;
+  width:100%;
+  max-width:1100px;
+  padding:40px 20px;
 }
 
+/* TITLE ALIGN FIX */
 .section h2 {
-  margin-left: 10%;
-  margin-bottom: 20px;
+  font-size:26px;
+  color:#0a4f73;
+  margin-bottom:25px;
+  text-align:left;
 }
 
 /* GRID */
 .grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 30px;
-  max-width: 1200px;
-  margin: auto;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:40px;
+}
+
+/* CARD WRAPPER */
+.card-wrapper {
+  text-align:left;
 }
 
 /* CARD */
 .card {
-  background: white;
-  border-radius: 18px;
-  overflow: hidden;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-  transition: 0.3s;
+  height:220px;
+  border-radius:18px;
+  background-size:cover;
+  background-position:center;
+  position:relative;
+  overflow:hidden;
+  cursor:pointer;
+  transition:0.3s;
+  box-shadow:0 10px 25px rgba(0,0,0,0.15);
 }
 
 .card:hover {
-  transform: translateY(-5px);
+  transform:translateY(-8px) scale(1.04);
 }
 
-.card img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
+/* OVERLAY */
+.card::after {
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to top, rgba(0,0,0,0.3), transparent);
 }
 
-.card-content {
-  padding: 15px;
+/* TAG */
+.tag {
+  position:absolute;
+  top:10px;
+  left:10px;
+  background:#003f5c;
+  color:white;
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:12px;
+  z-index:2;
 }
 
-.card-content h3 {
-  margin: 0;
+/* TEXT */
+.card-info h3 {
+  margin:10px 0 0;
+  color:#0a4f73;
+  font-weight:700;
 }
 
-.card-content p {
-  margin: 5px 0 0;
-  color: gray;
+.card-info p {
+  margin:4px 0 0;
+  color:#3c6a80;
 }
 
-/* BADGE */
-.badge {
-  position: absolute;
-  background: #1f3b57;
-  color: white;
-  padding: 5px 10px;
-  border-radius: 12px;
-  margin: 10px;
-  font-size: 12px;
+/* LOGOS */
+.logos-section {
+  background:white;
+  padding:20px 0;
+  text-align:center;
+  margin-top:60px;
+}
+
+.logos img {
+  height:50px;
+  margin:0 25px;
 }
 
 /* FOOTER */
-.footer {
-  margin-top: 80px;
-  text-align: center;
-}
-
-.footer img {
-  height: 40px;
-  margin: 10px;
+footer {
+  text-align:center;
+  font-size:12px;
+  padding:10px;
+  color:#5c7f91;
 }
 
 </style>
@@ -127,69 +201,48 @@ body {
 
 <body>
 
-<div class="overlay">
+<div class="page-content">
 
-<!-- HEADER -->
-
-<div class="header">
-
-  <div class="header-box">
-    <h1>AOFM WATERPOLO</h1>
+  <div class="header">
+    <div class="title">AOFM WATERPOLO</div>
+    <div class="subtitle">Official Photo Gallery Platform</div>
   </div>
 
-  <div class="subtitle">Official Photo Gallery Platform</div>
-
-</div>
-
-<!-- TOURNAMENTS -->
-
-<div class="section">
-
-  <h2>Tournaments</h2>
-
-  <div class="grid">
+  <div class="section">
 
 ```
-<!-- MAIN EVENT -->
-<a href="campeonato2026.html" style="text-decoration:none; color:inherit;">
-  <div class="card">
-    <div class="badge">2026</div>
-    <img src="portada-campeonato.jpg">
-    <div class="card-content">
+<h2>Tournaments</h2>
+
+<div class="grid">
+
+  <!-- MAIN -->
+  <div class="card-wrapper" onclick="window.location.href='campeonato2026.html'">
+    <div class="card" style="background-image:url('portada-campeonato.jpg')">
+      <div class="tag">2026</div>
+    </div>
+    <div class="card-info">
       <h3>Campeonato Nacional</h3>
-      <p>CDMX · 4 Categories</p>
+      <p>CDMX • 4 Categories</p>
     </div>
   </div>
-</a>
 
-<!-- EVENT 1 -->
-<div class="card">
-  <div class="badge">Upcoming</div>
-  <img src="waterpolo.jpg">
-  <div class="card-content">
-    <h3>Event 1</h3>
-    <p>Next week</p>
-  </div>
-</div>
+  <!-- EVENTS -->
+  <script>
+    const container = document.currentScript.parentElement;
+    for(let i=1;i<=3;i++){
+      container.innerHTML += `
+      <div class="card-wrapper">
+        <div class="card" style="background-image:url('waterpolo.jpg')">
+          <div class="tag">Upcoming</div>
+        </div>
+        <div class="card-info">
+          <h3>Event ${i}</h3>
+          <p>Next week</p>
+        </div>
+      </div>`;
+    }
+  </script>
 
-<!-- EVENT 2 -->
-<div class="card">
-  <div class="badge">Upcoming</div>
-  <img src="waterpolo.jpg">
-  <div class="card-content">
-    <h3>Event 2</h3>
-    <p>Next week</p>
-  </div>
-</div>
-
-<!-- EVENT 3 -->
-<div class="card">
-  <div class="badge">Upcoming</div>
-  <img src="waterpolo.jpg">
-  <div class="card-content">
-    <h3>Event 3</h3>
-    <p>Next week</p>
-  </div>
 </div>
 ```
 
@@ -197,15 +250,17 @@ body {
 
 </div>
 
-<!-- FOOTER -->
-
-<div class="footer">
-  <img src="logo-aofm.png">
-  <img src="logo-club.png">
-  <img src="logo-olimpicos.png">
+<div class="logos-section">
+  <div class="logos">
+    <img src="logo-olimpicos.png">
+    <img src="logo-aofm.png">
+    <img src="logo-club.png">
+  </div>
 </div>
 
-</div>
+<footer>
+  © 2026 AOFM Waterpolo
+</footer>
 
 </body>
 </html>
