@@ -5,54 +5,66 @@
 <title>Infantil Mayor</title>
 
 <style>
+
+/* ===== GLOBAL ===== */
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: radial-gradient(circle at 20% 30%, #cfe3f5, #7fa6c9);
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: url('https://www.transparenttextures.com/patterns/cubes.png'),
+              radial-gradient(circle at 20% 30%, #cfe3f5, #7fa6c9);
+  background-attachment: fixed;
   min-height: 100vh;
 }
 
-/* BACK */
+/* ===== BACK BUTTON ===== */
 .back {
-  position: absolute;
+  position: fixed;
   top: 20px;
   left: 20px;
   text-decoration: none;
-  font-weight: bold;
+  font-weight: 600;
   color: #1b3c59;
+  z-index: 10;
 }
 
-/* TITLE */
+/* ===== TITLE ===== */
 .title-container {
   text-align: center;
-  margin-top: 80px;
+  margin-top: 90px;
 }
 
 .title {
   display: inline-block;
-  padding: 16px 40px;
-  font-size: 28px;
-  font-weight: bold;
-  color: #1b3c59;
-  background: rgba(255,255,255,0.4);
-  border-radius: 30px;
-  backdrop-filter: blur(6px);
+  padding: 18px 50px;
+  font-size: 34px;
+  font-weight: 800;
+  color: #1b4f6b;
+  background: rgba(255,255,255,0.35);
+  border-radius: 40px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  animation: fadeIn 1s ease;
 }
 
-/* FILTERS */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+
+/* ===== FILTERS ===== */
 .filters {
   text-align: center;
   margin: 25px 0;
 }
 
 .filters button {
-  margin: 5px;
-  padding: 10px 18px;
-  border-radius: 20px;
+  margin: 6px;
+  padding: 10px 20px;
+  border-radius: 25px;
   border: none;
   background: rgba(255,255,255,0.6);
   cursor: pointer;
-  font-weight: bold;
+  font-weight: 600;
   transition: 0.2s;
 }
 
@@ -61,28 +73,51 @@ body {
   color: white;
 }
 
-/* GALLERY */
+/* ===== GALLERY ===== */
 .gallery {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 20px;
-  padding: 40px;
+  gap: 22px;
+  padding: 40px 60px 120px;
 }
 
-/* IMAGE STYLE */
 .gallery img {
   width: 100%;
   height: 180px;
   object-fit: cover;
-  border-radius: 18px;
+  border-radius: 20px;
   cursor: pointer;
   transition: 0.3s;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
 .gallery img:hover {
   transform: scale(1.05);
 }
+
+/* ===== FOOTER LOGOS ===== */
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  padding: 10px;
+}
+
+.footer img {
+  height: 40px;
+  opacity: 0.8;
+  transition: 0.2s;
+}
+
+.footer img:hover {
+  opacity: 1;
+}
+
 </style>
 </head>
 
@@ -95,15 +130,22 @@ body {
 </div>
 
 <div class="filters">
-  <button onclick="setTeam(this,'AGS')" class="active">AGS</button>
-  <button onclick="setTeam(this,'NL')">NL</button>
-  <button onclick="setTeam(this,'QROO')">QROO</button>
-  <button onclick="setTeam(this,'EDOMEX')">EDOMEX</button>
-  <button onclick="setTeam(this,'COAH')">COAH</button>
-  <button onclick="setTeam(this,'GRO')">GRO</button>
+  <button onclick="setTeam(this,'AGS')" class="active">vs AGS</button>
+  <button onclick="setTeam(this,'NL')">vs NL</button>
+  <button onclick="setTeam(this,'QROO')">vs QROO</button>
+  <button onclick="setTeam(this,'EDOMEX')">vs EDOMEX</button>
+  <button onclick="setTeam(this,'COAH')">vs COAH</button>
+  <button onclick="setTeam(this,'GRO')">vs GRO</button>
 </div>
 
 <div id="gallery" class="gallery"></div>
+
+<!-- FOOTER LOGOS -->
+<div class="footer">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Logo_placeholder.svg/512px-Logo_placeholder.svg.png">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Logo_placeholder.svg/512px-Logo_placeholder.svg.png">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Logo_placeholder.svg/512px-Logo_placeholder.svg.png">
+</div>
 
 <script>
 const cloudName = "du4pmuch7";
@@ -161,7 +203,6 @@ function setTeam(button, team) {
   loadTeam(team);
 }
 
-/* INITIAL LOAD */
 loadTeam("AGS");
 </script>
 
