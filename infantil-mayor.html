@@ -39,7 +39,7 @@ body {
   padding:80px 20px 40px;
 }
 
-/* ===== TITLE (MATCH INDEX) ===== */
+/* ===== TITLE ===== */
 .title {
   position:relative;
   display:inline-block;
@@ -57,7 +57,6 @@ body {
   overflow:hidden;
 }
 
-/* ANIMATED WAVE */
 .title::before {
   content:"";
   position:absolute;
@@ -78,7 +77,7 @@ body {
   100% { transform:translateX(100%); }
 }
 
-/* ===== FILTERS (GLASS STYLE) ===== */
+/* ===== FILTERS ===== */
 .filters {
   text-align:center;
   margin:30px 0;
@@ -100,13 +99,11 @@ body {
   transition:0.3s;
 }
 
-/* hover glow */
 .filters button:hover {
   background:rgba(255,255,255,0.4);
   box-shadow:0 0 12px rgba(0,168,204,0.3);
 }
 
-/* active */
 .filters button.active {
   background:#0a4f73;
   color:white;
@@ -138,12 +135,53 @@ body {
   transform:scale(1.05);
 }
 
-/* ===== LOGOS (MATCH INDEX) ===== */
+/* ===== LIGHTBOX ===== */
+.lightbox {
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.85);
+  backdrop-filter:blur(10px);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  opacity:0;
+  pointer-events:none;
+  transition:0.3s;
+  z-index:999;
+}
+
+.lightbox.active {
+  opacity:1;
+  pointer-events:auto;
+}
+
+.lightbox img {
+  max-width:90%;
+  max-height:85%;
+  border-radius:10px;
+  box-shadow:0 0 30px rgba(0,0,0,0.8);
+}
+
+/* buttons */
+.lightbox-btn {
+  position:absolute;
+  color:white;
+  font-size:30px;
+  cursor:pointer;
+  user-select:none;
+}
+
+.close { top:20px; right:30px; }
+.prev { left:30px; }
+.next { right:30px; }
+
+/* ===== LOGOS ===== */
 .logos-section {
   background:white;
   text-align:center;
   padding:20px;
-  margin-top:40px;
 }
 
 .logos img {
@@ -181,6 +219,14 @@ footer {
 
 <div id="gallery" class="gallery"></div>
 
+<!-- LIGHTBOX -->
+<div id="lightbox" class="lightbox">
+  <span class="lightbox-btn close" onclick="closeLightbox()">✕</span>
+  <span class="lightbox-btn prev" onclick="prevImage()">‹</span>
+  <img id="lightbox-img">
+  <span class="lightbox-btn next" onclick="nextImage()">›</span>
+</div>
+
 <!-- LOGOS -->
 <div class="logos-section">
   <div class="logos">
@@ -197,6 +243,8 @@ footer {
 <script>
 
 const cloudName = "du4pmuch7";
+let currentImages = [];
+let currentIndex = 0;
 
 const teamConfig = {
   AGS: { prefix: "CN2026_InfMyr_CDMX_AGS_0320_", count: 50 },
@@ -227,25 +275,57 @@ function loadTeam(team) {
   const container = document.getElementById("gallery");
   container.innerHTML = "";
 
-  const images = generateImages(team);
+  currentImages = generateImages(team);
 
-  images.forEach(img => {
+  currentImages.forEach((img, index) => {
     const image = document.createElement("img");
     image.src = img.thumb;
     image.loading = "lazy";
 
-    image.onclick = () => window.open(img.full, "_blank");
+    image.onclick = () => openLightbox(index);
 
     container.appendChild(image);
   });
 }
 
+/* LIGHTBOX */
+function openLightbox(index) {
+  currentIndex = index;
+  document.getElementById("lightbox-img").src = currentImages[index].full;
+  document.getElementById("lightbox").classList.add("active");
+}
+
+function closeLightbox() {
+  document.getElementById("lightbox").classList.remove("active");
+}
+
+function nextImage() {
+  currentIndex = (currentIndex + 1) % currentImages.length;
+  openLightbox(currentIndex);
+}
+
+function prevImage() {
+  currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+  openLightbox(currentIndex);
+}
+
+/* KEYBOARD */
+document.addEventListener("keydown", (e) => {
+  if (!document.getElementById("lightbox").classList.contains("active")) return;
+
+  if (e.key === "ArrowRight") nextImage();
+  if (e.key === "ArrowLeft") prevImage();
+  if (e.key === "Escape") closeLightbox();
+});
+
+/* FILTER */
 function setTeam(button, team) {
   document.querySelectorAll(".filters button").forEach(b => b.classList.remove("active"));
   button.classList.add("active");
   loadTeam(team);
 }
 
+/* INIT */
 loadTeam("AGS");
 
 </script>
