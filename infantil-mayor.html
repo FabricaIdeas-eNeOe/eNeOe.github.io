@@ -12,7 +12,7 @@ body {
   min-height: 100vh;
 }
 
-/* BACK BUTTON */
+/* BACK */
 .back {
   position: absolute;
   top: 20px;
@@ -30,39 +30,19 @@ body {
 
 .title {
   display: inline-block;
-  padding: 20px 40px;
+  padding: 16px 40px;
   font-size: 28px;
   font-weight: bold;
   color: #1b3c59;
-  position: relative;
-  z-index: 2;
+  background: rgba(255,255,255,0.4);
+  border-radius: 30px;
+  backdrop-filter: blur(6px);
 }
 
-.title::before {
-  content: "";
-  position: absolute;
-  width: 0;
-  height: 0;
-  background: rgba(255,255,255,0.5);
-  border-radius: 50%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  animation: expandCircle 1.2s ease forwards;
-  z-index: -1;
-}
-
-@keyframes expandCircle {
-  to {
-    width: 300px;
-    height: 300px;
-  }
-}
-
-/* FILTER BUTTONS */
+/* FILTERS */
 .filters {
   text-align: center;
-  margin: 20px 0;
+  margin: 25px 0;
 }
 
 .filters button {
@@ -70,9 +50,10 @@ body {
   padding: 10px 18px;
   border-radius: 20px;
   border: none;
-  background: #d9d9d9;
+  background: rgba(255,255,255,0.6);
   cursor: pointer;
   font-weight: bold;
+  transition: 0.2s;
 }
 
 .filters button.active {
@@ -80,7 +61,7 @@ body {
   color: white;
 }
 
-/* GALLERY GRID */
+/* GALLERY */
 .gallery {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -88,32 +69,19 @@ body {
   padding: 40px;
 }
 
-/* CARD */
-.card {
-  background: white;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-  text-align: center;
-  transition: transform 0.2s;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-}
-
-.card img {
+/* IMAGE STYLE */
+.gallery img {
   width: 100%;
-  height: 150px;
+  height: 180px;
   object-fit: cover;
+  border-radius: 18px;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }
 
-.card a {
-  display: block;
-  padding: 10px;
-  text-decoration: none;
-  font-weight: bold;
-  color: #1b3c59;
+.gallery img:hover {
+  transform: scale(1.05);
 }
 </style>
 </head>
@@ -159,7 +127,7 @@ function generateImages(team) {
     let number = String(i).padStart(3, "0");
 
     images.push({
-      src: `https://res.cloudinary.com/${cloudName}/image/upload/w_500/f_auto/q_auto/WP 2026/Campeonato Nacional 2026/inf-mayor-cdmx/gallery/${config.prefix}${number}.jpg`,
+      thumb: `https://res.cloudinary.com/${cloudName}/image/upload/w_400/f_auto/q_auto/WP 2026/Campeonato Nacional 2026/inf-mayor-cdmx/gallery/${config.prefix}${number}.jpg`,
       full: `https://res.cloudinary.com/${cloudName}/image/upload/f_auto/q_auto/WP 2026/Campeonato Nacional 2026/inf-mayor-cdmx/downloads/${config.prefix}${number}.jpg`
     });
   }
@@ -174,15 +142,16 @@ function loadTeam(team) {
   const images = generateImages(team);
 
   images.forEach(img => {
-    const card = document.createElement("div");
-    card.className = "card";
+    const image = document.createElement("img");
 
-    card.innerHTML = `
-      <img src="${img.src}" loading="lazy">
-      <a href="${img.full}" target="_blank">Full Image</a>
-    `;
+    image.src = img.thumb;
+    image.loading = "lazy";
 
-    container.appendChild(card);
+    image.onclick = () => {
+      window.open(img.full, "_blank");
+    };
+
+    container.appendChild(image);
   });
 }
 
@@ -192,7 +161,7 @@ function setTeam(button, team) {
   loadTeam(team);
 }
 
-/* DEFAULT LOAD */
+/* INITIAL LOAD */
 loadTeam("AGS");
 </script>
 
