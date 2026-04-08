@@ -48,7 +48,7 @@ body {
 
   padding:20px 60px;
 
-  background:rgba(255,255,255,0.2);
+  background:rgba(255,255,255,0.25);
   backdrop-filter:blur(25px);
 
   border-radius:30px;
@@ -61,7 +61,7 @@ body {
   overflow:hidden;
 }
 
-/* WATER RIPPLE */
+/* WATER RIPPLE EFFECT */
 .title::before {
   content:"";
   position:absolute;
@@ -96,27 +96,31 @@ body {
   max-width:1200px;
   margin:auto;
   padding:40px 20px;
+  text-align:center;
 }
 
 .section h2 {
   color:#0a4f73;
-  margin-bottom:25px;
+  margin-bottom:30px;
 }
 
 /* GRID */
 .grid {
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(340px,1fr));
   gap:40px;
+  justify-items:center;
 }
 
 /* CARD */
 .card-wrapper {
+  width:100%;
+  max-width:360px;
   cursor:pointer;
 }
 
 .card {
-  height:240px;
+  height:250px;
   border-radius:20px;
   background-size:cover;
   background-position:center;
@@ -134,7 +138,7 @@ body {
   content:"";
   position:absolute;
   inset:0;
-  background:linear-gradient(to top, rgba(0,0,0,0.4), transparent);
+  background:linear-gradient(to top, rgba(0,0,0,0.5), transparent);
 }
 
 /* TAG */
@@ -150,14 +154,37 @@ body {
   z-index:2;
 }
 
+/* PLAYER ICON */
+.player-icon {
+  position:absolute;
+  bottom:15px;
+  right:15px;
+  width:40px;
+  height:40px;
+  z-index:3;
+}
+
+.player-icon svg {
+  width:100%;
+  height:100%;
+  fill:#00a8cc;
+  stroke:#00a8cc;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+}
+
 /* TEXT */
+.card-info {
+  text-align:left;
+  margin-top:10px;
+}
+
 .card-info h3 {
-  margin:10px 0 0;
+  margin:5px 0;
   color:#0a4f73;
 }
 
 .card-info p {
-  margin:4px 0 0;
+  margin:0;
   color:#3c6a80;
   font-size:14px;
   line-height:1.4;
@@ -190,10 +217,14 @@ footer {
 
 <body>
 
+<!-- HEADER -->
+
 <div class="header">
   <div class="title">AOFM WATERPOLO</div>
   <div class="subtitle">Official Photo Gallery Platform</div>
 </div>
+
+<!-- SECTION -->
 
 <div class="section">
 
@@ -225,21 +256,38 @@ footer {
   </div>
 </div>
 
-<!-- CARD 3 -->
+<!-- CARD 3 WORLD AQUATICS -->
 
 <div class="card-wrapper">
-  <div class="card" style="background-image:url('waterpolo.jpg')">
-    <div class="tag">2026</div>
+
+  <div class="card" style="background-image:url('worldaquatics-u16.jpg')">
+
+```
+<div class="tag">2026</div>
+
+<div class="player-icon">
+  <svg viewBox="0 0 100 100">
+    <circle cx="50" cy="30" r="10"/>
+    <path d="M30 70 Q50 40 70 70" stroke-width="8" fill="none"/>
+    <circle cx="70" cy="50" r="6"/>
+  </svg>
+</div>
+```
+
   </div>
+
   <div class="card-info">
-    <h3>Mundial Waterpolo - World Aquatics</h3>
-    <p>August 2026 • Croatia<br>Selección Mexicana Sub16</p>
+    <h3>U16 Waterpolo Championships</h3>
+    <p>2026 • Upcoming<br>August 2026 • Zagreb, Croatia</p>
   </div>
-</div>
 
 </div>
 
 </div>
+
+</div>
+
+<!-- LOGOS -->
 
 <div class="logos-section">
   <div class="logos">
@@ -248,6 +296,8 @@ footer {
     <img src="logo-club.png">
   </div>
 </div>
+
+<!-- FOOTER -->
 
 <footer>
 © 2026 AOFM Waterpolo
