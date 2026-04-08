@@ -11,19 +11,18 @@
 
 <style>
 
-/* COLORS */
-:root {
-  --primary:#0a4f73;
-  --secondary:#1f7ea1;
-  --accent:#00a8cc;
-  --light:#e6f4f9;
-  --dark:#003f5c;
+/* BASE LAYOUT (STICKY FOOTER) */
+html, body {
+  height:100%;
+  margin:0;
 }
 
-/* BASE */
 body {
-  margin:0;
+  display:flex;
+  flex-direction:column;
+
   font-family:'Montserrat',sans-serif;
+
   background:
     linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.15)),
     url('background.png');
@@ -32,13 +31,17 @@ body {
   background-attachment:fixed;
 }
 
+.main {
+  flex:1;
+}
+
 /* HEADER */
 .header {
   text-align:center;
   padding:60px 20px 40px;
 }
 
-/* GLASS RIPPLE TITLE */
+/* TITLE WITH STRONG RIPPLE */
 .title {
   position:relative;
   display:inline-block;
@@ -54,33 +57,29 @@ body {
   border-radius:30px;
   border:1px solid rgba(255,255,255,0.6);
 
-  box-shadow:
-    0 10px 30px rgba(0,0,0,0.15),
-    inset 0 2px 6px rgba(255,255,255,0.4);
-
   overflow:hidden;
 }
 
-/* WATER RIPPLE EFFECT */
+/* STRONG RIPPLE EFFECT */
 .title::before {
   content:"";
   position:absolute;
-  width:200%;
-  height:200%;
-  top:-50%;
-  left:-50%;
+  inset:0;
 
   background:
-    radial-gradient(circle, rgba(0,168,204,0.25) 10%, transparent 60%),
-    radial-gradient(circle, rgba(255,255,255,0.3) 10%, transparent 60%);
+    linear-gradient(
+      120deg,
+      transparent 30%,
+      rgba(255,255,255,0.6) 50%,
+      transparent 70%
+    );
 
-  animation:rippleMove 8s infinite linear;
+  animation:wave 3s infinite linear;
 }
 
-@keyframes rippleMove {
-  0% { transform:translate(0,0) scale(1); }
-  50% { transform:translate(5%,5%) scale(1.1); }
-  100% { transform:translate(0,0) scale(1); }
+@keyframes wave {
+  0% { transform:translateX(-100%); }
+  100% { transform:translateX(100%); }
 }
 
 /* SUBTITLE */
@@ -169,7 +168,6 @@ body {
   height:100%;
   fill:#00a8cc;
   stroke:#00a8cc;
-  filter:drop-shadow(0 2px 4px rgba(0,0,0,0.4));
 }
 
 /* TEXT */
@@ -187,15 +185,13 @@ body {
   margin:0;
   color:#3c6a80;
   font-size:14px;
-  line-height:1.4;
 }
 
-/* LOGOS */
+/* LOGO BAR (FIXED BOTTOM STYLE) */
 .logos-section {
   background:white;
   text-align:center;
   padding:20px;
-  margin-top:60px;
 }
 
 .logos img {
@@ -216,6 +212,8 @@ footer {
 </head>
 
 <body>
+
+<div class="main">
 
 <!-- HEADER -->
 
@@ -256,14 +254,13 @@ footer {
   </div>
 </div>
 
-<!-- CARD 3 WORLD AQUATICS -->
+<!-- CARD 3 -->
 
 <div class="card-wrapper">
-
-  <div class="card" style="background-image:url('worldaquatics-u16.jpg')">
+  <div class="card" style="background-image:url('championship_cover.png')">
 
 ```
-<div class="tag">2026</div>
+<div class="tag">Upcoming 2026</div>
 
 <div class="player-icon">
   <svg viewBox="0 0 100 100">
@@ -278,8 +275,9 @@ footer {
 
   <div class="card-info">
     <h3>U16 Waterpolo Championships</h3>
-    <p>2026 • Upcoming<br>August 2026 • Zagreb, Croatia</p>
   </div>
+
+</div>
 
 </div>
 
