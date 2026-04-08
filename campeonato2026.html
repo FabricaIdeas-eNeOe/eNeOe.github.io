@@ -23,9 +23,9 @@ body {
   background-attachment:fixed;
 }
 
-/* HEADER */
+/* BACK */
 .header {
-  padding:30px;
+  padding:25px;
 }
 
 .back {
@@ -34,107 +34,136 @@ body {
   font-weight:600;
 }
 
-/* TITLE */
-.title {
+/* TITLE (GLASS STYLE LIKE HOMEPAGE) */
+.title-container {
   text-align:center;
-  font-size:42px;
-  font-weight:800;
-  color:#0a4f73;
   margin-top:10px;
 }
 
-/* FILTER CONTAINER (NEW GLASS EFFECT) */
-.filters-container {
-  display:flex;
-  justify-content:center;
-  margin-top:20px;
-}
+.title {
+  display:inline-block;
+  font-size:38px;
+  font-weight:800;
+  color:#0a4f73;
 
-.filters {
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
+  padding:16px 50px;
+  border-radius:35px;
 
-  background:rgba(255,255,255,0.3);
+  background:rgba(255,255,255,0.25);
   backdrop-filter:blur(20px);
 
-  padding:12px 20px;
-  border-radius:30px;
-  border:1px solid rgba(255,255,255,0.5);
+  border:1px solid rgba(255,255,255,0.6);
+
+  /* subtle ripple shine */
+  position:relative;
+  overflow:hidden;
 }
 
-/* FILTER BUTTON */
-.filter-btn {
-  padding:8px 16px;
-  border-radius:20px;
-  border:none;
-  background:#e3edf3;
-  cursor:pointer;
+.title::after {
+  content:"";
+  position:absolute;
+  top:0;
+  left:-100%;
+  width:200%;
+  height:100%;
+  background:linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.5),
+    transparent
+  );
+  animation:shine 6s infinite;
+}
+
+@keyframes shine {
+  0% { left:-100%; }
+  50% { left:100%; }
+  100% { left:100%; }
+}
+
+/* SUBTITLE */
+.subtitle {
+  text-align:center;
+  margin-top:10px;
+  color:#0a4f73;
   font-weight:600;
-  transition:0.2s;
 }
 
-.filter-btn:hover {
-  transform:scale(1.05);
-}
-
-.filter-btn.active {
-  background:#0a4f73;
-  color:white;
-}
-
-/* GALLERY */
-.gallery {
+/* GRID */
+.categories {
   max-width:1200px;
-  margin:40px auto;
+  margin:50px auto;
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
-  gap:25px;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:30px;
   padding:20px;
 }
 
 /* CARD */
-.photo {
-  border-radius:18px;
+.card {
+  border-radius:22px;
   overflow:hidden;
   cursor:pointer;
-  transition:0.3s;
+  transition:0.35s;
+
+  background:rgba(255,255,255,0.25);
+  backdrop-filter:blur(15px);
 
   box-shadow:
-    0 10px 25px rgba(0,0,0,0.2),
-    0 0 15px rgba(0,168,204,0.2);
+    0 12px 30px rgba(0,0,0,0.25),
+    0 0 20px rgba(0,168,204,0.2);
 }
 
-.photo img {
+/* IMAGE */
+.card img {
   width:100%;
-  height:100%;
+  height:200px;
   object-fit:cover;
   display:block;
+  transition:0.4s;
+}
+
+/* CONTENT */
+.card-content {
+  padding:18px;
+}
+
+.card-title {
+  font-weight:700;
+  color:#0a4f73;
+  font-size:18px;
+}
+
+.card-sub {
+  font-size:14px;
+  color:#5c7c8a;
 }
 
 /* HOVER */
-.photo:hover {
-  transform:translateY(-6px) scale(1.04);
+.card:hover {
+  transform:translateY(-8px) scale(1.04);
   box-shadow:
-    0 15px 35px rgba(0,0,0,0.3),
+    0 18px 40px rgba(0,0,0,0.35),
     0 0 25px rgba(0,168,204,0.35);
 }
 
-/* LIGHTBOX */
-.lightbox {
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.85);
-  display:none;
-  justify-content:center;
-  align-items:center;
-  z-index:1000;
+.card:hover img {
+  transform:scale(1.1);
 }
 
-.lightbox img {
-  max-width:90%;
-  max-height:90%;
-  border-radius:10px;
+/* FOOTER LOGOS */
+.footer {
+  position:fixed;
+  bottom:0;
+  width:100%;
+  text-align:center;
+  padding:15px;
+  background:rgba(255,255,255,0.9);
+}
+
+.footer img {
+  height:40px;
+  margin:0 15px;
 }
 
 </style>
@@ -143,98 +172,72 @@ body {
 
 <body>
 
-<!-- HEADER -->
+<!-- BACK -->
 
 <div class="header">
   <a href="index.html" class="back">← Back</a>
 </div>
 
-<div class="title">Campeonato Nacional 2026</div>
+<!-- TITLE -->
 
-<!-- FILTERS -->
+<div class="title-container">
+  <div class="title">Campeonato Nacional 2026</div>
+  <div class="subtitle">Select Category</div>
+</div>
 
-<div class="filters-container">
-  <div class="filters">
+<!-- CATEGORIES -->
 
-```
-<button class="filter-btn active" onclick="filterGallery(event,'all')">ALL</button>
-<button class="filter-btn" onclick="filterGallery(event,'AGS')">vs AGS</button>
-<button class="filter-btn" onclick="filterGallery(event,'COAH')">vs Coahuila</button>
-<button class="filter-btn" onclick="filterGallery(event,'EDOMEX')">vs EdoMex</button>
-<button class="filter-btn" onclick="filterGallery(event,'GRO')">vs Guerrero</button>
-<button class="filter-btn" onclick="filterGallery(event,'NL')">vs Nuevo León</button>
-<button class="filter-btn" onclick="filterGallery(event,'QROO')">vs QROO</button>
-```
+<div class="categories">
 
+  <!-- Infantil Menor -->
+
+  <div class="card">
+    <img src="waterpolo.jpg">
+    <div class="card-content">
+      <div class="card-title">Infantil Menor</div>
+      <div class="card-sub">CDMX Teams</div>
+    </div>
   </div>
+
+  <!-- Infantil Mayor -->
+
+  <div class="card" onclick="location.href='infantil-mayor.html'">
+    <img src="CN2026_InfMyr.jpg">
+    <div class="card-content">
+      <div class="card-title">Infantil Mayor</div>
+      <div class="card-sub">Official Matches</div>
+    </div>
+  </div>
+
+  <!-- Juvenil -->
+
+  <div class="card">
+    <img src="waterpolo.jpg">
+    <div class="card-content">
+      <div class="card-title">Juvenil</div>
+      <div class="card-sub">Coming Soon</div>
+    </div>
+  </div>
+
+  <!-- Junior -->
+
+  <div class="card">
+    <img src="waterpolo.jpg">
+    <div class="card-content">
+      <div class="card-title">Junior</div>
+      <div class="card-sub">Coming Soon</div>
+    </div>
+  </div>
+
 </div>
 
-<!-- GALLERY -->
+<!-- FOOTER -->
 
-<div class="gallery" id="gallery">
-
-<!-- EXAMPLES (replace later with Cloudinary images) -->
-
-<div class="photo AGS" onclick="openLightbox(this)">
-  <img src="https://res.cloudinary.com/demo/image/upload/sample.jpg">
+<div class="footer">
+  <img src="logo-aofm.png">
+  <img src="logo-club.png">
+  <img src="logo-olimpicos.png">
 </div>
-
-<div class="photo COAH" onclick="openLightbox(this)">
-  <img src="https://res.cloudinary.com/demo/image/upload/sample.jpg">
-</div>
-
-<div class="photo EDOMEX" onclick="openLightbox(this)">
-  <img src="https://res.cloudinary.com/demo/image/upload/sample.jpg">
-</div>
-
-<div class="photo GRO" onclick="openLightbox(this)">
-  <img src="https://res.cloudinary.com/demo/image/upload/sample.jpg">
-</div>
-
-<div class="photo NL" onclick="openLightbox(this)">
-  <img src="https://res.cloudinary.com/demo/image/upload/sample.jpg">
-</div>
-
-<div class="photo QROO" onclick="openLightbox(this)">
-  <img src="https://res.cloudinary.com/demo/image/upload/sample.jpg">
-</div>
-
-</div>
-
-<!-- LIGHTBOX -->
-
-<div class="lightbox" id="lightbox" onclick="closeLightbox()">
-  <img id="lightbox-img">
-</div>
-
-<script>
-
-function filterGallery(event, category) {
-
-  let photos = document.querySelectorAll('.photo');
-
-  photos.forEach(photo => {
-    if (category === 'all' || photo.classList.contains(category)) {
-      photo.style.display = "block";
-    } else {
-      photo.style.display = "none";
-    }
-  });
-
-  document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-  event.target.classList.add('active');
-}
-
-function openLightbox(el) {
-  document.getElementById("lightbox").style.display = "flex";
-  document.getElementById("lightbox-img").src = el.querySelector("img").src;
-}
-
-function closeLightbox() {
-  document.getElementById("lightbox").style.display = "none";
-}
-
-</script>
 
 </body>
 </html>
