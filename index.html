@@ -11,7 +11,7 @@
 
 <style>
 
-/* BASE LAYOUT (STICKY FOOTER) */
+/* BASE */
 html, body {
   height:100%;
   margin:0;
@@ -20,7 +20,6 @@ html, body {
 body {
   display:flex;
   flex-direction:column;
-
   font-family:'Montserrat',sans-serif;
 
   background:
@@ -41,7 +40,7 @@ body {
   padding:60px 20px 40px;
 }
 
-/* TITLE WITH STRONG RIPPLE */
+/* TITLE */
 .title {
   position:relative;
   display:inline-block;
@@ -56,23 +55,21 @@ body {
 
   border-radius:30px;
   border:1px solid rgba(255,255,255,0.6);
-
   overflow:hidden;
 }
 
-/* STRONG RIPPLE EFFECT */
+/* RIPPLE EFFECT */
 .title::before {
   content:"";
   position:absolute;
   inset:0;
 
-  background:
-    linear-gradient(
-      120deg,
-      transparent 30%,
-      rgba(255,255,255,0.6) 50%,
-      transparent 70%
-    );
+  background:linear-gradient(
+    120deg,
+    transparent 30%,
+    rgba(255,255,255,0.6) 50%,
+    transparent 70%
+  );
 
   animation:wave 3s infinite linear;
 }
@@ -185,9 +182,10 @@ body {
   margin:0;
   color:#3c6a80;
   font-size:14px;
+  line-height:1.4;
 }
 
-/* LOGO BAR (FIXED BOTTOM STYLE) */
+/* LOGOS */
 .logos-section {
   background:white;
   text-align:center;
@@ -275,6 +273,7 @@ footer {
 
   <div class="card-info">
     <h3>U16 Waterpolo Championships</h3>
+    <p>Selección Mexicana Sub16<br>Croatia, 03–09 August</p>
   </div>
 
 </div>
