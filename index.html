@@ -11,6 +11,15 @@
 
 <style>
 
+/* COLORS */
+:root {
+  --primary:#0a4f73;
+  --secondary:#1f7ea1;
+  --accent:#00a8cc;
+  --light:#e6f4f9;
+  --dark:#003f5c;
+}
+
 /* BASE */
 html, body {
   margin:0;
@@ -32,7 +41,7 @@ body {
   background-attachment:fixed;
 }
 
-/* FLEX */
+/* LAYOUT */
 .page-content {
   flex:1;
   display:flex;
@@ -46,47 +55,44 @@ body {
   padding:60px 20px 40px;
 }
 
-/* TITLE */
+/* GLASS TITLE */
 .title {
   position:relative;
   display:inline-block;
 
   font-size:52px;
   font-weight:800;
-  color:#0a4f73;
+  color:var(--primary);
 
-  padding:18px 50px;
+  padding:20px 60px;
 
-  background:rgba(255,255,255,0.35);
-  backdrop-filter:blur(18px);
+  background:rgba(255,255,255,0.25);
+  backdrop-filter:blur(25px);
 
-  border-radius:25px;
+  border-radius:30px;
   border:1px solid rgba(255,255,255,0.6);
 
   box-shadow:
-    0 10px 30px rgba(0,0,0,0.1),
+    0 10px 30px rgba(0,0,0,0.15),
     inset 0 1px 0 rgba(255,255,255,0.6);
 
   overflow:hidden;
 }
 
+/* WATER RIPPLE EFFECT */
 .title::before {
   content:"";
   position:absolute;
-  width:250px;
-  height:250px;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  border-radius:50%;
-
-  background:radial-gradient(circle, rgba(0,150,255,0.15), transparent 70%);
-  animation:ripple 5s infinite;
+  inset:-50%;
+  background:
+    radial-gradient(circle at center, rgba(0,168,204,0.25), transparent 60%);
+  animation:waterMove 6s linear infinite;
 }
 
-@keyframes ripple {
-  0% { transform:translate(-50%,-50%) scale(0.8); opacity:0.4; }
-  100% { transform:translate(-50%,-50%) scale(1.6); opacity:0; }
+@keyframes waterMove {
+  0% { transform:translateX(-10%) translateY(-10%) scale(1); }
+  50% { transform:translateX(10%) translateY(10%) scale(1.2); }
+  100% { transform:translateX(-10%) translateY(-10%) scale(1); }
 }
 
 /* SUBTITLE */
@@ -94,22 +100,20 @@ body {
   margin-top:25px;
   font-size:26px;
   font-weight:700;
-  color:#0a4f73;
+  color:var(--primary);
 }
 
-/* SECTION (CENTERED FIX) */
+/* SECTION */
 .section {
   width:100%;
   max-width:1100px;
   padding:40px 20px;
 }
 
-/* TITLE ALIGN FIX */
 .section h2 {
   font-size:26px;
-  color:#0a4f73;
+  color:var(--primary);
   margin-bottom:25px;
-  text-align:left;
 }
 
 /* GRID */
@@ -121,7 +125,7 @@ body {
 
 /* CARD WRAPPER */
 .card-wrapper {
-  text-align:left;
+  cursor:pointer;
 }
 
 /* CARD */
@@ -132,9 +136,8 @@ body {
   background-position:center;
   position:relative;
   overflow:hidden;
-  cursor:pointer;
   transition:0.3s;
-  box-shadow:0 10px 25px rgba(0,0,0,0.15);
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
 }
 
 .card:hover {
@@ -146,7 +149,7 @@ body {
   content:"";
   position:absolute;
   inset:0;
-  background:linear-gradient(to top, rgba(0,0,0,0.3), transparent);
+  background:linear-gradient(to top, rgba(0,0,0,0.35), transparent);
 }
 
 /* TAG */
@@ -154,7 +157,7 @@ body {
   position:absolute;
   top:10px;
   left:10px;
-  background:#003f5c;
+  background:var(--dark);
   color:white;
   padding:6px 12px;
   border-radius:20px;
@@ -165,8 +168,7 @@ body {
 /* TEXT */
 .card-info h3 {
   margin:10px 0 0;
-  color:#0a4f73;
-  font-weight:700;
+  color:var(--primary);
 }
 
 .card-info p {
@@ -226,10 +228,21 @@ footer {
     </div>
   </div>
 
-  <!-- EVENTS -->
+  <!-- CONADE EVENT -->
+  <div class="card-wrapper">
+    <div class="card" style="background-image:url('waterpolo.jpg')">
+      <div class="tag">2026</div>
+    </div>
+    <div class="card-info">
+      <h3>Juegos CONADE 2026</h3>
+      <p>CDMX • 4 categorías</p>
+    </div>
+  </div>
+
+  <!-- FUTURE EVENTS -->
   <script>
     const container = document.currentScript.parentElement;
-    for(let i=1;i<=3;i++){
+    for(let i=1;i<=2;i++){
       container.innerHTML += `
       <div class="card-wrapper">
         <div class="card" style="background-image:url('waterpolo.jpg')">
