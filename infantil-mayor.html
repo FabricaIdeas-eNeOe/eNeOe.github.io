@@ -8,26 +8,23 @@
 
 <style>
 
-/* ===== BACKGROUND ===== */
 body{
   margin:0;
-  font-family: Arial, sans-serif;
-  background: url('background.jpg') no-repeat center center/cover;
+  font-family: Arial;
+  background: url('background.jpg') no-repeat center/cover;
   color:#0f3d57;
 }
 
-/* ===== BACK BUTTON ===== */
 .back{
   position:absolute;
   top:20px;
   left:30px;
-  font-weight:bold;
   cursor:pointer;
+  font-weight:bold;
 }
 
-/* ===== TITLE GLASS + RIPPLE ===== */
 .title-box{
-  margin:60px auto 10px;
+  margin:60px auto;
   width:fit-content;
   padding:20px 60px;
   border-radius:30px;
@@ -44,37 +41,29 @@ body{
   height:200%;
   top:-50%;
   left:-50%;
-  background: radial-gradient(circle, rgba(255,255,255,0.25) 0%, transparent 60%);
+  background: radial-gradient(circle, rgba(255,255,255,0.25), transparent);
   animation:ripple 6s infinite linear;
 }
 
 @keyframes ripple{
-  0%{ transform: scale(0.8) rotate(0deg);}
-  50%{ transform: scale(1.2) rotate(180deg);}
-  100%{ transform: scale(0.8) rotate(360deg);}
+  0%{ transform:scale(0.8);}
+  50%{ transform:scale(1.2);}
+  100%{ transform:scale(0.8);}
 }
 
-h1{
-  margin:0;
-  font-size:38px;
-  letter-spacing:2px;
-}
+h1{ margin:0; }
 
-/* ===== FILTERS ===== */
 .filters{
   display:flex;
   justify-content:center;
-  gap:12px;
-  margin:25px auto;
-  flex-wrap:wrap;
+  gap:10px;
 }
 
 .filter-btn{
-  padding:10px 18px;
+  padding:8px 15px;
   border-radius:20px;
   background: rgba(255,255,255,0.5);
   cursor:pointer;
-  transition:0.3s;
 }
 
 .filter-btn.active{
@@ -82,51 +71,41 @@ h1{
   color:white;
 }
 
-/* ===== GALLERY ===== */
 .gallery{
   display:grid;
   grid-template-columns: repeat(auto-fill,minmax(260px,1fr));
   gap:25px;
-  padding:20px 60px 100px;
+  padding:30px 60px 100px;
 }
 
-/* ===== CARD ===== */
 .card{
   background: rgba(255,255,255,0.25);
   border-radius:20px;
   overflow:hidden;
   backdrop-filter: blur(10px);
   box-shadow:0 10px 20px rgba(0,0,0,0.15);
-  transition:0.3s;
-}
-
-.card:hover{
-  transform: translateY(-5px);
 }
 
 .card img{
   width:100%;
   height:200px;
   object-fit:cover;
-  display:block;
 }
 
-/* ===== DOWNLOAD ===== */
 .download{
   text-align:center;
-  padding:12px;
-  font-weight:bold;
+  padding:10px;
   cursor:pointer;
+  font-weight:bold;
 }
 
-/* ===== FOOTER ===== */
 .footer{
   position:fixed;
   bottom:0;
   width:100%;
   background:white;
-  padding:10px;
   text-align:center;
+  padding:10px;
 }
 
 </style>
@@ -145,106 +124,77 @@ h1{
 
 <div class="gallery" id="gallery"></div>
 
-<div class="footer">
-  © 2026 AOFM Waterpolo
-</div>
+<div class="footer">© 2026 AOFM Waterpolo</div>
 
 <script>
 
-/* ===== CONFIG ===== */
 const cloudName = "du4pmuch7";
-const folder = "inf-mayor-cdmx/gallery";
 
-/* ===== DATA ===== */
+/* 🔥 REAL IDs (ONLY VALID ONES) */
+const images = [
+
+/* AGS */
+{ id:"inf-mayor-cdmx/gallery/CN2026_InfMyr_CDMX_AGS_0320_001", team:"AGS"},
+{ id:"inf-mayor-cdmx/gallery/CN2026_InfMyr_CDMX_AGS_0320_002", team:"AGS"},
+{ id:"inf-mayor-cdmx/gallery/CN2026_InfMyr_CDMX_AGS_0320_003", team:"AGS"},
+{ id:"inf-mayor-cdmx/gallery/CN2026_InfMyr_CDMX_AGS_0320_004", team:"AGS"},
+{ id:"inf-mayor-cdmx/gallery/CN2026_InfMyr_CDMX_AGS_0320_005", team:"AGS"},
+
+/* ADD MORE HERE EXACTLY AS YOU EXPORTED */
+
+];
+
 const teams = ["AGS","NL","QROO","EDOMEX","COAH","GRO"];
-
-/* ===== KNOWN VALID RANGE (NO GUESSING FAIL) ===== */
-/* Based on your Cloudinary naming */
-const ranges = {
-  AGS: 25,
-  NL: 25,
-  QROO: 25,
-  EDOMEX: 25,
-  COAH: 25,
-  GRO: 25
-};
 
 const gallery = document.getElementById("gallery");
 const filtersContainer = document.getElementById("filters");
 
-let allImages = [];
-
-/* PAD */
-function pad(num){
-  return num.toString().padStart(3,'0');
-}
-
-/* BUILD LIST (NO BROKEN IMAGES) */
-function buildImages(){
-
-  teams.forEach(team => {
-
-    const max = ranges[team];
-
-    for(let i=1; i<=max; i++){
-
-      const publicId = `CN2026_InfMyr_CDMX_${team}_0320_${pad(i)}`;
-
-      const url = `https://res.cloudinary.com/${cloudName}/image/upload/${folder}/${publicId}.jpg`;
-
-      allImages.push({ url, team });
-    }
-
-  });
-}
-
-/* FILTERS */
+/* FILTER BUTTONS */
 function createFilters(){
 
   const allBtn = document.createElement("div");
-  allBtn.innerText = "ALL";
-  allBtn.className = "filter-btn active";
-  allBtn.onclick = () => filterImages("ALL", allBtn);
+  allBtn.innerText="ALL";
+  allBtn.className="filter-btn active";
+  allBtn.onclick=()=>filter("ALL",allBtn);
   filtersContainer.appendChild(allBtn);
 
-  teams.forEach(team => {
-
-    const btn = document.createElement("div");
-    btn.innerText = team;
-    btn.className = "filter-btn";
-
-    btn.onclick = () => filterImages(team, btn);
-
+  teams.forEach(t=>{
+    const btn=document.createElement("div");
+    btn.innerText=t;
+    btn.className="filter-btn";
+    btn.onclick=()=>filter(t,btn);
     filtersContainer.appendChild(btn);
   });
 }
 
 /* FILTER */
-function filterImages(team, element){
+function filter(team,el){
 
   document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-  element.classList.add('active');
+  el.classList.add('active');
 
-  renderGallery(team);
+  render(team);
 }
 
 /* RENDER */
-function renderGallery(team){
+function render(team){
 
-  gallery.innerHTML = "";
+  gallery.innerHTML="";
 
-  const filtered = team === "ALL"
-    ? allImages
-    : allImages.filter(img => img.team === team);
+  const list = team==="ALL"
+    ? images
+    : images.filter(i=>i.team===team);
 
-  filtered.forEach(img => {
+  list.forEach(img=>{
 
-    const div = document.createElement("div");
-    div.className = "card";
+    const url=`https://res.cloudinary.com/${cloudName}/image/upload/${img.id}.jpg`;
 
-    div.innerHTML = `
-      <img src="${img.url}">
-      <div class="download" onclick="window.open('${img.url}')">Download</div>
+    const div=document.createElement("div");
+    div.className="card";
+
+    div.innerHTML=`
+      <img src="${url}">
+      <div class="download" onclick="window.open('${url}')">Download</div>
     `;
 
     gallery.appendChild(div);
@@ -252,9 +202,8 @@ function renderGallery(team){
 }
 
 /* INIT */
-buildImages();
 createFilters();
-renderGallery("ALL");
+render("ALL");
 
 </script>
 
