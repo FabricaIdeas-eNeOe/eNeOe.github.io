@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Infantil Mayor Gallery</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+<script src="https://unpkg.com/cloudinary-core/cloudinary-core-shrinkwrap.min.js"></script>
+
+<style>
+
+/* BASE */
+body{
+  margin:0;
+  font-family:'Montserrat',sans-serif;
+
+  background:
+    linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.15)),
+    url('background.png');
+  background-size:cover;
+  background-attachment:fixed;
+}
+
+/* HEADER */
+.header{
+  padding:20px;
+}
+
+.back{
+  color:#0a4f73;
+  text-decoration:none;
+  font-weight:600;
+}
+
+/* TITLE */
+.title-container{
+  text-align:center;
+}
+
+.title{
+  display:inline-block;
+  font-size:34px;
+  font-weight:800;
+  color:#0a4f73;
+
+  padding:14px 45px;
+  border-radius:30px;
+
+  background:rgba(255,255,255,0.25);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.6);
+
+  position:relative;
+  overflow:hidden;
+}
+
+/* ripple shine */
+.title::after{
+  content:"";
+  position:absolute;
+  top:0;
+  left:-100%;
+  width:200%;
+  height:100%;
+  background:linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.5),
+    transparent
+  );
+  animation:shine 6s infinite;
+}
+
+@keyframes shine{
+  0%{left:-100%;}
+  50%{left:100%;}
+  100%{left:100%;}
+}
+
+/* FILTERS */
+.filters{
+  margin:30px auto;
+  text-align:center;
+}
+
+.filters button{
+  margin:5px;
+  padding:10px 18px;
+  border:none;
+  border-radius:20px;
+  background:#dfeaf2;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.filters button.active{
+  background:#0a4f73;
+  color:white;
+}
+
+/* GALLERY */
+.gallery{
+  max-width:1200px;
+  margin:30px auto 120px;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:25px;
+  padding:20px;
+}
+
+.card{
+  border-radius:18px;
+  overflow:hidden;
+
+  background:rgba(255,255,255,0.25);
+  backdrop-filter:blur(12px);
+
+  box-shadow:0 10px 25px rgba(0,0,0,0.25);
+  transition:0.3s;
+}
+
+.card img{
+  width:100%;
+  display:block;
+}
+
+.card:hover{
+  transform:scale(1.05);
+}
+
+/* DOWNLOAD */
+.download{
+  padding:10px;
+  text-align:center;
+}
+
+.download a{
+  text-decoration:none;
+  color:#0a4f73;
+  font-weight:600;
+}
+
+/* FOOTER */
+.footer{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  text-align:center;
+  padding:12px;
+  background:rgba(255,255,255,0.9);
+}
+
+.footer img{
+  height:40px;
+  margin:0 10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+  <a href="campeonato2026.html" class="back">← Back</a>
+</div>
+
+<div class="title-container">
+  <div class="title">Infantil Mayor</div>
+</div>
+
+<!-- FILTERS -->
+
+<div class="filters">
+  <button class="active" onclick="filterGallery('all')">ALL</button>
+  <button onclick="filterGallery('AGS')">vs AGS</button>
+  <button onclick="filterGallery('COAH')">vs Coahuila</button>
+  <button onclick="filterGallery('EDOMEX')">vs EdoMex</button>
+  <button onclick="filterGallery('GRO')">vs Guerrero</button>
+  <button onclick="filterGallery('NL')">vs Nuevo León</button>
+</div>
+
+<!-- GALLERY -->
+
+<div class="gallery" id="gallery"></div>
+
+<!-- FOOTER -->
+
+<div class="footer">
+  <img src="logo-aofm.png">
+  <img src="logo-club.png">
+  <img src="logo-olimpicos.png">
+</div>
+
+<script>
+
+// CONFIG
+const cloudName = "dfaac6gwe"; // 🔴 replace with your cloudinary name
+const basePath = "WP 2026/Campeonato Nacional 2026/inf-mayor-cdmx/gallery";
+
+// SAMPLE IMAGE LIST (you will replace later with API if needed)
+const images = [
+  "CN2026_InfMyr_CDMX_ROO_0322_060",
+  "CN2026_InfMyr_CDMX_ROO_0322_061",
+  "CN2026_InfMyr_CDMX_ROO_0322_062"
+];
+
+// INIT
+const gallery = document.getElementById("gallery");
+
+function renderGallery(filter="all"){
+  gallery.innerHTML="";
+
+  images.forEach(id=>{
+    if(filter==="all" || id.includes(filter)){
+
+      const url = `https://res.cloudinary.com/${cloudName}/image/upload/${basePath}/${id}.jpg`;
+
+      const div = document.createElement("div");
+      div.className="card";
+
+      div.innerHTML=`
+        <img src="${url}">
+        <div class="download">
+          <a href="${url}" download>Download</a>
+        </div>
+      `;
+
+      gallery.appendChild(div);
+    }
+  });
+}
+
+// FILTER
+function filterGallery(team){
+  document.querySelectorAll(".filters button").forEach(btn=>btn.classList.remove("active"));
+  event.target.classList.add("active");
+
+  renderGallery(team);
+}
+
+// INIT LOAD
+renderGallery();
+
+</script>
+
+</body>
+</html>
