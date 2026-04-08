@@ -108,13 +108,14 @@ body {
   justify-items:center;
 }
 
-/* CARD */
+/* CARD WRAPPER */
 .card-wrapper {
   width:100%;
   max-width:360px;
   cursor:pointer;
 }
 
+/* CARD */
 .card {
   height:250px;
   border-radius:20px;
@@ -123,18 +124,23 @@ body {
   position:relative;
   overflow:hidden;
   transition:0.3s;
-  box-shadow:0 12px 30px rgba(0,0,0,0.25);
+
+  /* BRIGHTER EFFECT */
+  box-shadow:
+    0 12px 30px rgba(0,0,0,0.2),
+    0 0 20px rgba(0,168,204,0.2);
 }
 
 .card:hover {
   transform:translateY(-8px) scale(1.05);
 }
 
+/* LIGHT OVERLAY (instead of dark) */
 .card::after {
   content:"";
   position:absolute;
   inset:0;
-  background:linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+  background:linear-gradient(to top, rgba(255,255,255,0.15), transparent);
 }
 
 /* TAG */
@@ -142,7 +148,7 @@ body {
   position:absolute;
   top:12px;
   left:12px;
-  background:#003f5c;
+  background:#0077a6;
   color:white;
   padding:6px 12px;
   border-radius:20px;
@@ -240,10 +246,10 @@ footer {
   </div>
 </div>
 
-<!-- CARD 2 -->
+<!-- CARD 2 (UPDATED IMAGE) -->
 
 <div class="card-wrapper">
-  <div class="card" style="background-image:url('waterpolo.jpg')">
+  <div class="card" style="background-image:url('polo_conade.png')">
     <div class="tag">2026</div>
   </div>
   <div class="card-info">
