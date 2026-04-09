@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -11,10 +10,15 @@
 
 <style>
 
-/* BASE */
+/* GLOBAL FIX */
+* {
+  box-sizing: border-box;
+}
+
 html, body {
   height:100%;
   margin:0;
+  overflow-x:hidden;
 }
 
 body {
@@ -22,12 +26,16 @@ body {
   flex-direction:column;
   font-family:'Montserrat',sans-serif;
 
+  /* ✅ SAME BEHAVIOR AS OTHER PAGES */
   background:
     linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.15)),
     url('background.png');
   background-size:cover;
   background-position:center;
-  background-attachment:fixed;
+  background-repeat:no-repeat;
+
+  /* IMPORTANT: no fixed (mobile safe) */
+  background-attachment: scroll;
 }
 
 .main {
@@ -58,7 +66,7 @@ body {
   overflow:hidden;
 }
 
-/* RIPPLE EFFECT */
+/* SOFT SHIMMER EFFECT (like other pages) */
 .title::before {
   content:"";
   position:absolute;
@@ -71,7 +79,7 @@ body {
     transparent 70%
   );
 
-  animation:wave 3s infinite linear;
+  animation:wave 3.5s infinite linear;
 }
 
 @keyframes wave {
@@ -103,21 +111,21 @@ body {
 /* GRID */
 .grid {
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(340px,1fr));
-  gap:40px;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:30px;
   justify-items:center;
 }
 
 /* CARD WRAPPER */
 .card-wrapper {
   width:100%;
-  max-width:360px;
+  max-width:340px;
   cursor:pointer;
 }
 
 /* CARD */
 .card {
-  height:250px;
+  height:230px;
   border-radius:20px;
   background-size:cover;
   background-position:center;
@@ -125,7 +133,6 @@ body {
   overflow:hidden;
   transition:0.3s;
 
-  /* BRIGHTER EFFECT */
   box-shadow:
     0 12px 30px rgba(0,0,0,0.2),
     0 0 20px rgba(0,168,204,0.2);
@@ -135,7 +142,7 @@ body {
   transform:translateY(-8px) scale(1.05);
 }
 
-/* LIGHT OVERLAY (instead of dark) */
+/* LIGHT OVERLAY */
 .card::after {
   content:"";
   position:absolute;
@@ -191,16 +198,18 @@ body {
   line-height:1.4;
 }
 
-/* LOGOS */
+/* LOGOS (MATCH OTHER PAGES STYLE) */
 .logos-section {
-  background:white;
+  backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.4);
   text-align:center;
-  padding:20px;
+  padding:15px;
 }
 
 .logos img {
-  height:50px;
-  margin:0 25px;
+  height:45px;
+  margin:0 20px;
+  opacity:0.9;
 }
 
 /* FOOTER */
@@ -211,8 +220,25 @@ footer {
   color:#5c7f91;
 }
 
-</style>
+/* MOBILE */
+@media (max-width: 600px) {
 
+  .title {
+    font-size:32px;
+    padding:15px 25px;
+  }
+
+  .subtitle {
+    font-size:18px;
+  }
+
+  .section {
+    padding:20px 10px;
+  }
+
+}
+
+</style>
 </head>
 
 <body>
@@ -220,14 +246,12 @@ footer {
 <div class="main">
 
 <!-- HEADER -->
-
 <div class="header">
   <div class="title">AOFM WATERPOLO</div>
   <div class="subtitle">Official Photo Gallery Platform</div>
 </div>
 
 <!-- SECTION -->
-
 <div class="section">
 
 <h2>Tournaments</h2>
@@ -235,7 +259,6 @@ footer {
 <div class="grid">
 
 <!-- CARD 1 -->
-
 <div class="card-wrapper" onclick="window.location.href='campeonato2026.html'">
   <div class="card" style="background-image:url('clasificatorio_2026.jpg')">
     <div class="tag">2026</div>
@@ -246,8 +269,7 @@ footer {
   </div>
 </div>
 
-<!-- CARD 2 (UPDATED IMAGE) -->
-
+<!-- CARD 2 -->
 <div class="card-wrapper">
   <div class="card" style="background-image:url('polo_conade.png')">
     <div class="tag">2026</div>
@@ -259,21 +281,18 @@ footer {
 </div>
 
 <!-- CARD 3 -->
-
 <div class="card-wrapper">
   <div class="card" style="background-image:url('championship_cover.png')">
 
-```
-<div class="tag">Upcoming 2026</div>
+    <div class="tag">Upcoming 2026</div>
 
-<div class="player-icon">
-  <svg viewBox="0 0 100 100">
-    <circle cx="50" cy="30" r="10"/>
-    <path d="M30 70 Q50 40 70 70" stroke-width="8" fill="none"/>
-    <circle cx="70" cy="50" r="6"/>
-  </svg>
-</div>
-```
+    <div class="player-icon">
+      <svg viewBox="0 0 100 100">
+        <circle cx="50" cy="30" r="10"/>
+        <path d="M30 70 Q50 40 70 70" stroke-width="8" fill="none"/>
+        <circle cx="70" cy="50" r="6"/>
+      </svg>
+    </div>
 
   </div>
 
@@ -281,7 +300,6 @@ footer {
     <h3>U16 Waterpolo Championships</h3>
     <p>Selección Mexicana Sub16<br>Croatia, 03–09 August</p>
   </div>
-
 </div>
 
 </div>
@@ -291,7 +309,6 @@ footer {
 </div>
 
 <!-- LOGOS -->
-
 <div class="logos-section">
   <div class="logos">
     <img src="logo-olimpicos.png">
@@ -301,7 +318,6 @@ footer {
 </div>
 
 <!-- FOOTER -->
-
 <footer>
 © 2026 AOFM Waterpolo
 </footer>
