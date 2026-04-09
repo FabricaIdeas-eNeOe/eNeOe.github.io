@@ -21,45 +21,75 @@ body {
 
   background:
     linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.15)),
-    url('background.png'); /* ✅ LOCAL */
+    url('background.png');
   background-size:cover;
   background-position:center;
 }
 
-/* CONTAINER */
-.container {
-  padding:40px 20px;
-  text-align:center;
+/* BACK BUTTON */
+.back {
+  position:absolute;
+  top:20px;
+  left:20px;
+  color:#1c4b63;
+  font-weight:600;
+  text-decoration:none;
 }
 
 /* TITLE */
+.title-container {
+  text-align:center;
+  margin-top:80px;
+}
+
 .title-box {
   display:inline-block;
   padding:20px 40px;
   border-radius:50px;
   background:rgba(255,255,255,0.35);
   backdrop-filter:blur(12px);
-  margin-bottom:15px;
+  position:relative;
+  overflow:hidden;
+}
+
+/* animated shine */
+.title-box::before {
+  content:"";
+  position:absolute;
+  top:-100%;
+  left:-50%;
+  width:200%;
+  height:300%;
+  background:radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 60%);
+  animation:shine 6s linear infinite;
+}
+
+@keyframes shine {
+  0% { transform:translateY(-100%); }
+  100% { transform:translateY(100%); }
 }
 
 .title-box h1 {
+  position:relative;
   font-size:42px;
   font-weight:800;
   color:#0a4f73;
 }
 
 .subtitle {
+  text-align:center;
+  margin-top:15px;
   color:#3c6e85;
-  margin-bottom:40px;
 }
 
 /* GRID */
 .grid {
+  margin:60px auto 120px;
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
   gap:30px;
   max-width:1000px;
-  margin:auto;
+  padding:0 20px;
 }
 
 /* CARD */
@@ -77,17 +107,14 @@ body {
   transform:translateY(-6px) scale(1.03);
 }
 
-/* IMAGE */
 .card img {
   width:100%;
   height:180px;
   object-fit:cover;
 }
 
-/* TEXT */
 .card-content {
   padding:15px;
-  text-align:left;
 }
 
 .card-content h3 {
@@ -100,16 +127,24 @@ body {
   font-size:14px;
 }
 
-/* LOGOS */
-.logos {
-  margin-top:60px;
+/* FIXED BOTTOM BAR */
+.bottom-bar {
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:70px;
+  background:rgba(255,255,255,0.85);
+  backdrop-filter:blur(10px);
   display:flex;
   justify-content:center;
-  gap:30px;
+  align-items:center;
+  gap:40px;
+  z-index:100;
 }
 
-.logos img {
-  height:40px;
+.bottom-bar img {
+  height:35px;
   opacity:0.9;
 }
 
@@ -125,61 +160,60 @@ body {
 
 <body>
 
-<div class="container">
+<a href="index.html" class="back">← Back</a>
 
+<div class="title-container">
   <div class="title-box">
     <h1>Campeonato Nacional 2026</h1>
   </div>
-
   <div class="subtitle">Select Category</div>
+</div>
 
-  <div class="grid">
+<div class="grid">
 
-    <!-- INFANTIL MENOR (LOCAL IMAGE ✅) -->
-    <a href="infantil-menor.html" class="card">
-      <img src="CN2026_InfMnr.jpg">
-      <div class="card-content">
-        <h3>Infantil Menor</h3>
-        <p>CDMX Teams</p>
-      </div>
-    </a>
-
-    <!-- INFANTIL MAYOR (LOCAL IMAGE ✅) -->
-    <a href="infantil-mayor.html" class="card">
-      <img src="CN2026_InfMyr.jpg">
-      <div class="card-content">
-        <h3>Infantil Mayor</h3>
-        <p>Official Matches</p>
-      </div>
-    </a>
-
-    <!-- JUVENIL -->
-    <div class="card">
-      <img src="waterpolo.jpg">
-      <div class="card-content">
-        <h3>Juvenil</h3>
-        <p>Coming Soon</p>
-      </div>
+  <!-- INFANTIL MENOR -->
+  <a href="infantil-menor.html" class="card">
+    <img src="CN2026_InfMnr.jpg">
+    <div class="card-content">
+      <h3>Infantil Menor</h3>
+      <p>CDMX Teams</p>
     </div>
+  </a>
 
-    <!-- JUNIOR -->
-    <div class="card">
-      <img src="waterpolo.jpg">
-      <div class="card-content">
-        <h3>Junior</h3>
-        <p>Coming Soon</p>
-      </div>
+  <!-- INFANTIL MAYOR -->
+  <a href="infantil-mayor.html" class="card">
+    <img src="CN2026_InfMyr.jpg">
+    <div class="card-content">
+      <h3>Infantil Mayor</h3>
+      <p>Official Matches</p>
     </div>
+  </a>
 
+  <!-- JUVENIL -->
+  <div class="card">
+    <img src="waterpolo.jpg">
+    <div class="card-content">
+      <h3>Juvenil</h3>
+      <p>Coming Soon</p>
+    </div>
   </div>
 
-  <!-- LOGOS (LOCAL ✅) -->
-  <div class="logos">
-    <img src="logo-aofm.png">
-    <img src="logo-club.png">
-    <img src="logo-olimpicos.png">
+  <!-- JUNIOR -->
+  <div class="card">
+    <img src="waterpolo.jpg">
+    <div class="card-content">
+      <h3>Junior</h3>
+      <p>Coming Soon</p>
+    </div>
   </div>
 
+</div>
+
+<!-- FIXED LOGO BAR -->
+<div class="bottom-bar">
+  <img src="logo-aofm.png">
+  <img src="logo-club.png">
+  <img src="logo-olimpicos.png">
 </div>
 
 </body>
