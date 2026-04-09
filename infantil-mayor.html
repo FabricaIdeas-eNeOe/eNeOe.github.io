@@ -23,7 +23,7 @@ body {
   background-attachment:fixed;
 }
 
-/* ===== BACK ===== */
+/* BACK */
 .back {
   position:fixed;
   top:20px;
@@ -33,13 +33,13 @@ body {
   text-decoration:none;
 }
 
-/* ===== HEADER ===== */
+/* HEADER */
 .header {
   text-align:center;
   padding:80px 20px 40px;
 }
 
-/* ===== TITLE ===== */
+/* TITLE */
 .title {
   position:relative;
   display:inline-block;
@@ -61,14 +61,7 @@ body {
   content:"";
   position:absolute;
   inset:0;
-
-  background:linear-gradient(
-    120deg,
-    transparent 30%,
-    rgba(255,255,255,0.6) 50%,
-    transparent 70%
-  );
-
+  background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,0.6) 50%,transparent 70%);
   animation:wave 3s infinite linear;
 }
 
@@ -77,7 +70,7 @@ body {
   100% { transform:translateX(100%); }
 }
 
-/* ===== FILTERS ===== */
+/* FILTERS */
 .filters {
   text-align:center;
   margin:30px 0;
@@ -95,7 +88,6 @@ body {
   color:#0a4f73;
   font-weight:600;
   cursor:pointer;
-
   transition:0.3s;
 }
 
@@ -109,7 +101,7 @@ body {
   color:white;
 }
 
-/* ===== GALLERY ===== */
+/* GALLERY */
 .gallery {
   display:grid;
   grid-template-columns:repeat(auto-fill, minmax(200px,1fr));
@@ -122,13 +114,9 @@ body {
   height:160px;
   object-fit:cover;
   border-radius:16px;
-
   cursor:pointer;
   transition:0.3s;
-
-  box-shadow:
-    0 10px 25px rgba(0,0,0,0.2),
-    0 0 10px rgba(0,168,204,0.2);
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
 }
 
 .gallery img:hover {
@@ -139,7 +127,7 @@ body {
 .lightbox {
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.85);
+  background:rgba(0,0,0,0.9);
   backdrop-filter:blur(10px);
 
   display:flex;
@@ -161,23 +149,22 @@ body {
   max-width:90%;
   max-height:85%;
   border-radius:10px;
-  box-shadow:0 0 30px rgba(0,0,0,0.8);
+  cursor:grab;
+  transition:transform 0.1s;
 }
 
-/* buttons */
 .lightbox-btn {
   position:absolute;
   color:white;
   font-size:30px;
   cursor:pointer;
-  user-select:none;
 }
 
 .close { top:20px; right:30px; }
 .prev { left:30px; }
 .next { right:30px; }
 
-/* ===== LOGOS ===== */
+/* LOGOS */
 .logos-section {
   background:white;
   text-align:center;
@@ -189,7 +176,6 @@ body {
   margin:0 25px;
 }
 
-/* ===== FOOTER ===== */
 footer {
   text-align:center;
   font-size:12px;
@@ -227,7 +213,6 @@ footer {
   <span class="lightbox-btn next" onclick="nextImage()">›</span>
 </div>
 
-<!-- LOGOS -->
 <div class="logos-section">
   <div class="logos">
     <img src="logo-olimpicos.png">
@@ -246,82 +231,131 @@ const cloudName = "du4pmuch7";
 let currentImages = [];
 let currentIndex = 0;
 
+/* ZOOM */
+let scale = 1;
+let startX, startY, moveX = 0, moveY = 0;
+
+/* SWIPE */
+let touchStartX = 0;
+
+/* CONFIG */
 const teamConfig = {
-  AGS: { prefix: "CN2026_InfMyr_CDMX_AGS_0320_", count: 50 },
-  COAH: { prefix: "CN2026_InfMyr_CDMX_COA_0320_", count: 51 },
-  EDOMEX: { prefix: "CN2026_InfMyr_CDMX_EDM_0319_", count: 44 },
-  GRO: { prefix: "CN2026_InfMyr_CDMX_GRO_0319_", count: 113 },
-  NL: { prefix: "CN2026_InfMyr_CDMX_NLE_0321_", count: 107 },
-  QROO: { prefix: "CN2026_InfMyr_CDMX_ROO_0322_", count: 60 }
+  AGS:{prefix:"CN2026_InfMyr_CDMX_AGS_0320_",count:50},
+  COAH:{prefix:"CN2026_InfMyr_CDMX_COA_0320_",count:51},
+  EDOMEX:{prefix:"CN2026_InfMyr_CDMX_EDM_0319_",count:44},
+  GRO:{prefix:"CN2026_InfMyr_CDMX_GRO_0319_",count:113},
+  NL:{prefix:"CN2026_InfMyr_CDMX_NLE_0321_",count:107},
+  QROO:{prefix:"CN2026_InfMyr_CDMX_ROO_0322_",count:60}
 };
 
-function generateImages(team) {
-  const config = teamConfig[team];
-  let images = [];
-
-  for (let i = 1; i <= config.count; i++) {
-    let number = String(i).padStart(3, "0");
-
-    images.push({
-      thumb: `https://res.cloudinary.com/${cloudName}/image/upload/w_400/f_auto/q_auto/WP 2026/Campeonato Nacional 2026/inf-mayor-cdmx/gallery/${config.prefix}${number}.jpg`,
-      full: `https://res.cloudinary.com/${cloudName}/image/upload/f_auto/q_auto/WP 2026/Campeonato Nacional 2026/inf-mayor-cdmx/downloads/${config.prefix}${number}.jpg`
+function generateImages(team){
+  const c=teamConfig[team];
+  let arr=[];
+  for(let i=1;i<=c.count;i++){
+    let n=String(i).padStart(3,"0");
+    arr.push({
+      thumb:`https://res.cloudinary.com/${cloudName}/image/upload/w_400/f_auto/q_auto/WP 2026/Campeonato Nacional 2026/inf-mayor-cdmx/gallery/${c.prefix}${n}.jpg`,
+      full:`https://res.cloudinary.com/${cloudName}/image/upload/f_auto/q_auto/WP 2026/Campeonato Nacional 2026/inf-mayor-cdmx/downloads/${c.prefix}${n}.jpg`
     });
   }
-
-  return images;
+  return arr;
 }
 
-function loadTeam(team) {
-  const container = document.getElementById("gallery");
-  container.innerHTML = "";
+function loadTeam(team){
+  const g=document.getElementById("gallery");
+  g.innerHTML="";
+  currentImages=generateImages(team);
 
-  currentImages = generateImages(team);
-
-  currentImages.forEach((img, index) => {
-    const image = document.createElement("img");
-    image.src = img.thumb;
-    image.loading = "lazy";
-
-    image.onclick = () => openLightbox(index);
-
-    container.appendChild(image);
+  currentImages.forEach((img,i)=>{
+    let el=document.createElement("img");
+    el.src=img.thumb;
+    el.onclick=()=>openLightbox(i);
+    g.appendChild(el);
   });
 }
 
 /* LIGHTBOX */
-function openLightbox(index) {
-  currentIndex = index;
-  document.getElementById("lightbox-img").src = currentImages[index].full;
+function openLightbox(i){
+  currentIndex=i;
+  document.getElementById("lightbox-img").src=currentImages[i].full;
   document.getElementById("lightbox").classList.add("active");
+  resetZoom();
 }
 
-function closeLightbox() {
+function closeLightbox(){
   document.getElementById("lightbox").classList.remove("active");
 }
 
-function nextImage() {
-  currentIndex = (currentIndex + 1) % currentImages.length;
+function nextImage(){
+  currentIndex=(currentIndex+1)%currentImages.length;
   openLightbox(currentIndex);
 }
 
-function prevImage() {
-  currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+function prevImage(){
+  currentIndex=(currentIndex-1+currentImages.length)%currentImages.length;
   openLightbox(currentIndex);
 }
 
-/* KEYBOARD */
-document.addEventListener("keydown", (e) => {
-  if (!document.getElementById("lightbox").classList.contains("active")) return;
+/* ZOOM (wheel) */
+document.getElementById("lightbox-img").addEventListener("wheel",e=>{
+  e.preventDefault();
+  scale+=e.deltaY*-0.001;
+  scale=Math.min(Math.max(1,scale),4);
+  applyTransform();
+});
 
-  if (e.key === "ArrowRight") nextImage();
-  if (e.key === "ArrowLeft") prevImage();
-  if (e.key === "Escape") closeLightbox();
+/* DRAG */
+document.getElementById("lightbox-img").addEventListener("mousedown",e=>{
+  startX=e.clientX;
+  startY=e.clientY;
+
+  document.onmousemove=e=>{
+    moveX+=e.clientX-startX;
+    moveY+=e.clientY-startY;
+    startX=e.clientX;
+    startY=e.clientY;
+    applyTransform();
+  };
+
+  document.onmouseup=()=>document.onmousemove=null;
+});
+
+/* TOUCH SWIPE */
+document.getElementById("lightbox").addEventListener("touchstart",e=>{
+  touchStartX=e.touches[0].clientX;
+});
+
+document.getElementById("lightbox").addEventListener("touchend",e=>{
+  let diff=e.changedTouches[0].clientX-touchStartX;
+  if(diff>50) prevImage();
+  if(diff<-50) nextImage();
+});
+
+/* APPLY */
+function applyTransform(){
+  const img=document.getElementById("lightbox-img");
+  img.style.transform=`scale(${scale}) translate(${moveX}px,${moveY}px)`;
+}
+
+function resetZoom(){
+  scale=1;
+  moveX=0;
+  moveY=0;
+  applyTransform();
+}
+
+/* KEYS */
+document.addEventListener("keydown",e=>{
+  if(!document.getElementById("lightbox").classList.contains("active"))return;
+  if(e.key==="ArrowRight")nextImage();
+  if(e.key==="ArrowLeft")prevImage();
+  if(e.key==="Escape")closeLightbox();
 });
 
 /* FILTER */
-function setTeam(button, team) {
-  document.querySelectorAll(".filters button").forEach(b => b.classList.remove("active"));
-  button.classList.add("active");
+function setTeam(btn,team){
+  document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
   loadTeam(team);
 }
 
