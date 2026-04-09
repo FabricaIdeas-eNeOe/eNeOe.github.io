@@ -2,231 +2,184 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<title>Campeonato Nacional 2026</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Campeonato Nacional 2026</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
 
 <style>
 
-/* BASE */
-body {
+* {
   margin:0;
+  padding:0;
+  box-sizing:border-box;
   font-family:'Montserrat',sans-serif;
+}
+
+body {
+  overflow-x:hidden;
 
   background:
     linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.15)),
-    url('background.png');
+    url('background.png'); /* ✅ LOCAL */
   background-size:cover;
-  background-attachment:fixed;
+  background-position:center;
 }
 
-/* HEADER */
-.header {
-  padding:25px;
-}
-
-.back {
-  color:#0a4f73;
-  text-decoration:none;
-  font-weight:600;
+/* CONTAINER */
+.container {
+  padding:40px 20px;
+  text-align:center;
 }
 
 /* TITLE */
-.title-container {
-  text-align:center;
-  margin-top:10px;
+.title-box {
+  display:inline-block;
+  padding:20px 40px;
+  border-radius:50px;
+  background:rgba(255,255,255,0.35);
+  backdrop-filter:blur(12px);
+  margin-bottom:15px;
 }
 
-.title {
-  display:inline-block;
-  font-size:38px;
+.title-box h1 {
+  font-size:42px;
   font-weight:800;
   color:#0a4f73;
-
-  padding:16px 50px;
-  border-radius:35px;
-
-  background:rgba(255,255,255,0.25);
-  backdrop-filter:blur(20px);
-
-  border:1px solid rgba(255,255,255,0.6);
-
-  position:relative;
-  overflow:hidden;
 }
 
-.title::after {
-  content:"";
-  position:absolute;
-  top:0;
-  left:-100%;
-  width:200%;
-  height:100%;
-  background:linear-gradient(
-    120deg,
-    transparent,
-    rgba(255,255,255,0.5),
-    transparent
-  );
-  animation:shine 6s infinite;
-}
-
-@keyframes shine {
-  0% { left:-100%; }
-  50% { left:100%; }
-  100% { left:100%; }
-}
-
-/* SUBTITLE */
 .subtitle {
-  text-align:center;
-  margin-top:10px;
-  color:#0a4f73;
-  font-weight:600;
+  color:#3c6e85;
+  margin-bottom:40px;
 }
 
 /* GRID */
-.categories {
-  max-width:1200px;
-  margin:50px auto;
+.grid {
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
   gap:30px;
-  padding:20px;
+  max-width:1000px;
+  margin:auto;
 }
 
 /* CARD */
 .card {
-  border-radius:22px;
+  text-decoration:none;
+  border-radius:20px;
   overflow:hidden;
-  cursor:pointer;
-  transition:0.35s;
+  background:rgba(255,255,255,0.3);
+  backdrop-filter:blur(12px);
+  transition:0.3s;
+  box-shadow:0 10px 30px rgba(0,0,0,0.15);
+}
 
-  background:rgba(255,255,255,0.25);
-  backdrop-filter:blur(15px);
-
-  box-shadow:
-    0 12px 30px rgba(0,0,0,0.25),
-    0 0 20px rgba(0,168,204,0.2);
+.card:hover {
+  transform:translateY(-6px) scale(1.03);
 }
 
 /* IMAGE */
 .card img {
   width:100%;
-  height:200px;
+  height:180px;
   object-fit:cover;
-  display:block;
-  transition:0.4s;
 }
 
-/* CONTENT */
+/* TEXT */
 .card-content {
-  padding:18px;
-}
-
-.card-title {
-  font-weight:700;
-  color:#0a4f73;
-  font-size:18px;
-}
-
-.card-sub {
-  font-size:14px;
-  color:#5c7c8a;
-}
-
-/* HOVER */
-.card:hover {
-  transform:translateY(-8px) scale(1.04);
-  box-shadow:
-    0 18px 40px rgba(0,0,0,0.35),
-    0 0 25px rgba(0,168,204,0.35);
-}
-
-.card:hover img {
-  transform:scale(1.1);
-}
-
-/* FOOTER */
-.footer {
-  position:fixed;
-  bottom:0;
-  width:100%;
-  text-align:center;
   padding:15px;
-  background:rgba(255,255,255,0.9);
+  text-align:left;
 }
 
-.footer img {
+.card-content h3 {
+  color:#0a4f73;
+  font-size:20px;
+}
+
+.card-content p {
+  color:#5c7f91;
+  font-size:14px;
+}
+
+/* LOGOS */
+.logos {
+  margin-top:60px;
+  display:flex;
+  justify-content:center;
+  gap:30px;
+}
+
+.logos img {
   height:40px;
-  margin:0 15px;
+  opacity:0.9;
+}
+
+/* MOBILE */
+@media(max-width:600px){
+  .title-box h1 {
+    font-size:28px;
+  }
 }
 
 </style>
-
 </head>
 
 <body>
 
-<!-- BACK -->
-<div class="header">
-  <a href="index.html" class="back">← Back</a>
-</div>
+<div class="container">
 
-<!-- TITLE -->
-<div class="title-container">
-  <div class="title">Campeonato Nacional 2026</div>
+  <div class="title-box">
+    <h1>Campeonato Nacional 2026</h1>
+  </div>
+
   <div class="subtitle">Select Category</div>
-</div>
 
-<!-- CATEGORIES -->
-<div class="categories">
+  <div class="grid">
 
-  <!-- Infantil Menor -->
-  <div class="card" onclick="location.href='infantil-menor.html'">
-    <img src="CN2026_InfMnr.jpg">
-    <div class="card-content">
-      <div class="card-title">Infantil Menor</div>
-      <div class="card-sub">CDMX Matches</div>
+    <!-- INFANTIL MENOR (LOCAL IMAGE ✅) -->
+    <a href="infantil-menor.html" class="card">
+      <img src="CN2026_InfMnr.jpg">
+      <div class="card-content">
+        <h3>Infantil Menor</h3>
+        <p>CDMX Teams</p>
+      </div>
+    </a>
+
+    <!-- INFANTIL MAYOR (LOCAL IMAGE ✅) -->
+    <a href="infantil-mayor.html" class="card">
+      <img src="CN2026_InfMyr.jpg">
+      <div class="card-content">
+        <h3>Infantil Mayor</h3>
+        <p>Official Matches</p>
+      </div>
+    </a>
+
+    <!-- JUVENIL -->
+    <div class="card">
+      <img src="waterpolo.jpg">
+      <div class="card-content">
+        <h3>Juvenil</h3>
+        <p>Coming Soon</p>
+      </div>
     </div>
+
+    <!-- JUNIOR -->
+    <div class="card">
+      <img src="waterpolo.jpg">
+      <div class="card-content">
+        <h3>Junior</h3>
+        <p>Coming Soon</p>
+      </div>
+    </div>
+
   </div>
 
-  <!-- Infantil Mayor -->
-  <div class="card" onclick="location.href='infantil-mayor.html'">
-    <img src="CN2026_InfMyr.jpg">
-    <div class="card-content">
-      <div class="card-title">Infantil Mayor</div>
-      <div class="card-sub">Official Matches</div>
-    </div>
+  <!-- LOGOS (LOCAL ✅) -->
+  <div class="logos">
+    <img src="logo-aofm.png">
+    <img src="logo-club.png">
+    <img src="logo-olimpicos.png">
   </div>
 
-  <!-- Juvenil -->
-  <div class="card">
-    <img src="waterpolo.jpg">
-    <div class="card-content">
-      <div class="card-title">Juvenil</div>
-      <div class="card-sub">Coming Soon</div>
-    </div>
-  </div>
-
-  <!-- Junior -->
-  <div class="card">
-    <img src="waterpolo.jpg">
-    <div class="card-content">
-      <div class="card-title">Junior</div>
-      <div class="card-sub">Coming Soon</div>
-    </div>
-  </div>
-
-</div>
-
-<!-- FOOTER -->
-<div class="footer">
-  <img src="logo-aofm.png">
-  <img src="logo-club.png">
-  <img src="logo-olimpicos.png">
 </div>
 
 </body>
