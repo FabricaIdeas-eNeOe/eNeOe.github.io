@@ -5,18 +5,18 @@
 <title>Campeonato Nacional 2026</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
 
 <style>
 
-* {
+*{
   margin:0;
   padding:0;
   box-sizing:border-box;
   font-family:'Montserrat',sans-serif;
 }
 
-body {
+body{
   overflow-x:hidden;
 
   background:
@@ -24,66 +24,63 @@ body {
     url('background.png');
   background-size:cover;
   background-position:center;
+  background-attachment:fixed;
 }
 
-/* BACK BUTTON */
-.back {
-  position:absolute;
+/* BACK */
+.back{
+  position:fixed;
   top:20px;
   left:20px;
-  color:#1c4b63;
-  font-weight:600;
+  color:#0a4f73;
   text-decoration:none;
+  font-weight:600;
+  z-index:10;
 }
 
-/* TITLE */
-.title-container {
+/* HEADER */
+.header{
   text-align:center;
-  margin-top:80px;
+  padding:80px 20px 40px;
 }
 
-.title-box {
+/* TITLE (MASTER STYLE FROM INFANTIL MAYOR) */
+.title{
   display:inline-block;
-  padding:20px 40px;
-  border-radius:50px;
-  background:rgba(255,255,255,0.35);
-  backdrop-filter:blur(12px);
+  font-size:42px;
+  font-weight:800;
+  color:#0a4f73;
+  padding:18px 60px;
+
+  background:rgba(255,255,255,0.25);
+  backdrop-filter:blur(25px);
+  border-radius:30px;
+  border:1px solid rgba(255,255,255,0.6);
+
   position:relative;
   overflow:hidden;
 }
 
-/* animated shine */
-.title-box::before {
+.title::before{
   content:"";
   position:absolute;
-  top:-100%;
-  left:-50%;
-  width:200%;
-  height:300%;
-  background:radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 60%);
-  animation:shine 6s linear infinite;
+  inset:0;
+  background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,0.6) 50%,transparent 70%);
+  animation:wave 3s infinite linear;
 }
 
-@keyframes shine {
-  0% { transform:translateY(-100%); }
-  100% { transform:translateY(100%); }
+@keyframes wave{
+  0%{transform:translateX(-100%)}
+  100%{transform:translateX(100%)}
 }
 
-.title-box h1 {
-  position:relative;
-  font-size:42px;
-  font-weight:800;
-  color:#0a4f73;
-}
-
-.subtitle {
-  text-align:center;
+.subtitle{
   margin-top:15px;
   color:#3c6e85;
 }
 
 /* GRID */
-.grid {
+.grid{
   margin:60px auto 120px;
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
@@ -93,7 +90,7 @@ body {
 }
 
 /* CARD */
-.card {
+.card{
   text-decoration:none;
   border-radius:20px;
   overflow:hidden;
@@ -103,56 +100,44 @@ body {
   box-shadow:0 10px 30px rgba(0,0,0,0.15);
 }
 
-.card:hover {
+.card:hover{
   transform:translateY(-6px) scale(1.03);
 }
 
-.card img {
+.card img{
   width:100%;
   height:180px;
   object-fit:cover;
 }
 
-.card-content {
+.card-content{
   padding:15px;
 }
 
-.card-content h3 {
+.card-content h3{
   color:#0a4f73;
   font-size:20px;
 }
 
-.card-content p {
+.card-content p{
   color:#5c7f91;
   font-size:14px;
 }
 
-/* FIXED BOTTOM BAR */
-.bottom-bar {
+/* FOOTER (MASTER FROM INFANTIL MENOR) */
+.footer{
   position:fixed;
   bottom:0;
-  left:0;
   width:100%;
-  height:70px;
+  text-align:center;
+  padding:12px;
   background:rgba(255,255,255,0.85);
   backdrop-filter:blur(10px);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:40px;
-  z-index:100;
 }
 
-.bottom-bar img {
-  height:35px;
-  opacity:0.9;
-}
-
-/* MOBILE */
-@media(max-width:600px){
-  .title-box h1 {
-    font-size:28px;
-  }
+.footer img{
+  height:40px;
+  margin:0 12px;
 }
 
 </style>
@@ -162,16 +147,13 @@ body {
 
 <a href="index.html" class="back">← Back</a>
 
-<div class="title-container">
-  <div class="title-box">
-    <h1>Campeonato Nacional 2026</h1>
-  </div>
+<div class="header">
+  <div class="title">Campeonato Nacional 2026</div>
   <div class="subtitle">Select Category</div>
 </div>
 
 <div class="grid">
 
-  <!-- INFANTIL MENOR -->
   <a href="infantil-menor.html" class="card">
     <img src="CN2026_InfMnr.jpg">
     <div class="card-content">
@@ -180,7 +162,6 @@ body {
     </div>
   </a>
 
-  <!-- INFANTIL MAYOR -->
   <a href="infantil-mayor.html" class="card">
     <img src="CN2026_InfMyr.jpg">
     <div class="card-content">
@@ -189,7 +170,6 @@ body {
     </div>
   </a>
 
-  <!-- JUVENIL -->
   <div class="card">
     <img src="waterpolo.jpg">
     <div class="card-content">
@@ -198,7 +178,6 @@ body {
     </div>
   </div>
 
-  <!-- JUNIOR -->
   <div class="card">
     <img src="waterpolo.jpg">
     <div class="card-content">
@@ -209,8 +188,7 @@ body {
 
 </div>
 
-<!-- FIXED LOGO BAR -->
-<div class="bottom-bar">
+<div class="footer">
   <img src="logo-aofm.png">
   <img src="logo-club.png">
   <img src="logo-olimpicos.png">
