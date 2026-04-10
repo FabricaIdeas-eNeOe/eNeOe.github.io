@@ -5,122 +5,326 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Infantil Mayor</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
+
 <style>
+
+/* BASE */
 body{
-margin:0;
-font-family:sans-serif;
-background:url('background.png') no-repeat center/cover fixed;
-overflow-x:hidden;
+  margin:0;
+  font-family:'Montserrat',sans-serif;
+  overflow-x:hidden;
+
+  background:
+    linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.15)),
+    url('background.png');
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
 }
 
-.container{padding:40px;}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-gap:15px;
+/* BACK */
+.back{
+  position:fixed;
+  top:20px;
+  left:20px;
+  color:#0a4f73;
+  text-decoration:none;
+  font-weight:600;
+  z-index:10;
 }
 
-.grid img{
-width:100%;
-border-radius:16px;
-cursor:pointer;
-transition:.3s;
+/* HEADER */
+.header{
+  text-align:center;
+  padding:80px 20px 40px;
 }
-.grid img:hover{transform:scale(1.03);}
 
+/* TITLE */
+.title{
+  display:inline-block;
+  font-size:42px;
+  font-weight:800;
+  color:#0a4f73;
+  padding:18px 60px;
+
+  background:rgba(255,255,255,0.25);
+  backdrop-filter:blur(25px);
+  border-radius:30px;
+  border:1px solid rgba(255,255,255,0.6);
+
+  position:relative;
+  overflow:hidden;
+}
+
+.title::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,0.6) 50%,transparent 70%);
+  animation:wave 3s infinite linear;
+}
+
+@keyframes wave{
+  0%{transform:translateX(-100%)}
+  100%{transform:translateX(100%)}
+}
+
+/* GLASS TABS */
+.filters{
+  text-align:center;
+  margin:30px 0;
+}
+
+.filters button{
+  margin:6px;
+  padding:10px 20px;
+  border-radius:25px;
+
+  border:1px solid rgba(255,255,255,0.5);
+  background:rgba(255,255,255,0.2);
+  backdrop-filter:blur(12px);
+
+  color:#0a4f73;
+  font-weight:600;
+  cursor:pointer;
+
+  box-shadow:
+    inset 0 1px 3px rgba(255,255,255,0.6),
+    0 4px 10px rgba(0,0,0,0.1);
+
+  transition:0.3s;
+}
+
+.filters button:hover{
+  transform:translateY(-2px);
+}
+
+.filters button.active{
+  background:#0a4f73;
+  color:white;
+  box-shadow:0 6px 16px rgba(0,0,0,0.25);
+}
+
+/* GALLERY */
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:18px;
+  padding:30px 60px 100px;
+}
+
+.gallery img{
+  width:100%;
+  height:160px;
+  object-fit:cover;
+  border-radius:16px;
+  cursor:pointer;
+  transition:0.3s;
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+.gallery img:hover{
+  transform:scale(1.05);
+}
+
+/* LIGHTBOX */
 .lightbox{
-position:fixed;
-top:0;left:0;
-width:100%;height:100%;
-background:rgba(0,0,0,.9);
-display:none;
-align-items:center;
-justify-content:center;
-z-index:999;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.92);
+  backdrop-filter:blur(10px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  pointer-events:none;
+  transition:0.3s;
+  z-index:999;
+}
+
+.lightbox.active{
+  opacity:1;
+  pointer-events:auto;
 }
 
 .lightbox img{
-max-width:90%;
-max-height:90%;
+  max-width:90%;
+  max-height:85%;
+  border-radius:10px;
+  cursor:grab;
+  transition:transform 0.1s;
 }
 
-.close{
-position:absolute;
-top:20px;right:20px;
-color:white;
-font-size:30px;
-cursor:pointer;
+/* UI */
+.lightbox-ui{
+  position:absolute;
+  inset:0;
+  transition:opacity 0.3s;
 }
+
+.lightbox-ui.hidden{opacity:0;}
+
+.lightbox-btn{
+  position:absolute;
+  color:white;
+  font-size:30px;
+  cursor:pointer;
+}
+
+.close{top:20px; right:30px;}
+.prev{left:30px;}
+.next{right:30px;}
 
 .counter{
-position:absolute;
-bottom:20px;
-color:white;
+  position:absolute;
+  bottom:20px;
+  right:30px;
+  color:white;
+  font-size:14px;
+  background:rgba(0,0,0,0.4);
+  padding:6px 12px;
+  border-radius:20px;
 }
+
+/* FOOTER */
+.footer{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  text-align:center;
+  padding:12px;
+  background:rgba(255,255,255,0.85);
+  backdrop-filter:blur(10px);
+}
+
+.footer img{
+  height:40px;
+  margin:0 12px;
+}
+
 </style>
 </head>
 
 <body>
 
-<div class="container">
-<div class="grid" id="gallery"></div>
+<a href="campeonato2026.html" class="back">← Back</a>
+
+<div class="header">
+  <div class="title">Infantil Mayor</div>
 </div>
 
-<div class="lightbox" id="lightbox">
-<span class="close" onclick="closeLB()">×</span>
-<img id="lbImg">
-<div class="counter" id="counter"></div>
+<div class="filters">
+  <button onclick="setTeam(this,'AGS')" class="active">vs AGS</button>
+  <button onclick="setTeam(this,'NL')">vs NL</button>
+  <button onclick="setTeam(this,'QROO')">vs QROO</button>
+  <button onclick="setTeam(this,'EDOMEX')">vs EDOMEX</button>
+  <button onclick="setTeam(this,'COAH')">vs COAH</button>
+  <button onclick="setTeam(this,'GRO')">vs GRO</button>
+</div>
+
+<div id="gallery" class="gallery"></div>
+
+<div id="lightbox" class="lightbox">
+  <div id="lightbox-ui" class="lightbox-ui">
+    <span class="lightbox-btn close" onclick="closeLightbox()">✕</span>
+    <span class="lightbox-btn prev" onclick="prevImage()">‹</span>
+    <span class="lightbox-btn next" onclick="nextImage()">›</span>
+    <div id="counter" class="counter"></div>
+  </div>
+  <img id="lightbox-img">
+</div>
+
+<div class="footer">
+  <img src="logo-aofm.png">
+  <img src="logo-club.png">
+  <img src="logo-olimpicos.png">
 </div>
 
 <script>
 
-const base = "https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/vXXXX/inf-mayor-cdmx";
+const cloudName="du4pmuch7";
 
-const images = [
-"CN2026_InfMyr_CDMX_AGS_0402_001.jpg",
-"CN2026_InfMyr_CDMX_AGS_0402_002.jpg"
-// 👉 keep your full list here
-];
+const teamConfig={
+  AGS:{prefix:"CN2026_InfMyr_CDMX_AGS_0320_",count:50},
+  COAH:{prefix:"CN2026_InfMyr_CDMX_COA_0320_",count:51},
+  EDOMEX:{prefix:"CN2026_InfMyr_CDMX_EDM_0319_",count:44},
+  GRO:{prefix:"CN2026_InfMyr_CDMX_GRO_0319_",count:113},
+  NL:{prefix:"CN2026_InfMyr_CDMX_NLE_0321_",count:107},
+  QROO:{prefix:"CN2026_InfMyr_CDMX_ROO_0322_",count:60}
+};
 
-const gallery = document.getElementById("gallery");
+let currentImages=[], currentIndex=0;
 
-images.forEach((img,i)=>{
-let el=document.createElement("img");
-el.src = `${base}/gallery/${img}`;
-el.loading="lazy";
-el.onclick=()=>openLB(i);
-gallery.appendChild(el);
-});
-
-let current=0;
-
-function openLB(i){
-current=i;
-document.getElementById("lightbox").style.display="flex";
-updateLB();
+function generateImages(team){
+  const c=teamConfig[team];
+  let arr=[];
+  for(let i=1;i<=c.count;i++){
+    let n=String(i).padStart(3,"0");
+    arr.push({
+      thumb:`https://res.cloudinary.com/${cloudName}/image/upload/w_400/f_auto/q_auto/WP 2026/Campeonato Nacional 2026/inf-mayor-cdmx/gallery/${c.prefix}${n}.jpg`,
+      full:`https://res.cloudinary.com/${cloudName}/image/upload/f_auto/q_auto/WP 2026/Campeonato Nacional 2026/inf-mayor-cdmx/downloads/${c.prefix}${n}.jpg`
+    });
+  }
+  return arr;
 }
 
-function closeLB(){
-document.getElementById("lightbox").style.display="none";
+function loadTeam(team){
+  const g=document.getElementById("gallery");
+  g.innerHTML="";
+  currentImages=generateImages(team);
+
+  currentImages.forEach((img,i)=>{
+    let el=document.createElement("img");
+    el.src=img.thumb;
+    el.onclick=()=>openLightbox(i);
+    g.appendChild(el);
+  });
 }
 
-function updateLB(){
-document.getElementById("lbImg").src =
-`${base}/downloads/${images[current]}`;
-
-document.getElementById("counter").innerText =
-`${current+1} / ${images.length}`;
-
-// preload next
-let next = new Image();
-next.src = `${base}/downloads/${images[(current+1)%images.length]}`;
+function openLightbox(i){
+  currentIndex=i;
+  document.getElementById("lightbox-img").src=currentImages[i].full;
+  document.getElementById("lightbox").classList.add("active");
+  updateCounter();
+  preloadNext();
+  resetUI();
 }
 
-document.addEventListener("keydown",(e)=>{
-if(e.key==="ArrowRight"){current=(current+1)%images.length;updateLB();}
-if(e.key==="ArrowLeft"){current=(current-1+images.length)%images.length;updateLB();}
-});
+function closeLightbox(){
+  document.getElementById("lightbox").classList.remove("active");
+}
+
+function nextImage(){currentIndex=(currentIndex+1)%currentImages.length;openLightbox(currentIndex);}
+function prevImage(){currentIndex=(currentIndex-1+currentImages.length)%currentImages.length;openLightbox(currentIndex);}
+
+function updateCounter(){
+  document.getElementById("counter").innerText=`${currentIndex+1} / ${currentImages.length}`;
+}
+
+function preloadNext(){
+  let img=new Image();
+  img.src=currentImages[(currentIndex+1)%currentImages.length].full;
+}
+
+let hideTimeout;
+function resetUI(){
+  const ui=document.getElementById("lightbox-ui");
+  ui.classList.remove("hidden");
+  clearTimeout(hideTimeout);
+  hideTimeout=setTimeout(()=>ui.classList.add("hidden"),2000);
+}
+
+document.getElementById("lightbox").addEventListener("mousemove",resetUI);
+document.getElementById("lightbox").addEventListener("click",resetUI);
+
+function setTeam(btn,team){
+  document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  loadTeam(team);
+}
+
+loadTeam("AGS");
 
 </script>
 
