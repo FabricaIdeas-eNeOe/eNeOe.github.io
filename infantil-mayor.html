@@ -40,7 +40,6 @@ body{
   padding:80px 20px 40px;
 }
 
-/* TITLE */
 .title{
   display:inline-block;
   font-size:42px;
@@ -183,6 +182,7 @@ body{
 <script>
 
 const cloudName="du4pmuch7";
+const base="WP%202026/Campeonato%20Nacional%202026/inf-mayor-cdmx";
 
 /* CONFIG */
 const teamConfig={
@@ -194,13 +194,10 @@ const teamConfig={
   QROO:{prefix:"CN2026_InfMyr_CDMX_ROO_0322_",count:60}
 };
 
-/* SAFE BASE PATH */
-const base="WP%202026/Campeonato%20Nacional%202026/inf-mayor-cdmx";
-
 let currentImages=[];
 let currentIndex=0;
 
-/* GENERATE IMAGES */
+/* GENERATE */
 function generateImages(team){
   const c=teamConfig[team];
   let arr=[];
@@ -223,18 +220,19 @@ let loaded=0;
 
 function loadMore(){
   const g=document.getElementById("gallery");
-
   const next=currentImages.slice(loaded,loaded+batchSize);
 
-  next.forEach((img,i)=>{
+  next.forEach((img)=>{
     let el=document.createElement("img");
     el.src=img.thumb;
     el.loading="lazy";
-    el.onclick=()=>openLightbox(loaded+i);
-    g.appendChild(el);
-  });
 
-  loaded+=batchSize;
+    const index = loaded;
+    el.onclick = () => openLightbox(index);
+
+    g.appendChild(el);
+    loaded++;
+  });
 }
 
 function loadTeam(team){
@@ -288,7 +286,7 @@ function setTeam(btn,team){
   loadTeam(team);
 }
 
-/* SAFE INIT */
+/* INIT */
 document.addEventListener("DOMContentLoaded",()=>{
   loadTeam("AGS");
 });
