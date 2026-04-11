@@ -2,7 +2,6 @@
 
 const cloudName="du4pmuch7";
 
-/* CONFIG */
 const teamConfig={
   AGS:{prefix:"CN2026_InfMyr_CDMX_AGS_0320_",count:50},
   COAH:{prefix:"CN2026_InfMyr_CDMX_COA_0320_",count:51},
@@ -15,14 +14,16 @@ const teamConfig={
 let currentImages=[];
 let currentIndex=0;
 
-/* 🔥 GENERATE URLs (3 TIERS) */
+/* ✅ FIXED BASE PATH (ENCODED) */
+const base = "WP%202026/Campeonato%20Nacional%202026/inf-mayor-cdmx";
+
+/* GENERATE */
 function generateImages(team){
   const c=teamConfig[team];
   let arr=[];
+
   for(let i=1;i<=c.count;i++){
     let n=String(i).padStart(3,"0");
-
-    const base = `WP 2026/Campeonato Nacional 2026/inf-mayor-cdmx`;
 
     arr.push({
       thumb:`https://res.cloudinary.com/${cloudName}/image/upload/w_300,q_auto:low,f_auto/${base}/gallery/${c.prefix}${n}.jpg`,
@@ -30,17 +31,18 @@ function generateImages(team){
       download:`https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q_auto/${base}/downloads/${c.prefix}${n}.jpg`
     });
   }
+
   return arr;
 }
 
-/* 🔥 PROGRESSIVE LOADING */
-let batchSize = 30;
-let loadedCount = 0;
+/* LOAD */
+let batchSize=30;
+let loadedCount=0;
 
 function loadMore(){
   const g=document.getElementById("gallery");
 
-  const nextBatch = currentImages.slice(loadedCount, loadedCount + batchSize);
+  const nextBatch=currentImages.slice(loadedCount,loadedCount+batchSize);
 
   nextBatch.forEach((img,i)=>{
     let el=document.createElement("img");
@@ -50,23 +52,21 @@ function loadMore(){
     g.appendChild(el);
   });
 
-  loadedCount += batchSize;
+  loadedCount+=batchSize;
 }
 
-/* INIT TEAM */
 function loadTeam(team){
   const g=document.getElementById("gallery");
   g.innerHTML="";
   currentImages=generateImages(team);
-  loadedCount = 0;
-
+  loadedCount=0;
   loadMore();
 }
 
 /* SCROLL LOAD */
 window.addEventListener("scroll",()=>{
-  if((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 300){
-    if(loadedCount < currentImages.length){
+  if((window.innerHeight+window.scrollY)>=document.body.offsetHeight-300){
+    if(loadedCount<currentImages.length){
       loadMore();
     }
   }
