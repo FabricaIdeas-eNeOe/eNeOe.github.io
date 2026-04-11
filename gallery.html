@@ -9,11 +9,12 @@
 
 <style>
 
-/* SAME DESIGN (LOCKED) */
+/* BASE */
 body{
   margin:0;
   font-family:'Montserrat',sans-serif;
   overflow-x:hidden;
+
   background:
     linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.15)),
     url('background.png');
@@ -21,6 +22,7 @@ body{
   background-position:center;
 }
 
+/* BACK */
 .back{
   position:fixed;
   top:20px;
@@ -28,25 +30,54 @@ body{
   color:#0a4f73;
   text-decoration:none;
   font-weight:600;
+  z-index:10;
 }
 
+/* HEADER */
 .header{
   text-align:center;
   padding:80px 20px 30px;
 }
 
+/* TITLE */
 .title{
   display:inline-block;
   font-size:42px;
   font-weight:800;
   color:#0a4f73;
   padding:18px 60px;
+
   background:rgba(255,255,255,0.25);
   backdrop-filter:blur(25px);
+
   border-radius:30px;
   border:1px solid rgba(255,255,255,0.6);
+
+  position:relative;
+  overflow:hidden;
 }
 
+.title::before{
+  content:"";
+  position:absolute;
+  inset:0;
+
+  background:linear-gradient(
+    120deg,
+    transparent 30%,
+    rgba(255,255,255,0.6) 50%,
+    transparent 70%
+  );
+
+  animation:wave 3s infinite linear;
+}
+
+@keyframes wave{
+  0%{transform:translateX(-100%)}
+  100%{transform:translateX(100%)}
+}
+
+/* FILTERS */
 .filters{
   text-align:center;
   margin:25px 0;
@@ -56,19 +87,33 @@ body{
   margin:6px;
   padding:10px 18px;
   border-radius:25px;
+
   border:1px solid rgba(255,255,255,0.5);
   background:rgba(255,255,255,0.25);
-  backdrop-filter:blur(10px);
+  backdrop-filter:blur(12px);
+
   color:#0a4f73;
   font-weight:600;
   cursor:pointer;
+
+  box-shadow:
+    inset 0 1px 3px rgba(255,255,255,0.6),
+    0 4px 10px rgba(0,0,0,0.1);
+
+  transition:0.3s;
+}
+
+.filters button:hover{
+  transform:translateY(-2px);
 }
 
 .filters button.active{
   background:#0a4f73;
   color:white;
+  box-shadow:0 6px 16px rgba(0,0,0,0.25);
 }
 
+/* GALLERY */
 .gallery{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
@@ -82,17 +127,28 @@ body{
   object-fit:cover;
   border-radius:14px;
   cursor:pointer;
+  transition:0.3s;
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
 }
 
+.gallery img:hover{
+  transform:scale(1.05);
+}
+
+/* LIGHTBOX */
 .lightbox{
   position:fixed;
   inset:0;
   background:rgba(0,0,0,0.92);
+  backdrop-filter:blur(10px);
+
   display:flex;
   align-items:center;
   justify-content:center;
+
   opacity:0;
   pointer-events:none;
+  transition:0.3s;
 }
 
 .lightbox.active{
@@ -103,6 +159,7 @@ body{
 .lightbox img{
   max-width:90%;
   max-height:85%;
+  border-radius:10px;
 }
 
 </style>
@@ -125,15 +182,14 @@ body{
 
 <script>
 
-/* 🔥 STEP 3 — READ URL */
+/* URL PARAMS */
 const params = new URLSearchParams(window.location.search);
-
 const event = params.get("event");
 const category = params.get("cat");
 
-/* 🔥 STEP 4 — CONFIG SYSTEM */
 const cloudName="du4pmuch7";
 
+/* CONFIG */
 const CONFIG = {
 
   cn2026: {
@@ -149,11 +205,24 @@ const CONFIG = {
       }
     },
 
+    "inf-mayor": {
+      title:"Infantil Mayor",
+      base:"WP%202026/Campeonato%20Nacional%202026/inf-mayor-cdmx",
+      teams:{
+        AGS:{prefix:"CN2026_InfMyr_CDMX_AGS_0320_",count:50},
+        COAH:{prefix:"CN2026_InfMyr_CDMX_COA_0320_",count:51},
+        EDOMEX:{prefix:"CN2026_InfMyr_CDMX_EDM_0319_",count:44},
+        GRO:{prefix:"CN2026_InfMyr_CDMX_GRO_0319_",count:113},
+        NL:{prefix:"CN2026_InfMyr_CDMX_NLE_0321_",count:107},
+        QROO:{prefix:"CN2026_InfMyr_CDMX_ROO_0322_",count:60}
+      }
+    },
+
     "junior": {
       title:"Junior",
       base:"WP%202026/Campeonato%20Nacional%202026/junior-cdmx",
       teams:{
-        // 👉 YOU WILL FILL THIS BASED ON YOUR UPLOADS
+        /* 🔜 YOU WILL FILL THIS */
       }
     }
 
@@ -161,13 +230,17 @@ const CONFIG = {
 
 };
 
-/* 🔥 LOAD CONFIG */
 const config = CONFIG[event]?.[category];
 
-document.getElementById("title").innerText = config?.title || "Gallery";
+if(!config){
+  document.getElementById("title").innerText="Gallery not found";
+}
 
-/* BUILD FILTERS */
-const filtersDiv = document.getElementById("filters");
+/* TITLE */
+document.getElementById("title").innerText=config.title;
+
+/* FILTERS */
+const filtersDiv=document.getElementById("filters");
 
 Object.keys(config.teams).forEach((team,i)=>{
   const btn=document.createElement("button");
@@ -201,7 +274,7 @@ function generateImages(team){
   return arr;
 }
 
-/* LOAD SYSTEM */
+/* LOADING SYSTEM */
 let currentImages=[];
 let loaded=0;
 let batchSize=30;
@@ -223,7 +296,6 @@ function loadMore(){
   });
 }
 
-/* AUTO FILL */
 function ensureFill(){
   while(document.body.offsetHeight < window.innerHeight && loaded < currentImages.length){
     loadMore();
