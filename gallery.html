@@ -61,14 +61,7 @@ body{
   content:"";
   position:absolute;
   inset:0;
-
-  background:linear-gradient(
-    120deg,
-    transparent 30%,
-    rgba(255,255,255,0.6) 50%,
-    transparent 70%
-  );
-
+  background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,0.6) 50%,transparent 70%);
   animation:wave 3s infinite linear;
 }
 
@@ -167,7 +160,7 @@ body{
 
 <body>
 
-<a href="index.html" class="back">← Back</a>
+<a href="campeonato2026.html" class="back">← Back</a>
 
 <div class="header">
   <div id="title" class="title">Gallery</div>
@@ -222,7 +215,10 @@ const CONFIG = {
       title:"Junior",
       base:"WP%202026/Campeonato%20Nacional%202026/junior-cdmx",
       teams:{
-        /* 🔜 YOU WILL FILL THIS */
+        GTO1:{prefix:"CN2026_JNR_CDMX_GTO_0402_",count:80,label:"vs GTO - Game 1"},
+        GTO2:{prefix:"CN2026_JNR_CDMX_GTO2_0402_",count:80,label:"vs GTO - Game 2"},
+        UNAM1:{prefix:"CN2026_JNR_CDMX_UNAM_0403_",count:80,label:"vs UNAM - Game 1"},
+        UNAM2:{prefix:"CN2026_JNR_CDMX_UNAM2_0403_",count:80,label:"vs UNAM - Game 2"}
       }
     }
 
@@ -244,7 +240,7 @@ const filtersDiv=document.getElementById("filters");
 
 Object.keys(config.teams).forEach((team,i)=>{
   const btn=document.createElement("button");
-  btn.innerText="vs "+team;
+  btn.innerText = config.teams[team].label || ("vs " + team);
 
   if(i===0) btn.classList.add("active");
 
