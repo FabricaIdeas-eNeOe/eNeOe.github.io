@@ -9,11 +9,9 @@
 
 <style>
 
-/* BASE */
 body{
   margin:0;
   font-family:'Montserrat',sans-serif;
-
   background:
     linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.15)),
     url('background.png');
@@ -24,7 +22,7 @@ body{
 /* HEADER */
 .header{
   text-align:center;
-  padding:80px 20px 40px;
+  padding:90px 20px 50px;
 }
 
 .title{
@@ -48,14 +46,7 @@ body{
   content:"";
   position:absolute;
   inset:0;
-
-  background:linear-gradient(
-    120deg,
-    transparent 30%,
-    rgba(255,255,255,0.6) 50%,
-    transparent 70%
-  );
-
+  background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,0.6) 50%,transparent 70%);
   animation:wave 3s infinite linear;
 }
 
@@ -66,40 +57,42 @@ body{
 
 /* GRID */
 .grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:30px;
-  padding:40px 60px 100px;
+  display:flex;
+  justify-content:center;
+  gap:40px;
+  flex-wrap:wrap;
+  padding:40px 40px 120px;
 }
 
 /* CARD */
 .card{
+  width:320px;
   text-decoration:none;
   color:inherit;
 
-  border-radius:20px;
+  border-radius:24px;
   overflow:hidden;
 
-  background:rgba(255,255,255,0.2);
-  backdrop-filter:blur(12px);
+  background:rgba(255,255,255,0.25);
+  backdrop-filter:blur(15px);
 
-  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+  box-shadow:
+    0 15px 35px rgba(0,0,0,0.2),
+    inset 0 1px 4px rgba(255,255,255,0.5);
 
   transition:0.3s;
 }
 
 .card:hover{
-  transform:translateY(-6px) scale(1.02);
+  transform:translateY(-8px) scale(1.02);
 }
 
-/* IMAGE */
 .card img{
   width:100%;
   height:200px;
   object-fit:cover;
 }
 
-/* CONTENT */
 .card-content{
   padding:20px;
   text-align:center;
@@ -128,43 +121,29 @@ body{
 
 <div class="grid">
 
-  <!-- INFANTIL MENOR -->
-  <a href="gallery.html?event=cn2026&cat=inf-menor" class="card">
-    <img src="infantil-menor.jpg">
-    <div class="card-content">
-      <h3>Infantil Menor</h3>
-      <p>Matches & Gallery</p>
-    </div>
-  </a>
+<a href="gallery.html?event=cn2026&cat=inf-menor" class="card">
+  <img src="infantil-menor.jpg">
+  <div class="card-content">
+    <h3>Infantil Menor</h3>
+    <p>Matches & Gallery</p>
+  </div>
+</a>
 
-  <!-- INFANTIL MAYOR -->
-  <a href="gallery.html?event=cn2026&cat=inf-mayor" class="card">
-    <img src="infantil-mayor.jpg">
-    <div class="card-content">
-      <h3>Infantil Mayor</h3>
-      <p>Matches & Gallery</p>
-    </div>
-  </a>
+<a href="gallery.html?event=cn2026&cat=inf-mayor" class="card">
+  <img src="infantil-mayor.jpg">
+  <div class="card-content">
+    <h3>Infantil Mayor</h3>
+    <p>Matches & Gallery</p>
+  </div>
+</a>
 
-  <!-- JUNIOR -->
-  <a href="gallery.html?event=cn2026&cat=junior" class="card">
-    <img src="waterpolo.jpg">
-    <div class="card-content">
-      <h3>Junior</h3>
-      <p>Matches & Gallery</p>
-    </div>
-  </a>
-
-  <!-- 🔜 FUTURE -->
-  <!--
-  <a href="gallery.html?event=cn2026&cat=juvenil" class="card">
-    <img src="juvenil.jpg">
-    <div class="card-content">
-      <h3>Juvenil</h3>
-      <p>Coming soon</p>
-    </div>
-  </a>
-  -->
+<a href="gallery.html?event=cn2026&cat=junior" class="card">
+  <img src="waterpolo.jpg">
+  <div class="card-content">
+    <h3>Junior</h3>
+    <p>Matches & Gallery</p>
+  </div>
+</a>
 
 </div>
 
