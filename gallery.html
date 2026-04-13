@@ -16,6 +16,18 @@ body{
   background-size:cover;
 }
 
+/* HIDDEN ADMIN HOTSPOTS */
+.hotspot{
+  position:fixed;
+  width:40px;
+  height:40px;
+  z-index:9999;
+}
+
+#homeBtn{top:0;left:0;}
+#campBtn{top:0;right:0;}
+#adminBtn{top:0;left:50%;transform:translateX(-50%);}
+
 /* HEADER */
 .header{
   text-align:center;
@@ -49,8 +61,6 @@ body{
   background:rgba(255,255,255,0.6);
   color:#0a4f73;
   cursor:pointer;
-  transition:0.25s;
-  font-size:14px;
 }
 
 .tab.active{
@@ -70,11 +80,6 @@ body{
   width:100%;
   border-radius:15px;
   cursor:pointer;
-  transition:0.2s;
-}
-
-.gallery img:hover{
-  transform:scale(1.05);
 }
 
 /* VIEWER */
@@ -85,13 +90,11 @@ body{
   display:none;
   justify-content:center;
   align-items:center;
-  z-index:999;
 }
 
 .viewer img{
   max-width:90%;
   max-height:85%;
-  border-radius:10px;
 }
 
 .close{
@@ -103,16 +106,10 @@ body{
   cursor:pointer;
 }
 
-/* FOOTER */
 .footer{
   background:rgba(255,255,255,0.8);
   padding:15px;
   text-align:center;
-}
-
-.footer img{
-  height:40px;
-  margin:0 10px;
 }
 
 </style>
@@ -120,8 +117,12 @@ body{
 
 <body>
 
+<div id="homeBtn" class="hotspot" onclick="location.href='index.html'"></div>
+<div id="campBtn" class="hotspot" onclick="location.href='campeonato2026.html'"></div>
+<div id="adminBtn" class="hotspot" onclick="location.href='admin.html'"></div>
+
 <div class="header">
-  <div class="title" id="title">Gallery</div>
+  <div class="title" id="title"></div>
   <div class="tabs" id="tabs"></div>
 </div>
 
@@ -133,12 +134,14 @@ body{
 </div>
 
 <div class="footer">
-  <img src="logo1.png">
-  <img src="logo2.png">
-  <img src="logo3.png">
+  <img src="logo1.png" height="40">
+  <img src="logo2.png" height="40">
+  <img src="logo3.png" height="40">
 </div>
 
 <script>
+
+const cloud = "https://res.cloudinary.com/YOUR_CLOUD/image/upload/Leonardo/gallery/";
 
 const params = new URLSearchParams(window.location.search);
 const cat = params.get("cat");
@@ -146,61 +149,61 @@ const cat = params.get("cat");
 const gallery = document.getElementById("gallery");
 const tabsContainer = document.getElementById("tabs");
 
-const cloud = "https://res.cloudinary.com/YOUR_CLOUD/image/upload/";
-
 function createTabs(tabs){
   tabsContainer.innerHTML="";
   tabs.forEach((t,i)=>{
-    let el = document.createElement("div");
+    let el=document.createElement("div");
     el.className="tab"+(i===0?" active":"");
     el.innerText=t.name;
     el.onclick=()=>{
       document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
       el.classList.add("active");
-      loadGallery(t);
+      loadGallery(t.prefix);
     };
     tabsContainer.appendChild(el);
   });
 }
 
-function loadGallery(config){
+function loadGallery(prefix){
 
   gallery.innerHTML="";
 
-  let i = 1;
-  let fails = 0;
+  let index=1;
+  let batch=20;
+  let failCount=0;
 
-  function loadNext(){
+  function loadBatch(){
 
-    if(fails > 5) return;
+    for(let j=0;j<batch;j++){
 
-    let img = new Image();
+      let num=String(index).padStart(3,'0');
 
-    let thumb = `${cloud}q_auto,f_auto,w_400/${config.prefix}_${String(i).padStart(3,'0')}.jpg`;
+      let img=new Image();
+      img.src=`${cloud}q_auto,f_auto,w_400/${prefix}_${num}.jpg`;
 
-    img.src = thumb;
+      img.onload=()=>{
+        failCount=0;
 
-    img.onload = ()=>{
-      fails = 0;
+        img.onclick=()=>{
+          openViewer(`${cloud}q_auto,f_auto/${prefix}_${num}.jpg`);
+        };
 
-      img.onclick = ()=>{
-        openViewer(`${cloud}q_auto,f_auto/${config.prefix}_${String(i).padStart(3,'0')}.jpg`);
+        gallery.appendChild(img);
       };
 
-      gallery.appendChild(img);
+      img.onerror=()=>{
+        failCount++;
+      };
 
-      i++;
-      loadNext();
-    };
+      index++;
+    }
 
-    img.onerror = ()=>{
-      fails++;
-      i++;
-      loadNext();
-    };
+    if(failCount<batch){
+      setTimeout(loadBatch,200);
+    }
   }
 
-  loadNext();
+  loadBatch();
 }
 
 function openViewer(src){
@@ -212,24 +215,21 @@ function closeViewer(){
   document.getElementById("viewer").style.display="none";
 }
 
-/* CONFIG PER CATEGORY */
+/* CONFIG */
 
 if(cat==="junior"){
-
   document.getElementById("title").innerText="Junior";
 
   createTabs([
-    {name:"vs GTO - Game 1", prefix:"CN2026_JNR_CDMX_GTO_0402"},
-    {name:"vs GTO - Game 2", prefix:"CN2026_JNR_CDMX2_GTO_0402"},
-    {name:"vs UNAM - Game 1", prefix:"CN2026_JNR_CDMX_UNAM_0403"},
-    {name:"vs UNAM - Game 2", prefix:"CN2026_JNR_CDMX2_UNAM_0403"},
-    {name:"Premiación", prefix:"CN2026_JNR_CDMX_3RD_0404"}
+    {name:"vs GTO - Game 1", prefix:"CN2026_Junr_CDMX_GTO_0402"},
+    {name:"vs GTO - Game 2", prefix:"CN2026_Junr_CDMX2_GTO_0402"},
+    {name:"vs UNAM - Game 1", prefix:"CN2026_Junr_CDMX_UNAM_0404"},
+    {name:"vs UNAM - Game 2", prefix:"CN2026_Junr_CDMX_UNAM2_0404"},
+    {name:"Premiación", prefix:"CN2026_Junr_CDMX_3RD_0404"}
   ]);
-
 }
 
 if(cat==="inf-mayor"){
-
   document.getElementById("title").innerText="Infantil Mayor";
 
   createTabs([
@@ -240,11 +240,9 @@ if(cat==="inf-mayor"){
     {name:"vs NL", prefix:"CN2026_INF_MAYOR_NL"},
     {name:"vs QROO", prefix:"CN2026_INF_MAYOR_QROO"}
   ]);
-
 }
 
 if(cat==="inf-menor"){
-
   document.getElementById("title").innerText="Infantil Menor";
 
   createTabs([
@@ -253,10 +251,9 @@ if(cat==="inf-menor"){
     {name:"vs MIC", prefix:"CN2026_INF_MENOR_MIC"},
     {name:"vs NL", prefix:"CN2026_INF_MENOR_NL"}
   ]);
-
 }
 
-/* LOAD FIRST TAB */
+/* INIT */
 setTimeout(()=>{
   document.querySelector(".tab").click();
 },100);
