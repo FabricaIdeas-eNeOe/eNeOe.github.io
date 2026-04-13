@@ -4,155 +4,58 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Gallery</title>
+<title>Gallery Test</title>
 
 <style>
-body {
+body{
   margin:0;
   font-family: Arial, sans-serif;
-  background: url('background.png') no-repeat center/cover;
+  background:#f2f2f2;
 }
 
-.title {
+.title{
   text-align:center;
-  margin-top:40px;
-  font-size:42px;
-  font-weight:bold;
-  color:#1f3b4d;
+  margin:40px;
+  font-size:32px;
 }
 
-.tabs {
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  margin:20px 0;
-}
-
-.tab {
-  padding:10px 20px;
-  border-radius:20px;
-  background:rgba(255,255,255,0.6);
-  backdrop-filter: blur(10px);
-  cursor:pointer;
-}
-
-.tab.active {
-  background:#1f5b6b;
-  color:white;
-}
-
-.gallery {
+.gallery{
   display:grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
-  gap:15px;
+  grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
+  gap:10px;
   padding:20px;
 }
 
-.img-box {
+img{
   width:100%;
-  aspect-ratio:4/3;
-  overflow:hidden;
-  border-radius:15px;
-}
-
-.img-box img {
-  width:100%;
-  height:100%;
-  object-fit:cover;
+  display:block;
 }
 </style>
 </head>
 
 <body>
 
-<div class="title" id="title">GALLERY</div>
-
-<div class="tabs" id="tabs"></div>
+<div class="title">TEST GALLERY</div>
 
 <div class="gallery" id="gallery"></div>
 
-<div style="text-align:center; padding:20px; background:rgba(255,255,255,0.5); backdrop-filter:blur(10px);">
-  <img src="logo-olimpicos.png" style="height:40px; margin:10px;">
-  <img src="logo-aofm.png" style="height:40px; margin:10px;">
-  <img src="logo-club.png" style="height:40px; margin:10px;">
-</div>
-
 <script>
 
-/* 🔒 CATEGORY CONFIG — THIS FIXES MIXED TABS */
-const CONFIG = {
-  "junior": {
-    path: "WP2026/Campeonato-Nacional-2026/junior-cdmx/gallery/",
-    prefix: "CN2026_Junr_CDMX_",
-    tabs: ["GTO","GTO2","UNAM","UNAM2"]
-  },
-  "inf-mayor": {
-    path: "WP2026/Campeonato-Nacional-2026/inf-mayor-cdmx/gallery/",
-    prefix: "CN2026_InfM_CDMX_",
-    tabs: ["AGS","COAH","EDOMEX","GRO","NL","ROO"]
-  },
-  "inf-menor": {
-    path: "WP2026/Campeonato-Nacional-2026/inf-menor-cdmx/gallery/",
-    prefix: "CN2026_Infm_CDMX_",
-    tabs: ["GTO","GTO2","UNAM","UNAM2"]
-  }
-};
+/* 🔴 HARDCODED TEST (NO VARIABLES) */
 
-const CLOUD = "https://res.cloudinary.com/du4pmuch7/image/upload/";
+const gallery = document.getElementById("gallery");
 
-/* READ CATEGORY */
-const params = new URLSearchParams(window.location.search);
-const cat = params.get("cat") || "junior";
+const images = [
+"https://res.cloudinary.com/du4pmuch7/image/upload/WP2026/Campeonato-Nacional-2026/junior-cdmx/gallery/CN2026_Junr_CDMX_UNAM2_0404_073.jpg",
+"https://res.cloudinary.com/du4pmuch7/image/upload/WP2026/Campeonato-Nacional-2026/junior-cdmx/gallery/CN2026_Junr_CDMX_UNAM2_0404_074.jpg",
+"https://res.cloudinary.com/du4pmuch7/image/upload/WP2026/Campeonato-Nacional-2026/junior-cdmx/gallery/CN2026_Junr_CDMX_UNAM2_0404_070.jpg"
+];
 
-/* SET TITLE */
-document.getElementById("title").innerText = cat.toUpperCase().replace("-", " ");
-
-/* BUILD TABS */
-const tabsContainer = document.getElementById("tabs");
-const current = CONFIG[cat];
-
-current.tabs.forEach((team, index) => {
-  let tab = document.createElement("div");
-  tab.className = "tab" + (index === 0 ? " active" : "");
-  tab.innerText = "vs " + team;
-
-  tab.onclick = () => {
-    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-    tab.classList.add("active");
-    loadGallery(team);
-  };
-
-  tabsContainer.appendChild(tab);
+images.forEach(src=>{
+  let img = document.createElement("img");
+  img.src = src;
+  gallery.appendChild(img);
 });
-
-/* LOAD GALLERY */
-function loadGallery(team){
-
-  const gallery = document.getElementById("gallery");
-  gallery.innerHTML = "";
-
-  const BASE = CLOUD + current.path;
-
-  for(let i = 1; i <= 150; i++){
-
-    let num = String(i).padStart(3,'0');
-
-    let url = BASE + current.prefix + team + "_0404_" + num + ".jpg";
-
-    let img = document.createElement("img");
-    img.src = url;
-    img.onerror = () => img.remove();
-
-    let box = document.createElement("div");
-    box.className = "img-box";
-    box.appendChild(img);
-
-    gallery.appendChild(box);
-  }
-}
-
-/* INITIAL LOAD */
-loadGallery(current.tabs[0]);
 
 </script>
 
