@@ -19,7 +19,6 @@ body{
   background-position:center;
 }
 
-/* HEADER */
 .header{
   text-align:center;
   padding:80px 20px 30px;
@@ -35,7 +34,6 @@ body{
   border-radius:30px;
 }
 
-/* FILTERS */
 .filters{
   text-align:center;
   margin:20px;
@@ -55,7 +53,6 @@ body{
   color:white;
 }
 
-/* GALLERY */
 .gallery{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
@@ -71,7 +68,6 @@ body{
   cursor:pointer;
 }
 
-/* LIGHTBOX */
 .lightbox{
   position:fixed;
   inset:0;
@@ -108,7 +104,6 @@ body{
   cursor:pointer;
 }
 
-/* FOOTER */
 .footer{
   text-align:center;
   padding:12px;
@@ -151,15 +146,28 @@ const category = params.get("cat");
 
 const cloudName="du4pmuch7";
 
-/* CONFIG WITHOUT COUNTS */
+/* SAFE CONFIG */
 const CONFIG = {
   cn2026: {
+    "inf-menor":{
+      title:"Infantil Menor",
+      base:"WP%202026/Campeonato%20Nacional%202026/inf-menor-cdmx",
+      teams:{
+        GRO:{prefix:"CN2026_InfMnr_CDMX_GRO_0319_"},
+        GTO:{prefix:"CN2026_InfMnr_CDMX_GTO_0322_"},
+        MIC:{prefix:"CN2026_InfMnr_CDMX_MIC_0321_"},
+        NLE:{prefix:"CN2026_InfMnr_CDMX_NLE_0320_"}
+      }
+    },
     "inf-mayor":{
       title:"Infantil Mayor",
       base:"WP%202026/Campeonato%20Nacional%202026/inf-mayor-cdmx",
       teams:{
         GRO:{prefix:"CN2026_InfMyr_CDMX_GRO_0319_"},
-        COAH:{prefix:"CN2026_InfMyr_CDMX_COA_0320_"}
+        COAH:{prefix:"CN2026_InfMyr_CDMX_COA_0320_"},
+        EDOMEX:{prefix:"CN2026_InfMyr_CDMX_EDM_0319_"},
+        NL:{prefix:"CN2026_InfMyr_CDMX_NLE_0321_"},
+        QROO:{prefix:"CN2026_InfMyr_CDMX_ROO_0322_"}
       }
     },
     "junior":{
@@ -198,15 +206,16 @@ Object.keys(config.teams).forEach((team,i)=>{
   filtersDiv.appendChild(btn);
 });
 
-/* SMART LOADER */
+/* LOAD SYSTEM */
 let index=1;
-let failCount=0;
+let loaded=0;
 let currentTeam=null;
+const MAX_IMAGES = 600;
 
-function loadBatch(){
-  if(failCount > 15) return; // stop if too many missing
+function loadMore(){
+  if(index > MAX_IMAGES) return;
 
-  for(let i=0;i<20;i++){
+  for(let i=0;i<30;i++){
     loadOne();
   }
 }
@@ -223,17 +232,13 @@ function loadOne(){
   let img=new Image();
 
   img.onload=()=>{
-    failCount=0;
-
     let el=document.createElement("img");
     el.src=thumb;
     el.onclick=()=>openLightbox(full);
     g.appendChild(el);
   };
 
-  img.onerror=()=>{
-    failCount++;
-  };
+  img.onerror=()=>{}; // skip silently
 
   img.src=thumb;
 
@@ -244,15 +249,14 @@ function loadOne(){
 function startGallery(team){
   document.getElementById("gallery").innerHTML="";
   index=1;
-  failCount=0;
   currentTeam=team;
-  loadBatch();
+  loadMore();
 }
 
 /* SCROLL */
 window.addEventListener("scroll",()=>{
   if(window.innerHeight + window.scrollY >= document.body.offsetHeight - 200){
-    loadBatch();
+    loadMore();
   }
 });
 
