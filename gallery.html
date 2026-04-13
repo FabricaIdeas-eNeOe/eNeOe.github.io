@@ -1,63 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Gallery Test</title>
-
-<style>
-body{
-  margin:0;
-  font-family: Arial, sans-serif;
-  background:#f2f2f2;
-}
-
-.title{
-  text-align:center;
-  margin:40px;
-  font-size:32px;
-}
-
-.gallery{
-  display:grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
-  gap:10px;
-  padding:20px;
-}
-
-img{
-  width:100%;
-  display:block;
-}
-</style>
-</head>
-
-<body>
-
-<div class="title">TEST GALLERY</div>
-
-<div class="gallery" id="gallery"></div>
-
 <script>
-
-/* 🔴 HARDCODED TEST (NO VARIABLES) */
+const images = [
+"https://res.cloudinary.com/du4pmuch7/image/upload/WP%202026/Campeonato%20Nacional%202026/junior-cdmx/gallery/CN2026_Junr_CDMX_UNAM2_0404_064.jpg",
+"https://res.cloudinary.com/du4pmuch7/image/upload/WP%202026/Campeonato%20Nacional%202026/junior-cdmx/gallery/CN2026_Junr_CDMX_UNAM2_0404_073.jpg",
+"https://res.cloudinary.com/du4pmuch7/image/upload/WP%202026/Campeonato%20Nacional%202026/junior-cdmx/gallery/CN2026_Junr_CDMX_UNAM2_0404_074.jpg"
+];
 
 const gallery = document.getElementById("gallery");
 
-const images = [
-"https://res.cloudinary.com/du4pmuch7/image/upload/WP2026/Campeonato-Nacional-2026/junior-cdmx/gallery/CN2026_Junr_CDMX_UNAM2_0404_073.jpg",
-"https://res.cloudinary.com/du4pmuch7/image/upload/WP2026/Campeonato-Nacional-2026/junior-cdmx/gallery/CN2026_Junr_CDMX_UNAM2_0404_074.jpg",
-"https://res.cloudinary.com/du4pmuch7/image/upload/WP2026/Campeonato-Nacional-2026/junior-cdmx/gallery/CN2026_Junr_CDMX_UNAM2_0404_070.jpg"
-];
-
-images.forEach(src=>{
-  let img = document.createElement("img");
+images.forEach(src => {
+  const img = document.createElement("img");
   img.src = src;
   gallery.appendChild(img);
 });
-
 </script>
-
-</body>
-</html>
