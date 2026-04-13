@@ -1,15 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Galería Junior</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+}
+
+h1 {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 15px;
+  padding: 20px;
+}
+
+.gallery img {
+  width: 100%;
+  border-radius: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>GALERÍA JUNIOR</h1>
+
+<div class="gallery" id="gallery"></div>
+
 <script>
-const images = [
-"https://res.cloudinary.com/du4pmuch7/image/upload/WP%202026/Campeonato%20Nacional%202026/junior-cdmx/gallery/CN2026_Junr_CDMX_UNAM2_0404_064.jpg",
-"https://res.cloudinary.com/du4pmuch7/image/upload/WP%202026/Campeonato%20Nacional%202026/junior-cdmx/gallery/CN2026_Junr_CDMX_UNAM2_0404_073.jpg",
-"https://res.cloudinary.com/du4pmuch7/image/upload/WP%202026/Campeonato%20Nacional%202026/junior-cdmx/gallery/CN2026_Junr_CDMX_UNAM2_0404_074.jpg"
+const base = "https://res.cloudinary.com/du4pmuch7/image/upload/";
+
+// ⚠️ IMPORTANT: URL ENCODED PATH
+const path = "WP%202026/Campeonato%20Nacional%202026/junior-cdmx/gallery/";
+
+// 👉 ADD ONLY REAL FILE NAMES FROM YOUR FOLDER
+const files = [
+"CN2026_Junr_CDMX_UNAM2_0404_064.jpg",
+"CN2026_Junr_CDMX_UNAM2_0404_073.jpg",
+"CN2026_Junr_CDMX_UNAM2_0404_074.jpg",
+"CN2026_Junr_CDMX_UNAM2_0404_070.jpg"
 ];
 
 const gallery = document.getElementById("gallery");
 
-images.forEach(src => {
+files.forEach(file => {
   const img = document.createElement("img");
-  img.src = src;
+  img.src = base + path + file;
   gallery.appendChild(img);
 });
 </script>
+
+</body>
+</html>
