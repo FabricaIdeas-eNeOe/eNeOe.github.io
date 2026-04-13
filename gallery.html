@@ -1,141 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Gallery</title>
+
+<style>
+body {
+  margin:0;
+  font-family: Arial, sans-serif;
+  background: url('background.jpg') no-repeat center/cover;
+}
+
+/* TITLE */
+.title {
+  text-align:center;
+  margin-top:40px;
+  font-size:40px;
+  font-weight:bold;
+  color:#1f3b4d;
+}
+
+/* TABS */
+.tabs {
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin:20px 0;
+}
+
+.tab {
+  padding:10px 20px;
+  border-radius:20px;
+  background:rgba(255,255,255,0.6);
+  backdrop-filter: blur(10px);
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.tab.active {
+  background:#1f5b6b;
+  color:white;
+}
+
+/* GALLERY */
+.gallery {
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
+  gap:15px;
+  padding:20px;
+}
+
+.img-box {
+  width:100%;
+  aspect-ratio: 4/3;
+  overflow:hidden;
+  border-radius:15px;
+}
+
+.img-box img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+</style>
+</head>
+
+<body>
+
+<div class="title">JUNIOR</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="loadGallery('gto')">vs GTO</div>
+  <div class="tab" onclick="loadGallery('gto2')">vs GTO2</div>
+  <div class="tab" onclick="loadGallery('unam')">vs UNAM</div>
+  <div class="tab" onclick="loadGallery('unam2')">vs UNAM2</div>
+</div>
+
+<div class="gallery" id="gallery"></div>
+
 <script>
 
-/* =========================
-   CONFIG
-========================= */
+const BASE =
+"https://res.cloudinary.com/du4pmuch7/image/upload/WP2026/Campeonato-Nacional-2026/junior-cdmx/gallery/";
 
-const CLOUD_NAME = "du4pmuch7";
-const BASE_PATH = "WP_2026/Campeonato_Nacional_2026";
+function loadGallery(team){
 
-/* =========================
-   FALLBACK MANIFEST (manual safety)
-========================= */
-
-const FALLBACK = {
-  junior: {
-    GTO: ["gto_01"],
-    GTO2: [],
-    UNAM: [],
-    UNAM2: [],
-    "3RD": []
-  },
-  "inf-mayor": {
-    COAH: [],
-    ROO: []
-  },
-  "inf-menor": {
-    MIC: []
-  }
-};
-
-/* =========================
-   INIT
-========================= */
-
-const params = new URLSearchParams(window.location.search);
-const category = params.get("cat");
-
-const gallery = document.getElementById("gallery");
-const tabs = document.getElementById("tabs");
-const title = document.getElementById("title");
-
-if(!FALLBACK[category]){
-  document.body.innerHTML = "<h2>Invalid category</h2>";
-}
-
-title.innerText = category.toUpperCase();
-
-/* =========================
-   BUILD TABS
-========================= */
-
-Object.keys(FALLBACK[category]).forEach((rival,i)=>{
-
-  const tab = document.createElement("div");
-  tab.className = "tab" + (i===0 ? " active" : "");
-
-  tab.innerText = rival === "3RD" ? "Premiación" : "vs " + rival;
-
-  tab.onclick = ()=>{
-    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-    tab.classList.add("active");
-    loadImages(rival);
-  };
-
-  tabs.appendChild(tab);
-});
-
-/* =========================
-   LOAD IMAGES (HYBRID)
-========================= */
-
-async function loadImages(rival){
-
-  gallery.innerHTML = "Loading...";
-
-  const folder = `${BASE_PATH}/${category}-cdmx/gallery`;
-
-  const jsonURL = `https://res.cloudinary.com/${CLOUD_NAME}/image/list/${folder}.json`;
-
-  try {
-
-    const res = await fetch(jsonURL);
-
-    if(!res.ok) throw "Cloudinary JSON failed";
-
-    const data = await res.json();
-
-    // Filter images by rival keyword
-    const images = data.resources
-      .map(r => r.public_id.split("/").pop())
-      .filter(name => name.toLowerCase().includes(rival.toLowerCase()));
-
-    render(images);
-
-  } catch(e){
-
-    console.warn("Using FALLBACK:", e);
-
-    const images = FALLBACK[category][rival] || [];
-    render(images);
-  }
-}
-
-/* =========================
-   RENDER
-========================= */
-
-function render(list){
-
+  const gallery = document.getElementById("gallery");
   gallery.innerHTML = "";
 
-  if(!list.length){
-    gallery.innerHTML = "<p>No images yet</p>";
-    return;
-  }
+  // 🔥 TEMP: load first 80 images (adjust later)
+  for(let i=1;i<=80;i++){
 
-  list.forEach(name => {
+    let num = String(i).padStart(3,'0');
 
-    const url = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${BASE_PATH}/${category}-cdmx/gallery/${name}.jpg`;
+    let url = BASE + "CN2026_Junr_CDMX_" + team.toUpperCase() + "_0404_" + num + ".jpg";
 
-    const card = document.createElement("div");
-    card.className = "card";
-
-    const img = document.createElement("img");
+    let img = document.createElement("img");
     img.src = url;
 
-    img.onerror = ()=>card.remove();
+    img.onerror = () => img.remove();
 
-    card.appendChild(img);
-    gallery.appendChild(card);
-  });
+    let box = document.createElement("div");
+    box.className = "img-box";
+    box.appendChild(img);
+
+    gallery.appendChild(box);
+  }
 }
 
-/* =========================
-   INIT LOAD
-========================= */
-
-const first = Object.keys(FALLBACK[category])[0];
-loadImages(first);
+// initial load
+loadGallery("gto");
 
 </script>
+
+</body>
+</html>
