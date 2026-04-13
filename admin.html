@@ -1,15 +1,22 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>Admin Gallery</title>
-</head>
-<body>
+<head><title>Admin</title></head>
+<body style="font-family:Montserrat;text-align:center;margin-top:100px;">
 
-<h2>Admin Only</h2>
+<h2>Admin Access</h2>
 
-<a href="gallery.html?cat=kids&kid=leonardo">Leonardo</a><br>
-<a href="gallery.html?cat=kids&kid=emilio">Emilio</a>
+<input type="password" id="pass" placeholder="Password">
+<button onclick="login()">Enter</button>
+
+<script>
+function login(){
+  if(document.getElementById("pass").value==="AOFM2026"){
+    location.href="kids.html";
+  }else{
+    alert("Wrong password");
+  }
+}
+</script>
 
 </body>
 </html>
