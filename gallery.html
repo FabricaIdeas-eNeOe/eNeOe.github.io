@@ -10,7 +10,7 @@
 body {
   margin:0;
   font-family: Arial, sans-serif;
-  background: url('background.jpg') no-repeat center/cover;
+  background: url('background.png') no-repeat center/cover;
 }
 
 /* TITLE */
@@ -73,34 +73,42 @@ body {
 <div class="title">JUNIOR</div>
 
 <div class="tabs">
-  <div class="tab active" onclick="loadGallery('gto')">vs GTO</div>
-  <div class="tab" onclick="loadGallery('gto2')">vs GTO2</div>
-  <div class="tab" onclick="loadGallery('unam')">vs UNAM</div>
-  <div class="tab" onclick="loadGallery('unam2')">vs UNAM2</div>
+  <div class="tab active" onclick="setTab(this); loadGallery('GTO')">vs GTO</div>
+  <div class="tab" onclick="setTab(this); loadGallery('GTO2')">vs GTO2</div>
+  <div class="tab" onclick="setTab(this); loadGallery('UNAM')">vs UNAM</div>
+  <div class="tab" onclick="setTab(this); loadGallery('UNAM2')">vs UNAM2</div>
 </div>
 
 <div class="gallery" id="gallery"></div>
 
 <script>
 
-const BASE =
-"https://res.cloudinary.com/du4pmuch7/image/upload/WP2026/Campeonato-Nacional-2026/junior-cdmx/gallery/";
+/* ✅ EXACT PATH (your current structure) */
+const BASE = "https://res.cloudinary.com/du4pmuch7/image/upload/WP2026/Campeonato-Nacional-2026/junior-cdmx/gallery/";
 
+/* TAB UI */
+function setTab(el){
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+/* LOAD GALLERY */
 function loadGallery(team){
 
   const gallery = document.getElementById("gallery");
   gallery.innerHTML = "";
 
-  // 🔥 TEMP: load first 80 images (adjust later)
-  for(let i=1;i<=80;i++){
+  /* ✅ SAFE RANGE (covers your existing files like 063–073 etc) */
+  for(let i = 1; i <= 150; i++){
 
     let num = String(i).padStart(3,'0');
 
-    let url = BASE + "CN2026_Junr_CDMX_" + team.toUpperCase() + "_0404_" + num + ".jpg";
+    let url = BASE + "CN2026_Junr_CDMX_" + team + "_0404_" + num + ".jpg";
 
     let img = document.createElement("img");
     img.src = url;
 
+    /* Remove if doesn't exist */
     img.onerror = () => img.remove();
 
     let box = document.createElement("div");
@@ -111,8 +119,8 @@ function loadGallery(team){
   }
 }
 
-// initial load
-loadGallery("gto");
+/* INITIAL LOAD */
+loadGallery("GTO");
 
 </script>
 
