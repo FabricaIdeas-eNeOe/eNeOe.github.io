@@ -6,55 +6,92 @@
 
 <title>Gallery</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
+
 <style>
+
 body{
   margin:0;
-  font-family:sans-serif;
-  background:url("background.png") center/cover no-repeat fixed;
+  font-family:'Montserrat',sans-serif;
+
+  background:
+    linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.15)),
+    url('background.png');
+
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
 }
 
-/* TITLE */
-.title{
+/* HEADER */
+.header{
   text-align:center;
-  margin-top:40px;
-  font-size:38px;
-  font-weight:bold;
-  color:#0a4f73;
+  padding:80px 20px 30px;
+}
 
+.title{
+  position:relative;
   display:inline-block;
-  padding:15px 40px;
-  border-radius:25px;
+  font-size:42px;
+  font-weight:800;
+  color:#0a4f73;
+  padding:20px 70px;
 
   background:rgba(255,255,255,0.25);
-  backdrop-filter:blur(18px);
-  border:1px solid rgba(255,255,255,0.5);
+  backdrop-filter:blur(25px);
+
+  border-radius:35px;
+  border:1px solid rgba(255,255,255,0.6);
+
+  overflow:hidden;
+}
+
+.title::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,0.6) 50%,transparent 70%);
+  animation:wave 3s infinite linear;
+}
+
+@keyframes wave{
+  0%{transform:translateX(-100%)}
+  100%{transform:translateX(100%)}
 }
 
 /* TABS */
 .tabs{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
   margin-top:20px;
-  text-align:center;
 }
 
 .tab{
-  display:inline-block;
-  margin:5px;
+  position:relative;
   padding:10px 18px;
   border-radius:20px;
   cursor:pointer;
-  position:relative;
-  overflow:hidden;
 
   background:rgba(255,255,255,0.25);
   backdrop-filter:blur(18px);
   border:1px solid rgba(255,255,255,0.5);
+
+  overflow:hidden;
+  transition:0.25s;
 }
 
 .tab::before{
   content:"";
   position:absolute;
   inset:0;
-  background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,0.6) 50%,transparent 70%);
+  background:linear-gradient(
+    120deg,
+    transparent 30%,
+    rgba(255,255,255,0.6) 50%,
+    transparent 70%
+  );
   opacity:0;
 }
 
@@ -63,36 +100,37 @@ body{
   animation:wave 2s linear infinite;
 }
 
-@keyframes wave{
-  from{transform:translateX(-100%)}
-  to{transform:translateX(100%)}
-}
-
 .tab.active{
   background:#0a4f73;
   color:white;
 }
 
-/* GALLERY GRID FIXED */
+/* GALLERY */
 .gallery{
-  margin-top:40px;
-  display:grid;
-  grid-template-columns:repeat(auto-fill, minmax(220px,1fr));
-  gap:12px;
-  padding:20px;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:14px;
+  padding:20px 20px 120px;
 }
 
-/* 🔥 UNIFORM IMAGE BLOCKS */
-.gallery img{
-  width:100%;
-  height:160px;
-  object-fit:cover; /* KEY FIX */
+/* IMAGE CARD (FIX PORTRAIT) */
+.card{
+  width:220px;
+  height:150px;
   border-radius:12px;
+  overflow:hidden;
+}
+
+.card img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
   cursor:pointer;
   transition:0.2s;
 }
 
-.gallery img:hover{
+.card img:hover{
   transform:scale(1.05);
 }
 
@@ -117,7 +155,7 @@ body{
   position:fixed;
   bottom:0;
   width:100%;
-  background:rgba(255,255,255,0.8);
+  background:rgba(255,255,255,0.85);
   backdrop-filter:blur(10px);
   text-align:center;
   padding:10px;
@@ -127,16 +165,17 @@ body{
   height:40px;
   margin:0 10px;
 }
+
 </style>
 </head>
 
 <body>
 
-<div style="text-align:center">
-  <div id="title" class="title"></div>
+<div class="header">
+  <div class="title" id="title"></div>
+  <div class="tabs" id="tabs"></div>
 </div>
 
-<div id="tabs" class="tabs"></div>
 <div id="gallery" class="gallery"></div>
 
 <div id="viewer" class="viewer" onclick="this.style.display='none'">
@@ -145,126 +184,122 @@ body{
 
 <div class="footer">
   <img src="logo-aofm.png">
-  <img src="logo-cdmx.png">
-  <img src="logo-federacion.png">
+  <img src="logo-club.png">
+  <img src="logo-olimpicos.png">
 </div>
 
 <script>
-const BASE = "https://res.cloudinary.com/du4pmuch7/image/upload/";
-const ROOT = "WP 2026/Campeonato Nacional 2026/";
 
-const CONFIG = {
-  "inf-menor": {
-    title:"INF MENOR",
-    folder:"inf-menor-cdmx/gallery/",
-    prefix:"InfMnr",
-    rivals:["GRO","GTO","MIC","NL"]
+/* =========================
+   🔥 MANIFEST (EDIT ONLY THIS)
+========================= */
+
+const MANIFEST = {
+
+  junior: {
+    GTO: [
+      "CN2026_Junr_CDMX_GTO_0402_001"
+    ],
+    GTO2: [
+      "CN2026_Junr_CDMX2_GTO_0402_001"
+    ],
+    UNAM: [
+      "CN2026_Junr_CDMX_UNAM_0404_072"
+    ],
+    UNAM2: [
+      "CN2026_Junr_CDMX_UNAM2_0404_001"
+    ],
+    "3RD": [
+      "CN2026_Junr_CDMX_3RD_0404_001"
+    ]
   },
+
   "inf-mayor": {
-    title:"INF MAYOR",
-    folder:"inf-mayor-cdmx/gallery/",
-    prefix:"InfMyr",
-    rivals:["AGS","COAH","EDOMEX","GRO","NL","ROO"]
+    ROO: [
+      "CN2026_InfMyr_CDMX_ROO_0322_060"
+    ],
+    COAH: [
+      "CN2026_InfMyr_CDMX_COAH_0322_001"
+    ]
   },
-  "junior": {
-    title:"JUNIOR",
-    folder:"junior-cdmx/gallery/",
-    prefix:"Junr",
-    rivals:["GTO","GTO2","UNAM","UNAM2"]
+
+  "inf-menor": {
+    MIC: [
+      "CN2026_InfMnr_CDMX_MIC_0319_001"
+    ]
   }
+
 };
 
-const urlParams = new URLSearchParams(window.location.search);
-const cat = urlParams.get("cat");
-const current = CONFIG[cat];
+/* ========================= */
+
+const CLOUD = "https://res.cloudinary.com/du4pmuch7/image/upload/";
+const ROOT = "WP%202026/Campeonato%20Nacional%202026/";
+
+const params = new URLSearchParams(window.location.search);
+const category = params.get("cat");
 
 const title = document.getElementById("title");
 const tabs = document.getElementById("tabs");
 const gallery = document.getElementById("gallery");
-const viewer = document.getElementById("viewer");
 const full = document.getElementById("full");
+const viewer = document.getElementById("viewer");
 
-title.innerText = current.title;
+title.innerText = category.toUpperCase();
 
-/* CREATE TABS */
-current.rivals.forEach((r,i)=>{
-  let t = document.createElement("div");
-  t.className = "tab" + (i==0 ? " active":"");
-  t.innerText = "vs " + r;
+/* BUILD TABS */
 
-  t.onclick = ()=>{
-    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
-    t.classList.add("active");
-    load(r);
+Object.keys(MANIFEST[category]).forEach((rival,i)=>{
+
+  const tab = document.createElement("div");
+  tab.className = "tab" + (i===0 ? " active" : "");
+
+  tab.innerText = rival === "3RD" ? "Premiación" : "vs " + rival;
+
+  tab.onclick = ()=>{
+    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+    tab.classList.add("active");
+    loadImages(rival);
   };
 
-  tabs.appendChild(t);
+  tabs.appendChild(tab);
 });
 
-/* 🔥 IMPROVED LOADER */
-function load(rival){
+/* LOAD IMAGES */
 
-  gallery.innerHTML="";
-  let index = 1;
-  let consecutiveMiss = 0;
+function loadImages(rival){
 
-  function scan(){
+  gallery.innerHTML = "";
 
-    let num = String(index).padStart(3,"0");
-    let found = false;
+  const list = MANIFEST[category][rival];
 
-    const dates = ["0319","0320","0321","0322","0404"];
+  list.forEach(name => {
 
-    let pending = dates.length;
+    const card = document.createElement("div");
+    card.className = "card";
 
-    dates.forEach(date=>{
+    const img = document.createElement("img");
 
-      let publicId = `${ROOT}${current.folder}CN2026_${current.prefix}_CDMX_${rival}_${date}_${num}`;
+    const url = CLOUD + ROOT + category + "-cdmx/gallery/" + name + ".jpg";
 
-      let thumb = `${BASE}q_auto,f_auto,w_400/${encodeURI(publicId)}.jpg`;
-      let fullUrl = `${BASE}${encodeURI(publicId)}.jpg`;
+    img.src = url;
 
-      let img = new Image();
+    img.onclick = ()=>{
+      full.src = url;
+      viewer.style.display = "flex";
+    };
 
-      img.onload = ()=>{
-        found = true;
-        consecutiveMiss = 0;
+    card.appendChild(img);
+    gallery.appendChild(card);
 
-        img.onclick = ()=>{
-          full.src = fullUrl;
-          viewer.style.display="flex";
-        };
-
-        gallery.appendChild(img);
-
-        pending--;
-        if(pending===0) next();
-      };
-
-      img.onerror = ()=>{
-        pending--;
-        if(pending===0) next();
-      };
-
-      img.src = thumb;
-    });
-
-    function next(){
-      if(!found) consecutiveMiss++;
-
-      index++;
-
-      if(consecutiveMiss < 40){ // 🔥 smarter threshold
-        setTimeout(scan,40);
-      }
-    }
-  }
-
-  scan();
+  });
 }
 
 /* INIT */
-load(current.rivals[0]);
+
+const first = Object.keys(MANIFEST[category])[0];
+loadImages(first);
+
 </script>
 
 </body>
