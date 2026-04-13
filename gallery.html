@@ -9,7 +9,6 @@
 
 <style>
 
-/* BASE */
 body{
   margin:0;
   font-family:'Montserrat',sans-serif;
@@ -40,22 +39,6 @@ body{
 
   border-radius:30px;
   border:1px solid rgba(255,255,255,0.6);
-
-  position:relative;
-  overflow:hidden;
-}
-
-.title::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,0.6) 50%,transparent 70%);
-  animation:wave 3s infinite linear;
-}
-
-@keyframes wave{
-  0%{transform:translateX(-100%)}
-  100%{transform:translateX(100%)}
 }
 
 /* FILTERS */
@@ -118,10 +101,8 @@ body{
 .lightbox img{
   max-width:95%;
   max-height:90%;
-  border-radius:10px;
 }
 
-/* CLOSE */
 .close-btn{
   position:absolute;
   top:20px;
@@ -130,9 +111,7 @@ body{
   height:45px;
   border-radius:50%;
   background:rgba(255,255,255,0.2);
-  backdrop-filter:blur(10px);
   color:white;
-  font-size:24px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -154,7 +133,7 @@ body{
   margin:0 10px;
 }
 
-/* 🔒 HIDDEN NAV */
+/* ADMIN */
 .admin-zone{
   position:fixed;
   bottom:0;
@@ -197,10 +176,34 @@ const category = params.get("cat");
 
 const cloudName="du4pmuch7";
 
-/* CONFIG */
+/* FULL CONFIG RESTORED */
 const CONFIG = {
 
   cn2026: {
+
+    "inf-menor": {
+      title:"Infantil Menor",
+      base:"WP%202026/Campeonato%20Nacional%202026/inf-menor-cdmx",
+      teams:{
+        GRO:{prefix:"CN2026_InfMnr_CDMX_GRO_0319_",count:85},
+        GTO:{prefix:"CN2026_InfMnr_CDMX_GTO_0322_",count:79},
+        MIC:{prefix:"CN2026_InfMnr_CDMX_MIC_0321_",count:43},
+        NLE:{prefix:"CN2026_InfMnr_CDMX_NLE_0320_",count:68}
+      }
+    },
+
+    "inf-mayor": {
+      title:"Infantil Mayor",
+      base:"WP%202026/Campeonato%20Nacional%202026/inf-mayor-cdmx",
+      teams:{
+        AGS:{prefix:"CN2026_InfMyr_CDMX_AGS_0320_",count:50},
+        COAH:{prefix:"CN2026_InfMyr_CDMX_COA_0320_",count:51},
+        EDOMEX:{prefix:"CN2026_InfMyr_CDMX_EDM_0319_",count:44},
+        GRO:{prefix:"CN2026_InfMyr_CDMX_GRO_0319_",count:113},
+        NL:{prefix:"CN2026_InfMyr_CDMX_NLE_0321_",count:107},
+        QROO:{prefix:"CN2026_InfMyr_CDMX_ROO_0322_",count:60}
+      }
+    },
 
     "junior": {
       title:"Junior",
@@ -219,6 +222,12 @@ const CONFIG = {
 };
 
 const config = CONFIG[event]?.[category];
+
+if(!config){
+  document.getElementById("title").innerText="No gallery found";
+  throw new Error("Invalid category");
+}
+
 document.getElementById("title").innerText=config.title;
 
 /* FILTERS */
@@ -226,7 +235,7 @@ const filtersDiv=document.getElementById("filters");
 
 Object.keys(config.teams).forEach((team,i)=>{
   const btn=document.createElement("button");
-  btn.innerText = config.teams[team].label;
+  btn.innerText = config.teams[team].label || ("vs " + team);
 
   if(i===0) btn.classList.add("active");
 
