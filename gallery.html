@@ -1,12 +1,19 @@
 <script>
 
 /* =========================
-   MANIFEST (PUT REAL FILES ONLY)
+   CONFIG
 ========================= */
 
-const MANIFEST = {
+const CLOUD_NAME = "du4pmuch7";
+const BASE_PATH = "WP_2026/Campeonato_Nacional_2026";
+
+/* =========================
+   FALLBACK MANIFEST (manual safety)
+========================= */
+
+const FALLBACK = {
   junior: {
-    GTO: [],
+    GTO: ["gto_01"],
     GTO2: [],
     UNAM: [],
     UNAM2: [],
@@ -21,8 +28,9 @@ const MANIFEST = {
   }
 };
 
-const CLOUD = "https://res.cloudinary.com/du4pmuch7/image/upload/";
-const ROOT = "WP%202026/Campeonato%20Nacional%202026/";
+/* =========================
+   INIT
+========================= */
 
 const params = new URLSearchParams(window.location.search);
 const category = params.get("cat");
@@ -31,11 +39,17 @@ const gallery = document.getElementById("gallery");
 const tabs = document.getElementById("tabs");
 const title = document.getElementById("title");
 
+if(!FALLBACK[category]){
+  document.body.innerHTML = "<h2>Invalid category</h2>";
+}
+
 title.innerText = category.toUpperCase();
 
-/* BUILD TABS */
+/* =========================
+   BUILD TABS
+========================= */
 
-Object.keys(MANIFEST[category]).forEach((rival,i)=>{
+Object.keys(FALLBACK[category]).forEach((rival,i)=>{
 
   const tab = document.createElement("div");
   tab.className = "tab" + (i===0 ? " active" : "");
@@ -51,47 +65,77 @@ Object.keys(MANIFEST[category]).forEach((rival,i)=>{
   tabs.appendChild(tab);
 });
 
-/* LOAD */
+/* =========================
+   LOAD IMAGES (HYBRID)
+========================= */
 
-function loadImages(rival){
+async function loadImages(rival){
+
+  gallery.innerHTML = "Loading...";
+
+  const folder = `${BASE_PATH}/${category}-cdmx/gallery`;
+
+  const jsonURL = `https://res.cloudinary.com/${CLOUD_NAME}/image/list/${folder}.json`;
+
+  try {
+
+    const res = await fetch(jsonURL);
+
+    if(!res.ok) throw "Cloudinary JSON failed";
+
+    const data = await res.json();
+
+    // Filter images by rival keyword
+    const images = data.resources
+      .map(r => r.public_id.split("/").pop())
+      .filter(name => name.toLowerCase().includes(rival.toLowerCase()));
+
+    render(images);
+
+  } catch(e){
+
+    console.warn("Using FALLBACK:", e);
+
+    const images = FALLBACK[category][rival] || [];
+    render(images);
+  }
+}
+
+/* =========================
+   RENDER
+========================= */
+
+function render(list){
 
   gallery.innerHTML = "";
 
-  const list = MANIFEST[category][rival];
-
-  console.log("Loading:", category, rival, list);
-
-  if(!list || list.length === 0){
-    gallery.innerHTML = "<p style='color:#0a4f73'>No images yet</p>";
+  if(!list.length){
+    gallery.innerHTML = "<p>No images yet</p>";
     return;
   }
 
   list.forEach(name => {
 
-    const url = CLOUD + ROOT + category + "-cdmx/gallery/" + name + ".jpg";
-
-    console.log("IMG:", url);
+    const url = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${BASE_PATH}/${category}-cdmx/gallery/${name}.jpg`;
 
     const card = document.createElement("div");
     card.className = "card";
 
     const img = document.createElement("img");
-
     img.src = url;
 
-    img.onerror = () => {
-      console.error("Missing:", url);
-      card.remove();
-    };
+    img.onerror = ()=>card.remove();
 
     card.appendChild(img);
     gallery.appendChild(card);
   });
 }
 
-/* INIT */
+/* =========================
+   INIT LOAD
+========================= */
 
-const first = Object.keys(MANIFEST[category])[0];
+const first = Object.keys(FALLBACK[category])[0];
 loadImages(first);
 
 </script>
