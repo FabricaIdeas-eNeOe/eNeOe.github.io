@@ -16,54 +16,44 @@ body{
   background-size:cover;
 }
 
-/* HIDDEN ADMIN HOTSPOTS */
+/* 🔐 HIDDEN HOTSPOTS */
 .hotspot{
   position:fixed;
-  width:40px;
-  height:40px;
+  width:40px;height:40px;
   z-index:9999;
 }
-
-#homeBtn{top:0;left:0;}
-#campBtn{top:0;right:0;}
-#adminBtn{top:0;left:50%;transform:translateX(-50%);}
+#home{top:0;left:0;}
+#camp{top:0;right:0;}
+#admin{top:0;left:50%;transform:translateX(-50%);}
 
 /* HEADER */
-.header{
-  text-align:center;
-  padding:60px 20px 20px;
-}
+.header{text-align:center;padding:60px 20px 10px;}
 
 .title{
   display:inline-block;
-  font-size:40px;
+  font-size:42px;
   font-weight:800;
   color:#0a4f73;
-  padding:18px 60px;
+  padding:20px 70px;
   background:rgba(255,255,255,0.25);
   backdrop-filter:blur(25px);
   border-radius:35px;
-  border:1px solid rgba(255,255,255,0.6);
 }
 
 /* TABS */
 .tabs{
   display:flex;
   justify-content:center;
-  gap:12px;
+  gap:10px;
   flex-wrap:wrap;
   margin-top:20px;
 }
-
 .tab{
   padding:10px 18px;
   border-radius:20px;
   background:rgba(255,255,255,0.6);
-  color:#0a4f73;
   cursor:pointer;
-  transition:0.2s;
 }
-
 .tab.active{
   background:#0a4f73;
   color:white;
@@ -72,14 +62,13 @@ body{
 /* GALLERY */
 .gallery{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
-  gap:18px;
+  grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
+  gap:16px;
   padding:40px;
 }
-
 .gallery img{
   width:100%;
-  border-radius:15px;
+  border-radius:14px;
   cursor:pointer;
 }
 
@@ -92,12 +81,10 @@ body{
   justify-content:center;
   align-items:center;
 }
-
 .viewer img{
   max-width:90%;
   max-height:85%;
 }
-
 .close{
   position:absolute;
   top:20px;
@@ -107,10 +94,11 @@ body{
   cursor:pointer;
 }
 
+/* FOOTER */
 .footer{
-  background:rgba(255,255,255,0.8);
-  padding:15px;
+  background:rgba(255,255,255,0.85);
   text-align:center;
+  padding:12px;
 }
 
 </style>
@@ -118,10 +106,10 @@ body{
 
 <body>
 
-<!-- HIDDEN NAVIGATION -->
-<div id="homeBtn" class="hotspot" onclick="location.href='index.html'"></div>
-<div id="campBtn" class="hotspot" onclick="location.href='campeonato2026.html'"></div>
-<div id="adminBtn" class="hotspot" onclick="location.href='admin.html'"></div>
+<!-- 🔐 HIDDEN NAV -->
+<div id="home" class="hotspot" onclick="location.href='index.html'"></div>
+<div id="camp" class="hotspot" onclick="location.href='campeonato2026.html'"></div>
+<div id="admin" class="hotspot" onclick="location.href='admin.html'"></div>
 
 <div class="header">
   <div class="title" id="title"></div>
@@ -143,124 +131,102 @@ body{
 
 <script>
 
-/* ✅ CLOUDINARY FIXED */
-const cloud = "https://res.cloudinary.com/du4pmuch7/image/upload/Leonardo/gallery/";
+const CLOUD = "https://res.cloudinary.com/du4pmuch7/image/upload/Leonardo/gallery/";
 
 const params = new URLSearchParams(window.location.search);
 const cat = params.get("cat");
 
 const gallery = document.getElementById("gallery");
-const tabsContainer = document.getElementById("tabs");
+const tabsDiv = document.getElementById("tabs");
 
-function createTabs(tabs){
-  tabsContainer.innerHTML="";
-  tabs.forEach((t,i)=>{
-    let el=document.createElement("div");
-    el.className="tab"+(i===0?" active":"");
-    el.innerText=t.name;
+function tab(name, prefix){
+  let t=document.createElement("div");
+  t.className="tab";
+  t.innerText=name;
 
-    el.onclick=()=>{
-      document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
-      el.classList.add("active");
-      loadGallery(t.prefix);
-    };
+  t.onclick=()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    t.classList.add("active");
+    load(prefix);
+  };
 
-    tabsContainer.appendChild(el);
-  });
+  tabsDiv.appendChild(t);
+  return t;
 }
 
-function loadGallery(prefix){
-
+function load(prefix){
   gallery.innerHTML="";
-  let index=1;
-  let batch=20;
-  let fails=0;
+  let i=1,fail=0;
 
-  function loadBatch(){
+  function loop(){
+    let num=String(i).padStart(3,'0');
 
-    for(let i=0;i<batch;i++){
+    let img=new Image();
+    img.src=`${CLOUD}q_auto,f_auto,w_400/${prefix}_${num}.jpg`;
 
-      let num=String(index).padStart(3,'0');
+    img.onload=()=>{
+      fail=0;
+      img.onclick=()=>open(`${CLOUD}${prefix}_${num}.jpg`);
+      gallery.appendChild(img);
+    };
 
-      let img=new Image();
-      img.src=`${cloud}q_auto,f_auto,w_400/${prefix}_${num}.jpg`;
+    img.onerror=()=>fail++;
 
-      img.onload=()=>{
-        fails=0;
+    i++;
 
-        img.onclick=()=>{
-          openViewer(`${cloud}q_auto,f_auto/${prefix}_${num}.jpg`);
-        };
-
-        gallery.appendChild(img);
-      };
-
-      img.onerror=()=>{
-        fails++;
-      };
-
-      index++;
-    }
-
-    if(fails < batch){
-      setTimeout(loadBatch,200);
+    if(fail<12){
+      requestAnimationFrame(loop);
     }
   }
 
-  loadBatch();
+  loop();
 }
 
-function openViewer(src){
-  document.getElementById("viewer").style.display="flex";
-  document.getElementById("viewerImg").src=src;
+function open(src){
+  viewer.style.display="flex";
+  viewerImg.src=src;
 }
-
 function closeViewer(){
-  document.getElementById("viewer").style.display="none";
+  viewer.style.display="none";
 }
 
-/* CONFIG */
+/* ⚡ AUTO CONFIG */
 
 if(cat==="junior"){
-  document.getElementById("title").innerText="Junior";
+  title.innerText="Junior";
 
-  createTabs([
-    {name:"vs GTO - Game 1", prefix:"CN2026_Junr_CDMX_GTO_0402"},
-    {name:"vs GTO - Game 2", prefix:"CN2026_Junr_CDMX2_GTO_0402"},
-    {name:"vs UNAM - Game 1", prefix:"CN2026_Junr_CDMX_UNAM_0404"},
-    {name:"vs UNAM - Game 2", prefix:"CN2026_Junr_CDMX_UNAM2_0404"},
-    {name:"Premiación", prefix:"CN2026_Junr_CDMX_3RD_0404"}
-  ]);
+  tab("vs GTO - Game 1","CN2026_Junr_CDMX_GTO_0402").classList.add("active");
+  tab("vs GTO - Game 2","CN2026_Junr_CDMX2_GTO_0402");
+  tab("vs UNAM - Game 1","CN2026_Junr_CDMX_UNAM_0404");
+  tab("vs UNAM - Game 2","CN2026_Junr_CDMX_UNAM2_0404");
+  tab("Premiación","CN2026_Junr_CDMX_3RD_0404");
+
+  load("CN2026_Junr_CDMX_GTO_0402");
 }
 
 if(cat==="inf-mayor"){
-  document.getElementById("title").innerText="Infantil Mayor";
+  title.innerText="Infantil Mayor";
 
-  createTabs([
-    {name:"vs AGS", prefix:"CN2026_INF_MAYOR_AGS"},
-    {name:"vs COAH", prefix:"CN2026_INF_MAYOR_COAH"},
-    {name:"vs EDOMEX", prefix:"CN2026_INF_MAYOR_EDOMEX"},
-    {name:"vs GRO", prefix:"CN2026_INF_MAYOR_GRO"},
-    {name:"vs NL", prefix:"CN2026_INF_MAYOR_NL"},
-    {name:"vs QROO", prefix:"CN2026_INF_MAYOR_QROO"}
-  ]);
+  tab("vs AGS","CN2026_INF_MAYOR_AGS").classList.add("active");
+  tab("vs COAH","CN2026_INF_MAYOR_COAH");
+  tab("vs EDOMEX","CN2026_INF_MAYOR_EDOMEX");
+  tab("vs GRO","CN2026_INF_MAYOR_GRO");
+  tab("vs NL","CN2026_INF_MAYOR_NL");
+  tab("vs QROO","CN2026_INF_MAYOR_QROO");
+
+  load("CN2026_INF_MAYOR_AGS");
 }
 
 if(cat==="inf-menor"){
-  document.getElementById("title").innerText="Infantil Menor";
+  title.innerText="Infantil Menor";
 
-  createTabs([
-    {name:"vs GRO", prefix:"CN2026_INF_MENOR_GRO"},
-    {name:"vs GTO", prefix:"CN2026_INF_MENOR_GTO"},
-    {name:"vs MIC", prefix:"CN2026_INF_MENOR_MIC"},
-    {name:"vs NL", prefix:"CN2026_INF_MENOR_NL"}
-  ]);
+  tab("vs GRO","CN2026_INF_MENOR_GRO").classList.add("active");
+  tab("vs GTO","CN2026_INF_MENOR_GTO");
+  tab("vs MIC","CN2026_INF_MENOR_MIC");
+  tab("vs NL","CN2026_INF_MENOR_NL");
+
+  load("CN2026_INF_MENOR_GRO");
 }
-
-/* INIT */
-setTimeout(()=>{
-  document.querySelector(".tab").click();
-},100);
 
 </script>
 
