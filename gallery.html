@@ -8,7 +8,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
 
 <style>
-
 body{
   margin:0;
   font-family:'Montserrat',sans-serif;
@@ -16,17 +15,11 @@ body{
   background-size:cover;
 }
 
-/* 🔐 HIDDEN HOTSPOTS */
-.hotspot{
-  position:fixed;
-  width:40px;height:40px;
-  z-index:9999;
-}
+.hotspot{position:fixed;width:40px;height:40px;z-index:9999;}
 #home{top:0;left:0;}
 #camp{top:0;right:0;}
 #admin{top:0;left:50%;transform:translateX(-50%);}
 
-/* HEADER */
 .header{text-align:center;padding:60px 20px 10px;}
 
 .title{
@@ -40,7 +33,6 @@ body{
   border-radius:35px;
 }
 
-/* TABS */
 .tabs{
   display:flex;
   justify-content:center;
@@ -48,31 +40,32 @@ body{
   flex-wrap:wrap;
   margin-top:20px;
 }
+
 .tab{
   padding:10px 18px;
   border-radius:20px;
   background:rgba(255,255,255,0.6);
   cursor:pointer;
 }
+
 .tab.active{
   background:#0a4f73;
   color:white;
 }
 
-/* GALLERY */
 .gallery{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
   gap:16px;
   padding:40px;
 }
+
 .gallery img{
   width:100%;
   border-radius:14px;
   cursor:pointer;
 }
 
-/* VIEWER */
 .viewer{
   position:fixed;
   inset:0;
@@ -81,10 +74,12 @@ body{
   justify-content:center;
   align-items:center;
 }
+
 .viewer img{
   max-width:90%;
   max-height:85%;
 }
+
 .close{
   position:absolute;
   top:20px;
@@ -94,19 +89,16 @@ body{
   cursor:pointer;
 }
 
-/* FOOTER */
 .footer{
   background:rgba(255,255,255,0.85);
   text-align:center;
   padding:12px;
 }
-
 </style>
 </head>
 
 <body>
 
-<!-- 🔐 HIDDEN NAV -->
 <div id="home" class="hotspot" onclick="location.href='index.html'"></div>
 <div id="camp" class="hotspot" onclick="location.href='campeonato2026.html'"></div>
 <div id="admin" class="hotspot" onclick="location.href='admin.html'"></div>
@@ -131,15 +123,17 @@ body{
 
 <script>
 
-const CLOUD = "https://res.cloudinary.com/du4pmuch7/image/upload/Leonardo/gallery/";
+const CLOUD_MAIN = "https://res.cloudinary.com/du4pmuch7/image/upload/Leonardo/gallery/";
+const CLOUD_KIDS = "https://res.cloudinary.com/du4pmuch7/image/upload/Kids/";
 
 const params = new URLSearchParams(window.location.search);
 const cat = params.get("cat");
+const name = params.get("name");
 
 const gallery = document.getElementById("gallery");
 const tabsDiv = document.getElementById("tabs");
 
-function tab(name, prefix){
+function tab(name, prefix, cloud){
   let t=document.createElement("div");
   t.className="tab";
   t.innerText=name;
@@ -147,14 +141,14 @@ function tab(name, prefix){
   t.onclick=()=>{
     document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
     t.classList.add("active");
-    load(prefix);
+    load(prefix, cloud);
   };
 
   tabsDiv.appendChild(t);
   return t;
 }
 
-function load(prefix){
+function load(prefix, cloud){
   gallery.innerHTML="";
   let i=1,fail=0;
 
@@ -162,11 +156,11 @@ function load(prefix){
     let num=String(i).padStart(3,'0');
 
     let img=new Image();
-    img.src=`${CLOUD}q_auto,f_auto,w_400/${prefix}_${num}.jpg`;
+    img.src=`${cloud}q_auto,f_auto,w_400/${prefix}_${num}.jpg`;
 
     img.onload=()=>{
       fail=0;
-      img.onclick=()=>open(`${CLOUD}${prefix}_${num}.jpg`);
+      img.onclick=()=>open(`${cloud}${prefix}_${num}.jpg`);
       gallery.appendChild(img);
     };
 
@@ -174,7 +168,7 @@ function load(prefix){
 
     i++;
 
-    if(fail<12){
+    if(fail<10){
       requestAnimationFrame(loop);
     }
   }
@@ -186,46 +180,34 @@ function open(src){
   viewer.style.display="flex";
   viewerImg.src=src;
 }
+
 function closeViewer(){
   viewer.style.display="none";
 }
 
-/* ⚡ AUTO CONFIG */
+/* NORMAL GALLERIES */
 
 if(cat==="junior"){
   title.innerText="Junior";
 
-  tab("vs GTO - Game 1","CN2026_Junr_CDMX_GTO_0402").classList.add("active");
-  tab("vs GTO - Game 2","CN2026_Junr_CDMX2_GTO_0402");
-  tab("vs UNAM - Game 1","CN2026_Junr_CDMX_UNAM_0404");
-  tab("vs UNAM - Game 2","CN2026_Junr_CDMX_UNAM2_0404");
-  tab("Premiación","CN2026_Junr_CDMX_3RD_0404");
+  tab("vs GTO - Game 1","CN2026_Junr_CDMX_GTO_0402",CLOUD_MAIN).classList.add("active");
+  tab("vs GTO - Game 2","CN2026_Junr_CDMX2_GTO_0402",CLOUD_MAIN);
+  tab("vs UNAM - Game 1","CN2026_Junr_CDMX_UNAM_0404",CLOUD_MAIN);
+  tab("vs UNAM - Game 2","CN2026_Junr_CDMX_UNAM2_0404",CLOUD_MAIN);
+  tab("Premiación","CN2026_Junr_CDMX_3RD_0404",CLOUD_MAIN);
 
-  load("CN2026_Junr_CDMX_GTO_0402");
+  load("CN2026_Junr_CDMX_GTO_0402",CLOUD_MAIN);
 }
 
-if(cat==="inf-mayor"){
-  title.innerText="Infantil Mayor";
+/* KIDS PRIVATE */
 
-  tab("vs AGS","CN2026_INF_MAYOR_AGS").classList.add("active");
-  tab("vs COAH","CN2026_INF_MAYOR_COAH");
-  tab("vs EDOMEX","CN2026_INF_MAYOR_EDOMEX");
-  tab("vs GRO","CN2026_INF_MAYOR_GRO");
-  tab("vs NL","CN2026_INF_MAYOR_NL");
-  tab("vs QROO","CN2026_INF_MAYOR_QROO");
+if(cat==="kids"){
+  title.innerText=name;
 
-  load("CN2026_INF_MAYOR_AGS");
-}
+  let prefix = `CN2026_${name}`;
+  tab(name,prefix,CLOUD_KIDS).classList.add("active");
 
-if(cat==="inf-menor"){
-  title.innerText="Infantil Menor";
-
-  tab("vs GRO","CN2026_INF_MENOR_GRO").classList.add("active");
-  tab("vs GTO","CN2026_INF_MENOR_GTO");
-  tab("vs MIC","CN2026_INF_MENOR_MIC");
-  tab("vs NL","CN2026_INF_MENOR_NL");
-
-  load("CN2026_INF_MENOR_GRO");
+  load(prefix,CLOUD_KIDS);
 }
 
 </script>
