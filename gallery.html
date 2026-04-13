@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Gallery</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -123,52 +124,63 @@ body{
 
 <script>
 
-const CLOUD_MAIN = "https://res.cloudinary.com/du4pmuch7/image/upload/Leonardo/gallery/";
-const CLOUD_KIDS = "https://res.cloudinary.com/du4pmuch7/image/upload/Kids/";
+const BASE = "https://res.cloudinary.com/du4pmuch7/image/upload/";
+const FOLDER = "WP%202026/Campeonato%20Nacional%202026/";
 
 const params = new URLSearchParams(window.location.search);
 const cat = params.get("cat");
-const name = params.get("name");
 
 const gallery = document.getElementById("gallery");
 const tabsDiv = document.getElementById("tabs");
+const title = document.getElementById("title");
 
-function tab(name, prefix, cloud){
-  let t=document.createElement("div");
-  t.className="tab";
-  t.innerText=name;
+/* CATEGORY CONFIG */
+let config = {
+  "junior":{
+    code:"Junr",
+    folder:"junior-cdmx/gallery",
+    tabs:["GTO","UNAM","3RD"]
+  },
+  "inf-mayor":{
+    code:"InfMyr",
+    folder:"inf-mayor-cdmx/gallery",
+    tabs:["AGS","COAH","EDOMEX","GRO","NL","ROO"]
+  },
+  "inf-menor":{
+    code:"InfMnr",
+    folder:"inf-menor-cdmx/gallery",
+    tabs:["GRO","GTO","MIC","NL"]
+  }
+};
 
-  t.onclick=()=>{
-    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
-    t.classList.add("active");
-    load(prefix, cloud);
-  };
+let current = config[cat];
+title.innerText = cat.replace("-", " ").toUpperCase();
 
-  tabsDiv.appendChild(t);
-  return t;
-}
-
-function load(prefix, cloud){
+/* LOAD IMAGES SMART */
+function load(rival){
   gallery.innerHTML="";
-  let i=1,fail=0;
+  let i=1, fails=0;
 
   function loop(){
-    let num=String(i).padStart(3,'0');
 
-    let img=new Image();
-    img.src=`${cloud}q_auto,f_auto,w_400/${prefix}_${num}.jpg`;
+    let num = String(i).padStart(3,'0');
 
-    img.onload=()=>{
-      fail=0;
-      img.onclick=()=>open(`${cloud}${prefix}_${num}.jpg`);
+    let url = `${BASE}${FOLDER}${current.folder}/q_auto,f_auto,w_400/CN2026_${current.code}_CDMX_${rival}_${num}.jpg`;
+
+    let img = new Image();
+    img.src = url;
+
+    img.onload = ()=>{
+      fails=0;
+      img.onclick=()=>open(url.replace("w_400/",""));
       gallery.appendChild(img);
     };
 
-    img.onerror=()=>fail++;
+    img.onerror = ()=>fails++;
 
     i++;
 
-    if(fail<10){
+    if(fails < 20){
       requestAnimationFrame(loop);
     }
   }
@@ -176,6 +188,27 @@ function load(prefix, cloud){
   loop();
 }
 
+/* CREATE TABS */
+current.tabs.forEach((r,i)=>{
+  let t=document.createElement("div");
+  t.className="tab";
+  if(i===0) t.classList.add("active");
+
+  t.innerText = r==="3RD" ? "Premiación" : "vs "+r;
+
+  t.onclick=()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    t.classList.add("active");
+    load(r);
+  };
+
+  tabsDiv.appendChild(t);
+});
+
+/* INIT */
+load(current.tabs[0]);
+
+/* VIEWER */
 function open(src){
   viewer.style.display="flex";
   viewerImg.src=src;
@@ -183,31 +216,6 @@ function open(src){
 
 function closeViewer(){
   viewer.style.display="none";
-}
-
-/* NORMAL GALLERIES */
-
-if(cat==="junior"){
-  title.innerText="Junior";
-
-  tab("vs GTO - Game 1","CN2026_Junr_CDMX_GTO_0402",CLOUD_MAIN).classList.add("active");
-  tab("vs GTO - Game 2","CN2026_Junr_CDMX2_GTO_0402",CLOUD_MAIN);
-  tab("vs UNAM - Game 1","CN2026_Junr_CDMX_UNAM_0404",CLOUD_MAIN);
-  tab("vs UNAM - Game 2","CN2026_Junr_CDMX_UNAM2_0404",CLOUD_MAIN);
-  tab("Premiación","CN2026_Junr_CDMX_3RD_0404",CLOUD_MAIN);
-
-  load("CN2026_Junr_CDMX_GTO_0402",CLOUD_MAIN);
-}
-
-/* KIDS PRIVATE */
-
-if(cat==="kids"){
-  title.innerText=name;
-
-  let prefix = `CN2026_${name}`;
-  tab(name,prefix,CLOUD_KIDS).classList.add("active");
-
-  load(prefix,CLOUD_KIDS);
 }
 
 </script>
