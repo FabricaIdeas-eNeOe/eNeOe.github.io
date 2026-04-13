@@ -80,30 +80,17 @@ body{
   margin:6px;
   padding:10px 18px;
   border-radius:25px;
-
   border:1px solid rgba(255,255,255,0.5);
   background:rgba(255,255,255,0.25);
   backdrop-filter:blur(12px);
-
   color:#0a4f73;
   font-weight:600;
   cursor:pointer;
-
-  box-shadow:
-    inset 0 1px 3px rgba(255,255,255,0.6),
-    0 4px 10px rgba(0,0,0,0.1);
-
-  transition:0.3s;
-}
-
-.filters button:hover{
-  transform:translateY(-2px);
 }
 
 .filters button.active{
   background:#0a4f73;
   color:white;
-  box-shadow:0 6px 16px rgba(0,0,0,0.25);
 }
 
 /* GALLERY */
@@ -120,25 +107,16 @@ body{
   object-fit:cover;
   border-radius:14px;
   cursor:pointer;
-  transition:0.3s;
-  box-shadow:0 10px 25px rgba(0,0,0,0.2);
-}
-
-.gallery img:hover{
-  transform:scale(1.05);
 }
 
 /* LIGHTBOX */
 .lightbox{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.92);
-  backdrop-filter:blur(10px);
-
+  background:rgba(0,0,0,0.95);
   display:flex;
   align-items:center;
   justify-content:center;
-
   opacity:0;
   pointer-events:none;
   transition:0.3s;
@@ -150,9 +128,27 @@ body{
 }
 
 .lightbox img{
-  max-width:90%;
-  max-height:85%;
+  max-width:95%;
+  max-height:90%;
   border-radius:10px;
+}
+
+/* CLOSE BUTTON */
+.close-btn{
+  position:absolute;
+  top:20px;
+  right:20px;
+  width:45px;
+  height:45px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.2);
+  backdrop-filter:blur(10px);
+  color:white;
+  font-size:24px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
 }
 
 /* FOOTER */
@@ -163,12 +159,21 @@ body{
   text-align:center;
   padding:12px;
   background:rgba(255,255,255,0.85);
-  backdrop-filter:blur(10px);
 }
 
 .footer img{
   height:40px;
-  margin:0 12px;
+  margin:0 10px;
+}
+
+/* 🔒 HIDDEN ADMIN BUTTON */
+.admin-zone{
+  position:fixed;
+  bottom:0;
+  right:0;
+  width:80px;
+  height:60px;
+  opacity:0;
 }
 
 </style>
@@ -186,6 +191,7 @@ body{
 <div id="gallery" class="gallery"></div>
 
 <div id="lightbox" class="lightbox">
+  <div class="close-btn" onclick="closeLightbox()">✕</div>
   <img id="lightbox-img">
 </div>
 
@@ -195,9 +201,11 @@ body{
   <img src="logo-olimpicos.png">
 </div>
 
+<!-- 🔒 hidden admin -->
+<div class="admin-zone" onclick="window.location='index.html'"></div>
+
 <script>
 
-/* PARAMS */
 const params = new URLSearchParams(window.location.search);
 const event = params.get("event");
 const category = params.get("cat");
@@ -249,8 +257,7 @@ const CONFIG = {
 };
 
 const config = CONFIG[event]?.[category];
-
-document.getElementById("title").innerText = config.title;
+document.getElementById("title").innerText=config.title;
 
 /* FILTERS */
 const filtersDiv=document.getElementById("filters");
@@ -270,7 +277,7 @@ Object.keys(config.teams).forEach((team,i)=>{
   filtersDiv.appendChild(btn);
 });
 
-/* GENERATE IMAGES */
+/* IMAGES */
 function generateImages(team){
   const c=config.teams[team];
   let arr=[];
@@ -278,34 +285,25 @@ function generateImages(team){
   for(let i=1;i<=c.count;i++){
     let n=String(i).padStart(3,"0");
 
-    let url1=`https://res.cloudinary.com/${cloudName}/image/upload/w_300,q_auto:low,f_auto/${config.base}/gallery/${c.prefix}${n}.jpg`;
-    let url2=url1.replace("CN2026_","CN2026");
-
     arr.push({
-      thumb:url1,
-      fallback:url2,
-      lightbox:url1
+      thumb:`https://res.cloudinary.com/${cloudName}/image/upload/w_300,q_auto:low,f_auto/${config.base}/gallery/${c.prefix}${n}.jpg`,
+      full:`https://res.cloudinary.com/${cloudName}/image/upload/q_auto:good,f_auto/${config.base}/gallery/${c.prefix}${n}.jpg`
     });
   }
 
   return arr;
 }
 
-/* LOAD SYSTEM */
+/* LOAD */
 let currentImages=[];
 let loaded=0;
-let batchSize=30;
 
 function loadMore(){
   const g=document.getElementById("gallery");
-  const next=currentImages.slice(loaded,loaded+batchSize);
 
-  next.forEach((img)=>{
+  currentImages.slice(loaded,loaded+30).forEach((img)=>{
     let el=document.createElement("img");
     el.src=img.thumb;
-    el.loading="lazy";
-
-    el.onerror=()=>{el.src=img.fallback};
 
     const index=loaded;
     el.onclick=()=>openLightbox(index);
@@ -315,37 +313,25 @@ function loadMore(){
   });
 }
 
-function ensureFill(){
-  while(document.body.offsetHeight < window.innerHeight && loaded < currentImages.length){
-    loadMore();
-  }
-}
-
 function loadTeam(team){
   document.getElementById("gallery").innerHTML="";
   currentImages=generateImages(team);
   loaded=0;
   loadMore();
-  ensureFill();
 }
-
-window.addEventListener("scroll",()=>{
-  if((window.innerHeight+window.scrollY)>=document.body.offsetHeight-300){
-    if(loaded<currentImages.length){
-      loadMore();
-    }
-  }
-});
 
 /* LIGHTBOX */
 function openLightbox(i){
-  document.getElementById("lightbox-img").src=currentImages[i].lightbox;
+  document.getElementById("lightbox-img").src=currentImages[i].full;
   document.getElementById("lightbox").classList.add("active");
 }
 
+function closeLightbox(){
+  document.getElementById("lightbox").classList.remove("active");
+}
+
 document.addEventListener("DOMContentLoaded",()=>{
-  const firstTeam = Object.keys(config.teams)[0];
-  loadTeam(firstTeam);
+  loadTeam(Object.keys(config.teams)[0]);
 });
 
 </script>
