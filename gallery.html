@@ -12,102 +12,102 @@
 body{
   margin:0;
   font-family:'Montserrat',sans-serif;
-  background:
-    linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.15)),
-    url('background.png');
+  background:url('background.png') no-repeat center center fixed;
   background-size:cover;
-  background-position:center;
 }
 
+/* HEADER */
 .header{
   text-align:center;
-  padding:80px 20px 30px;
+  padding:60px 20px 20px;
 }
 
 .title{
-  font-size:42px;
+  display:inline-block;
+  font-size:40px;
   font-weight:800;
   color:#0a4f73;
   padding:18px 60px;
   background:rgba(255,255,255,0.25);
   backdrop-filter:blur(25px);
-  border-radius:30px;
+  border-radius:35px;
+  border:1px solid rgba(255,255,255,0.6);
 }
 
-.filters{
-  text-align:center;
-  margin:20px;
+/* TABS */
+.tabs{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:20px;
 }
 
-.filters button{
-  margin:5px;
+.tab{
   padding:10px 18px;
-  border-radius:25px;
-  border:none;
-  background:#ffffff70;
+  border-radius:20px;
+  background:rgba(255,255,255,0.6);
+  color:#0a4f73;
   cursor:pointer;
+  transition:0.25s;
+  font-size:14px;
 }
 
-.filters button.active{
+.tab.active{
   background:#0a4f73;
   color:white;
 }
 
+/* GALLERY */
 .gallery{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-  gap:15px;
-  padding:20px;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:18px;
+  padding:40px;
 }
 
 .gallery img{
   width:100%;
-  height:150px;
-  object-fit:cover;
-  border-radius:14px;
+  border-radius:15px;
   cursor:pointer;
+  transition:0.2s;
 }
 
-.lightbox{
+.gallery img:hover{
+  transform:scale(1.05);
+}
+
+/* VIEWER */
+.viewer{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.95);
-  display:flex;
-  align-items:center;
+  background:rgba(0,0,0,0.9);
+  display:none;
   justify-content:center;
-  opacity:0;
-  pointer-events:none;
+  align-items:center;
+  z-index:999;
 }
 
-.lightbox.active{
-  opacity:1;
-  pointer-events:auto;
+.viewer img{
+  max-width:90%;
+  max-height:85%;
+  border-radius:10px;
 }
 
-.lightbox img{
-  max-width:95%;
-  max-height:90%;
-}
-
-.close-btn{
+.close{
   position:absolute;
   top:20px;
-  right:20px;
-  width:45px;
-  height:45px;
-  border-radius:50%;
-  background:rgba(255,255,255,0.2);
+  right:30px;
+  font-size:30px;
   color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
   cursor:pointer;
 }
 
+/* FOOTER */
 .footer{
+  background:rgba(255,255,255,0.8);
+  padding:15px;
   text-align:center;
-  padding:12px;
-  background:rgba(255,255,255,0.85);
 }
 
 .footer img{
@@ -121,159 +121,145 @@ body{
 <body>
 
 <div class="header">
-  <div id="title" class="title">Gallery</div>
+  <div class="title" id="title">Gallery</div>
+  <div class="tabs" id="tabs"></div>
 </div>
 
-<div id="filters" class="filters"></div>
-<div id="gallery" class="gallery"></div>
+<div class="gallery" id="gallery"></div>
 
-<div id="lightbox" class="lightbox">
-  <div class="close-btn" onclick="closeLightbox()">✕</div>
-  <img id="lightbox-img">
+<div class="viewer" id="viewer">
+  <div class="close" onclick="closeViewer()">✕</div>
+  <img id="viewerImg">
 </div>
 
 <div class="footer">
-  <img src="logo-aofm.png">
-  <img src="logo-club.png">
-  <img src="logo-olimpicos.png">
+  <img src="logo1.png">
+  <img src="logo2.png">
+  <img src="logo3.png">
 </div>
 
 <script>
 
 const params = new URLSearchParams(window.location.search);
-const event = params.get("event");
-const category = params.get("cat");
+const cat = params.get("cat");
 
-const cloudName="du4pmuch7";
+const gallery = document.getElementById("gallery");
+const tabsContainer = document.getElementById("tabs");
 
-/* SAFE CONFIG */
-const CONFIG = {
-  cn2026: {
-    "inf-menor":{
-      title:"Infantil Menor",
-      base:"WP%202026/Campeonato%20Nacional%202026/inf-menor-cdmx",
-      teams:{
-        GRO:{prefix:"CN2026_InfMnr_CDMX_GRO_0319_"},
-        GTO:{prefix:"CN2026_InfMnr_CDMX_GTO_0322_"},
-        MIC:{prefix:"CN2026_InfMnr_CDMX_MIC_0321_"},
-        NLE:{prefix:"CN2026_InfMnr_CDMX_NLE_0320_"}
-      }
-    },
-    "inf-mayor":{
-      title:"Infantil Mayor",
-      base:"WP%202026/Campeonato%20Nacional%202026/inf-mayor-cdmx",
-      teams:{
-        GRO:{prefix:"CN2026_InfMyr_CDMX_GRO_0319_"},
-        COAH:{prefix:"CN2026_InfMyr_CDMX_COA_0320_"},
-        EDOMEX:{prefix:"CN2026_InfMyr_CDMX_EDM_0319_"},
-        NL:{prefix:"CN2026_InfMyr_CDMX_NLE_0321_"},
-        QROO:{prefix:"CN2026_InfMyr_CDMX_ROO_0322_"}
-      }
-    },
-    "junior":{
-      title:"Junior",
-      base:"WP%202026/Campeonato%20Nacional%202026/junior-cdmx",
-      teams:{
-        GTO1:{prefix:"CN2026_JNR_CDMX_GTO_0402_",label:"vs GTO - Game 1"},
-        GTO2:{prefix:"CN2026_JNR_CDMX_GTO2_0402_",label:"vs GTO - Game 2"},
-        UNAM1:{prefix:"CN2026_JNR_CDMX_UNAM_0403_",label:"vs UNAM - Game 1"},
-        UNAM2:{prefix:"CN2026_JNR_CDMX_UNAM2_0403_",label:"vs UNAM - Game 2"},
-        PREM:{prefix:"CN2026_JNR_CDMX_3RD_",label:"Premiación"}
-      }
-    }
+const cloud = "https://res.cloudinary.com/YOUR_CLOUD/image/upload/";
+
+function createTabs(tabs){
+  tabsContainer.innerHTML="";
+  tabs.forEach((t,i)=>{
+    let el = document.createElement("div");
+    el.className="tab"+(i===0?" active":"");
+    el.innerText=t.name;
+    el.onclick=()=>{
+      document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+      el.classList.add("active");
+      loadGallery(t);
+    };
+    tabsContainer.appendChild(el);
+  });
+}
+
+function loadGallery(config){
+
+  gallery.innerHTML="";
+
+  let i = 1;
+  let fails = 0;
+
+  function loadNext(){
+
+    if(fails > 5) return;
+
+    let img = new Image();
+
+    let thumb = `${cloud}q_auto,f_auto,w_400/${config.prefix}_${String(i).padStart(3,'0')}.jpg`;
+
+    img.src = thumb;
+
+    img.onload = ()=>{
+      fails = 0;
+
+      img.onclick = ()=>{
+        openViewer(`${cloud}q_auto,f_auto/${config.prefix}_${String(i).padStart(3,'0')}.jpg`);
+      };
+
+      gallery.appendChild(img);
+
+      i++;
+      loadNext();
+    };
+
+    img.onerror = ()=>{
+      fails++;
+      i++;
+      loadNext();
+    };
   }
-};
 
-const config = CONFIG[event]?.[category];
-
-document.getElementById("title").innerText=config.title;
-
-/* FILTERS */
-const filtersDiv=document.getElementById("filters");
-
-Object.keys(config.teams).forEach((team,i)=>{
-  const btn=document.createElement("button");
-  btn.innerText=config.teams[team].label || ("vs "+team);
-
-  if(i===0) btn.classList.add("active");
-
-  btn.onclick=()=>{
-    document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
-    btn.classList.add("active");
-    startGallery(team);
-  };
-
-  filtersDiv.appendChild(btn);
-});
-
-/* LOAD SYSTEM */
-let index=1;
-let loaded=0;
-let currentTeam=null;
-const MAX_IMAGES = 600;
-
-function loadMore(){
-  if(index > MAX_IMAGES) return;
-
-  for(let i=0;i<30;i++){
-    loadOne();
-  }
+  loadNext();
 }
 
-function loadOne(){
-  const g=document.getElementById("gallery");
-  const team=config.teams[currentTeam];
-
-  let n=String(index).padStart(3,"0");
-
-  let thumb=`https://res.cloudinary.com/${cloudName}/image/upload/w_250,q_auto:low/${config.base}/gallery/${team.prefix}${n}.jpg`;
-  let full=`https://res.cloudinary.com/${cloudName}/image/upload/q_auto:good/${config.base}/gallery/${team.prefix}${n}.jpg`;
-
-  let img=new Image();
-
-  img.onload=()=>{
-    let el=document.createElement("img");
-    el.src=thumb;
-    el.onclick=()=>openLightbox(full);
-    g.appendChild(el);
-  };
-
-  img.onerror=()=>{}; // skip silently
-
-  img.src=thumb;
-
-  index++;
+function openViewer(src){
+  document.getElementById("viewer").style.display="flex";
+  document.getElementById("viewerImg").src=src;
 }
 
-/* START */
-function startGallery(team){
-  document.getElementById("gallery").innerHTML="";
-  index=1;
-  currentTeam=team;
-  loadMore();
+function closeViewer(){
+  document.getElementById("viewer").style.display="none";
 }
 
-/* SCROLL */
-window.addEventListener("scroll",()=>{
-  if(window.innerHeight + window.scrollY >= document.body.offsetHeight - 200){
-    loadMore();
-  }
-});
+/* CONFIG PER CATEGORY */
 
-/* LIGHTBOX */
-function openLightbox(src){
-  document.getElementById("lightbox-img").src=src;
-  document.getElementById("lightbox").classList.add("active");
+if(cat==="junior"){
+
+  document.getElementById("title").innerText="Junior";
+
+  createTabs([
+    {name:"vs GTO - Game 1", prefix:"CN2026_JNR_CDMX_GTO_0402"},
+    {name:"vs GTO - Game 2", prefix:"CN2026_JNR_CDMX2_GTO_0402"},
+    {name:"vs UNAM - Game 1", prefix:"CN2026_JNR_CDMX_UNAM_0403"},
+    {name:"vs UNAM - Game 2", prefix:"CN2026_JNR_CDMX2_UNAM_0403"},
+    {name:"Premiación", prefix:"CN2026_JNR_CDMX_3RD_0404"}
+  ]);
+
 }
 
-function closeLightbox(){
-  document.getElementById("lightbox").classList.remove("active");
+if(cat==="inf-mayor"){
+
+  document.getElementById("title").innerText="Infantil Mayor";
+
+  createTabs([
+    {name:"vs AGS", prefix:"CN2026_INF_MAYOR_AGS"},
+    {name:"vs COAH", prefix:"CN2026_INF_MAYOR_COAH"},
+    {name:"vs EDOMEX", prefix:"CN2026_INF_MAYOR_EDOMEX"},
+    {name:"vs GRO", prefix:"CN2026_INF_MAYOR_GRO"},
+    {name:"vs NL", prefix:"CN2026_INF_MAYOR_NL"},
+    {name:"vs QROO", prefix:"CN2026_INF_MAYOR_QROO"}
+  ]);
+
 }
 
-/* INIT */
-document.addEventListener("DOMContentLoaded",()=>{
-  startGallery(Object.keys(config.teams)[0]);
-});
+if(cat==="inf-menor"){
+
+  document.getElementById("title").innerText="Infantil Menor";
+
+  createTabs([
+    {name:"vs GRO", prefix:"CN2026_INF_MENOR_GRO"},
+    {name:"vs GTO", prefix:"CN2026_INF_MENOR_GTO"},
+    {name:"vs MIC", prefix:"CN2026_INF_MENOR_MIC"},
+    {name:"vs NL", prefix:"CN2026_INF_MENOR_NL"}
+  ]);
+
+}
+
+/* LOAD FIRST TAB */
+setTimeout(()=>{
+  document.querySelector(".tab").click();
+},100);
 
 </script>
 
