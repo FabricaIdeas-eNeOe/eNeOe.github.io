@@ -22,24 +22,12 @@ body{
   background-position:center;
 }
 
-/* BACK */
-.back{
-  position:fixed;
-  top:20px;
-  left:20px;
-  color:#0a4f73;
-  text-decoration:none;
-  font-weight:600;
-  z-index:10;
-}
-
 /* HEADER */
 .header{
   text-align:center;
   padding:80px 20px 30px;
 }
 
-/* TITLE */
 .title{
   display:inline-block;
   font-size:42px;
@@ -133,7 +121,7 @@ body{
   border-radius:10px;
 }
 
-/* CLOSE BUTTON */
+/* CLOSE */
 .close-btn{
   position:absolute;
   top:20px;
@@ -166,7 +154,7 @@ body{
   margin:0 10px;
 }
 
-/* 🔒 HIDDEN ADMIN BUTTON */
+/* 🔒 HIDDEN NAV */
 .admin-zone{
   position:fixed;
   bottom:0;
@@ -180,8 +168,6 @@ body{
 </head>
 
 <body>
-
-<a href="campeonato2026.html" class="back">← Back</a>
 
 <div class="header">
   <div id="title" class="title">Gallery</div>
@@ -201,7 +187,6 @@ body{
   <img src="logo-olimpicos.png">
 </div>
 
-<!-- 🔒 hidden admin -->
 <div class="admin-zone" onclick="window.location='index.html'"></div>
 
 <script>
@@ -217,30 +202,6 @@ const CONFIG = {
 
   cn2026: {
 
-    "inf-menor": {
-      title:"Infantil Menor",
-      base:"WP%202026/Campeonato%20Nacional%202026/inf-menor-cdmx",
-      teams:{
-        GRO:{prefix:"CN2026_InfMnr_CDMX_GRO_0319_",count:85},
-        GTO:{prefix:"CN2026_InfMnr_CDMX_GTO_0322_",count:79},
-        MIC:{prefix:"CN2026_InfMnr_CDMX_MIC_0321_",count:43},
-        NLE:{prefix:"CN2026_InfMnr_CDMX_NLE_0320_",count:68}
-      }
-    },
-
-    "inf-mayor": {
-      title:"Infantil Mayor",
-      base:"WP%202026/Campeonato%20Nacional%202026/inf-mayor-cdmx",
-      teams:{
-        AGS:{prefix:"CN2026_InfMyr_CDMX_AGS_0320_",count:50},
-        COAH:{prefix:"CN2026_InfMyr_CDMX_COA_0320_",count:51},
-        EDOMEX:{prefix:"CN2026_InfMyr_CDMX_EDM_0319_",count:44},
-        GRO:{prefix:"CN2026_InfMyr_CDMX_GRO_0319_",count:113},
-        NL:{prefix:"CN2026_InfMyr_CDMX_NLE_0321_",count:107},
-        QROO:{prefix:"CN2026_InfMyr_CDMX_ROO_0322_",count:60}
-      }
-    },
-
     "junior": {
       title:"Junior",
       base:"WP%202026/Campeonato%20Nacional%202026/junior-cdmx",
@@ -248,7 +209,8 @@ const CONFIG = {
         GTO1:{prefix:"CN2026_JNR_CDMX_GTO_0402_",count:80,label:"vs GTO - Game 1"},
         GTO2:{prefix:"CN2026_JNR_CDMX_GTO2_0402_",count:80,label:"vs GTO - Game 2"},
         UNAM1:{prefix:"CN2026_JNR_CDMX_UNAM_0403_",count:80,label:"vs UNAM - Game 1"},
-        UNAM2:{prefix:"CN2026_JNR_CDMX_UNAM2_0403_",count:80,label:"vs UNAM - Game 2"}
+        UNAM2:{prefix:"CN2026_JNR_CDMX_UNAM2_0403_",count:80,label:"vs UNAM - Game 2"},
+        PREMIACION:{prefix:"CN2026_JNR_CDMX_3RD_",count:60,label:"Premiación"}
       }
     }
 
@@ -264,7 +226,7 @@ const filtersDiv=document.getElementById("filters");
 
 Object.keys(config.teams).forEach((team,i)=>{
   const btn=document.createElement("button");
-  btn.innerText = config.teams[team].label || ("vs " + team);
+  btn.innerText = config.teams[team].label;
 
   if(i===0) btn.classList.add("active");
 
