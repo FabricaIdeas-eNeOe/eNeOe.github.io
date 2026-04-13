@@ -16,11 +16,13 @@ body{
   background-size:cover;
 }
 
+/* HIDDEN NAV */
 .hotspot{position:fixed;width:40px;height:40px;z-index:9999;}
 #home{top:0;left:0;}
 #camp{top:0;right:0;}
 #admin{top:0;left:50%;transform:translateX(-50%);}
 
+/* HEADER */
 .header{text-align:center;padding:60px 20px 10px;}
 
 .title{
@@ -34,6 +36,7 @@ body{
   border-radius:35px;
 }
 
+/* TABS */
 .tabs{
   display:flex;
   justify-content:center;
@@ -54,6 +57,7 @@ body{
   color:white;
 }
 
+/* GALLERY */
 .gallery{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
@@ -67,6 +71,7 @@ body{
   cursor:pointer;
 }
 
+/* VIEWER */
 .viewer{
   position:fixed;
   inset:0;
@@ -90,6 +95,7 @@ body{
   cursor:pointer;
 }
 
+/* FOOTER */
 .footer{
   background:rgba(255,255,255,0.85);
   text-align:center;
@@ -124,8 +130,9 @@ body{
 
 <script>
 
+/* ✅ CORRECT CLOUDINARY PATH */
 const BASE = "https://res.cloudinary.com/du4pmuch7/image/upload/";
-const FOLDER = "WP%202026/Campeonato%20Nacional%202026/";
+const ROOT = "WP%202026/Campeonato%20Nacional%202026/";
 
 const params = new URLSearchParams(window.location.search);
 const cat = params.get("cat");
@@ -134,75 +141,83 @@ const gallery = document.getElementById("gallery");
 const tabsDiv = document.getElementById("tabs");
 const title = document.getElementById("title");
 
-/* CATEGORY CONFIG */
-let config = {
+/* CONFIG */
+const CONFIG = {
   "junior":{
-    code:"Junr",
+    prefix:"Junr",
     folder:"junior-cdmx/gallery",
-    tabs:["GTO","UNAM","3RD"]
+    tabs:["GTO","GTO2","UNAM","UNAM2","3RD"]
   },
   "inf-mayor":{
-    code:"InfMyr",
+    prefix:"InfMyr",
     folder:"inf-mayor-cdmx/gallery",
     tabs:["AGS","COAH","EDOMEX","GRO","NL","ROO"]
   },
   "inf-menor":{
-    code:"InfMnr",
+    prefix:"InfMnr",
     folder:"inf-menor-cdmx/gallery",
     tabs:["GRO","GTO","MIC","NL"]
   }
 };
 
-let current = config[cat];
-title.innerText = cat.replace("-", " ").toUpperCase();
+const current = CONFIG[cat];
+title.innerText = cat.replace("-"," ").toUpperCase();
 
-/* LOAD IMAGES SMART */
+/* LOAD IMAGES */
 function load(rival){
+
   gallery.innerHTML="";
-  let i=1, fails=0;
+  let index = 1;
+  let fails = 0;
 
-  function loop(){
+  function scan(){
 
-    let num = String(i).padStart(3,'0');
+    let num = String(index).padStart(3,"0");
 
-    let url = `${BASE}${FOLDER}${current.folder}/q_auto,f_auto,w_400/CN2026_${current.code}_CDMX_${rival}_${num}.jpg`;
+    /* 🔥 TRY MULTIPLE DATES */
+    const dates = ["0319","0320","0321","0322","0404"];
 
-    let img = new Image();
-    img.src = url;
+    dates.forEach(date=>{
+      let url = `${BASE}${ROOT}${current.folder}/q_auto,f_auto,w_400/CN2026_${current.prefix}_CDMX_${rival}_${date}_${num}.jpg`;
 
-    img.onload = ()=>{
-      fails=0;
-      img.onclick=()=>open(url.replace("w_400/",""));
-      gallery.appendChild(img);
-    };
+      let img = new Image();
+      img.src = url;
 
-    img.onerror = ()=>fails++;
+      img.onload = ()=>{
+        fails=0;
+        img.onclick=()=>open(url.replace("w_400/",""));
+        gallery.appendChild(img);
+      };
 
-    i++;
+      img.onerror = ()=>fails++;
+    });
 
-    if(fails < 20){
-      requestAnimationFrame(loop);
+    index++;
+
+    if(fails < 50){
+      requestAnimationFrame(scan);
     }
   }
 
-  loop();
+  scan();
 }
 
-/* CREATE TABS */
+/* BUILD TABS */
 current.tabs.forEach((r,i)=>{
-  let t=document.createElement("div");
-  t.className="tab";
-  if(i===0) t.classList.add("active");
 
-  t.innerText = r==="3RD" ? "Premiación" : "vs "+r;
+  let tab = document.createElement("div");
+  tab.className="tab";
+  if(i===0) tab.classList.add("active");
 
-  t.onclick=()=>{
-    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
-    t.classList.add("active");
+  tab.innerText = r==="3RD" ? "Premiación" : "vs "+r;
+
+  tab.onclick=()=>{
+    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+    tab.classList.add("active");
     load(r);
   };
 
-  tabsDiv.appendChild(t);
+  tabsDiv.appendChild(tab);
 });
 
 /* INIT */
