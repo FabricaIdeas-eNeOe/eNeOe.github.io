@@ -9,31 +9,59 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
 
 <style>
+
 body{
   margin:0;
   font-family:'Montserrat',sans-serif;
-  background:url('background.png') no-repeat center center fixed;
+
+  background:
+    linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.15)),
+    url('background.png');
+
   background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
 }
 
+/* 🔒 HOTSPOTS */
 .hotspot{position:fixed;width:40px;height:40px;z-index:9999;}
 #home{top:0;left:0;}
 #camp{top:0;right:0;}
 #admin{top:0;left:50%;transform:translateX(-50%);}
 
-.header{text-align:center;padding:60px 20px 10px;}
+/* HEADER */
+.header{text-align:center;padding:70px 20px 20px;}
 
+/* TITLE (RESTORED EFFECT) */
 .title{
+  position:relative;
   display:inline-block;
   font-size:42px;
   font-weight:800;
   color:#0a4f73;
   padding:20px 70px;
+
   background:rgba(255,255,255,0.25);
   backdrop-filter:blur(25px);
   border-radius:35px;
+  border:1px solid rgba(255,255,255,0.6);
+  overflow:hidden;
 }
 
+.title::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,0.6) 50%,transparent 70%);
+  animation:wave 3s infinite linear;
+}
+
+@keyframes wave{
+  0%{transform:translateX(-100%)}
+  100%{transform:translateX(100%)}
+}
+
+/* TABS */
 .tabs{
   display:flex;
   justify-content:center;
@@ -47,6 +75,7 @@ body{
   border-radius:20px;
   background:rgba(255,255,255,0.6);
   cursor:pointer;
+  transition:0.2s;
 }
 
 .tab.active{
@@ -54,6 +83,7 @@ body{
   color:white;
 }
 
+/* GALLERY */
 .gallery{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
@@ -65,8 +95,14 @@ body{
   width:100%;
   border-radius:14px;
   cursor:pointer;
+  transition:0.2s;
 }
 
+.gallery img:hover{
+  transform:scale(1.05);
+}
+
+/* VIEWER */
 .viewer{
   position:fixed;
   inset:0;
@@ -90,11 +126,22 @@ body{
   cursor:pointer;
 }
 
+/* ✅ FIXED FOOTER */
 .footer{
+  position:fixed;
+  bottom:0;
+  width:100%;
   background:rgba(255,255,255,0.85);
   text-align:center;
-  padding:12px;
+  padding:10px;
+  backdrop-filter:blur(10px);
 }
+
+.footer img{
+  height:40px;
+  margin:0 10px;
+}
+
 </style>
 </head>
 
@@ -117,17 +164,14 @@ body{
 </div>
 
 <div class="footer">
-  <img src="logo-aofm.png" height="40">
-  <img src="logo-club.png" height="40">
-  <img src="logo-olimpicos.png" height="40">
+  <img src="logo-aofm.png">
+  <img src="logo-club.png">
+  <img src="logo-olimpicos.png">
 </div>
 
 <script>
 
-/* 🔥 FIXED BASE */
 const BASE = "https://res.cloudinary.com/du4pmuch7/image/upload/";
-
-/* 🔥 FULL PUBLIC ID ROOT */
 const ROOT = "WP 2026/Campeonato Nacional 2026/";
 
 const params = new URLSearchParams(window.location.search);
@@ -163,34 +207,40 @@ function load(rival){
 
   gallery.innerHTML="";
   let index = 1;
-  let fails = 0;
+  let failCount = 0;
 
   function scan(){
 
     let num = String(index).padStart(3,"0");
+    let found = false;
+
     const dates = ["0319","0320","0321","0322","0404"];
 
     dates.forEach(date=>{
 
       let publicId = `${ROOT}${current.folder}/CN2026_${current.prefix}_CDMX_${rival}_${date}_${num}`;
-
-      let url = `${BASE}q_auto,f_auto,w_400/${encodeURI(publicId)}.jpg`;
+      let thumb = `${BASE}q_auto,f_auto,w_400/${encodeURI(publicId)}.jpg`;
+      let full = `${BASE}${encodeURI(publicId)}.jpg`;
 
       let img = new Image();
-      img.src = url;
+      img.src = thumb;
 
       img.onload = ()=>{
-        fails=0;
-        img.onclick=()=>open(url.replace("w_400/",""));
+        found = true;
+        failCount = 0;
+
+        img.onclick=()=>open(full);
         gallery.appendChild(img);
       };
 
-      img.onerror = ()=>fails++;
+      img.onerror = ()=>{};
     });
+
+    if(!found) failCount++;
 
     index++;
 
-    if(fails < 60){
+    if(failCount < 25){
       requestAnimationFrame(scan);
     }
   }
