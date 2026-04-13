@@ -13,7 +13,6 @@ body {
   background: url('background.png') no-repeat center/cover;
 }
 
-/* TITLE */
 .title {
   text-align:center;
   margin-top:40px;
@@ -22,7 +21,6 @@ body {
   color:#1f3b4d;
 }
 
-/* TABS */
 .tabs {
   display:flex;
   justify-content:center;
@@ -43,7 +41,6 @@ body {
   color:white;
 }
 
-/* GALLERY */
 .gallery {
   display:grid;
   grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
@@ -53,7 +50,7 @@ body {
 
 .img-box {
   width:100%;
-  aspect-ratio: 4/3;
+  aspect-ratio:4/3;
   overflow:hidden;
   border-radius:15px;
 }
@@ -70,16 +67,10 @@ body {
 
 <div class="title" id="title">GALLERY</div>
 
-<div class="tabs">
-  <div class="tab active" onclick="setTab(this); loadGallery('GTO')">vs GTO</div>
-  <div class="tab" onclick="setTab(this); loadGallery('GTO2')">vs GTO2</div>
-  <div class="tab" onclick="setTab(this); loadGallery('UNAM')">vs UNAM</div>
-  <div class="tab" onclick="setTab(this); loadGallery('UNAM2')">vs UNAM2</div>
-</div>
+<div class="tabs" id="tabs"></div>
 
 <div class="gallery" id="gallery"></div>
 
-<!-- LOGOS -->
 <div style="text-align:center; padding:20px; background:rgba(255,255,255,0.5); backdrop-filter:blur(10px);">
   <img src="logo-olimpicos.png" style="height:40px; margin:10px;">
   <img src="logo-aofm.png" style="height:40px; margin:10px;">
@@ -88,21 +79,51 @@ body {
 
 <script>
 
-/* 🔒 LOCKED BASE PATH (exactly as your structure) */
-const BASE = "https://res.cloudinary.com/du4pmuch7/image/upload/WP2026/Campeonato-Nacional-2026/junior-cdmx/gallery/";
+/* 🔒 CATEGORY CONFIG — THIS FIXES MIXED TABS */
+const CONFIG = {
+  "junior": {
+    path: "WP2026/Campeonato-Nacional-2026/junior-cdmx/gallery/",
+    prefix: "CN2026_Junr_CDMX_",
+    tabs: ["GTO","GTO2","UNAM","UNAM2"]
+  },
+  "inf-mayor": {
+    path: "WP2026/Campeonato-Nacional-2026/inf-mayor-cdmx/gallery/",
+    prefix: "CN2026_InfM_CDMX_",
+    tabs: ["AGS","COAH","EDOMEX","GRO","NL","ROO"]
+  },
+  "inf-menor": {
+    path: "WP2026/Campeonato-Nacional-2026/inf-menor-cdmx/gallery/",
+    prefix: "CN2026_Infm_CDMX_",
+    tabs: ["GTO","GTO2","UNAM","UNAM2"]
+  }
+};
 
-/* TITLE FROM URL */
+const CLOUD = "https://res.cloudinary.com/du4pmuch7/image/upload/";
+
+/* READ CATEGORY */
 const params = new URLSearchParams(window.location.search);
-const cat = params.get("cat");
-if(cat){
-  document.getElementById("title").innerText = cat.toUpperCase().replace("-", " ");
-}
+const cat = params.get("cat") || "junior";
 
-/* TAB UI */
-function setTab(el){
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-}
+/* SET TITLE */
+document.getElementById("title").innerText = cat.toUpperCase().replace("-", " ");
+
+/* BUILD TABS */
+const tabsContainer = document.getElementById("tabs");
+const current = CONFIG[cat];
+
+current.tabs.forEach((team, index) => {
+  let tab = document.createElement("div");
+  tab.className = "tab" + (index === 0 ? " active" : "");
+  tab.innerText = "vs " + team;
+
+  tab.onclick = () => {
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    tab.classList.add("active");
+    loadGallery(team);
+  };
+
+  tabsContainer.appendChild(tab);
+});
 
 /* LOAD GALLERY */
 function loadGallery(team){
@@ -110,15 +131,16 @@ function loadGallery(team){
   const gallery = document.getElementById("gallery");
   gallery.innerHTML = "";
 
+  const BASE = CLOUD + current.path;
+
   for(let i = 1; i <= 150; i++){
 
     let num = String(i).padStart(3,'0');
 
-    let url = BASE + "CN2026_Junr_CDMX_" + team + "_0404_" + num + ".jpg";
+    let url = BASE + current.prefix + team + "_0404_" + num + ".jpg";
 
     let img = document.createElement("img");
     img.src = url;
-
     img.onerror = () => img.remove();
 
     let box = document.createElement("div");
@@ -130,7 +152,7 @@ function loadGallery(team){
 }
 
 /* INITIAL LOAD */
-loadGallery("GTO");
+loadGallery(current.tabs[0]);
 
 </script>
 
