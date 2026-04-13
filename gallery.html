@@ -151,34 +151,29 @@ const category = params.get("cat");
 
 const cloudName="du4pmuch7";
 
-/* CONFIG */
+/* CONFIG WITHOUT COUNTS */
 const CONFIG = {
-
   cn2026: {
-
-    "inf-mayor": {
+    "inf-mayor":{
       title:"Infantil Mayor",
       base:"WP%202026/Campeonato%20Nacional%202026/inf-mayor-cdmx",
       teams:{
-        COAH:{prefix:"CN2026_InfMyr_CDMX_COA_0320_",count:120},
-        GRO:{prefix:"CN2026_InfMyr_CDMX_GRO_0319_",count:120}
+        GRO:{prefix:"CN2026_InfMyr_CDMX_GRO_0319_"},
+        COAH:{prefix:"CN2026_InfMyr_CDMX_COA_0320_"}
       }
     },
-
-    "junior": {
+    "junior":{
       title:"Junior",
       base:"WP%202026/Campeonato%20Nacional%202026/junior-cdmx",
       teams:{
-        GTO1:{prefix:"CN2026_JNR_CDMX_GTO_0402_",count:120,label:"vs GTO - Game 1"},
-        GTO2:{prefix:"CN2026_JNR_CDMX_GTO2_0402_",count:120,label:"vs GTO - Game 2"},
-        UNAM1:{prefix:"CN2026_JNR_CDMX_UNAM_0403_",count:120,label:"vs UNAM - Game 1"},
-        UNAM2:{prefix:"CN2026_JNR_CDMX_UNAM2_0403_",count:120,label:"vs UNAM - Game 2"},
-        PREMIACION:{prefix:"CN2026_JNR_CDMX_3RD_",count:80,label:"Premiación"}
+        GTO1:{prefix:"CN2026_JNR_CDMX_GTO_0402_",label:"vs GTO - Game 1"},
+        GTO2:{prefix:"CN2026_JNR_CDMX_GTO2_0402_",label:"vs GTO - Game 2"},
+        UNAM1:{prefix:"CN2026_JNR_CDMX_UNAM_0403_",label:"vs UNAM - Game 1"},
+        UNAM2:{prefix:"CN2026_JNR_CDMX_UNAM2_0403_",label:"vs UNAM - Game 2"},
+        PREM:{prefix:"CN2026_JNR_CDMX_3RD_",label:"Premiación"}
       }
     }
-
   }
-
 };
 
 const config = CONFIG[event]?.[category];
@@ -197,69 +192,73 @@ Object.keys(config.teams).forEach((team,i)=>{
   btn.onclick=()=>{
     document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
     btn.classList.add("active");
-    loadTeam(team);
+    startGallery(team);
   };
 
   filtersDiv.appendChild(btn);
 });
 
-/* IMAGE GENERATION */
-function generateImages(team){
-  const c=config.teams[team];
-  let arr=[];
+/* SMART LOADER */
+let index=1;
+let failCount=0;
+let currentTeam=null;
 
-  for(let i=1;i<=c.count;i++){
-    let n=String(i).padStart(3,"0");
+function loadBatch(){
+  if(failCount > 15) return; // stop if too many missing
 
-    arr.push({
-      thumb:`https://res.cloudinary.com/${cloudName}/image/upload/w_300,q_auto/${config.base}/gallery/${c.prefix}${n}.jpg`,
-      full:`https://res.cloudinary.com/${cloudName}/image/upload/q_auto/${config.base}/gallery/${c.prefix}${n}.jpg`
-    });
+  for(let i=0;i<20;i++){
+    loadOne();
   }
-
-  return arr;
 }
 
-/* LOAD */
-let currentImages=[];
-let loaded=0;
-
-function loadMore(){
+function loadOne(){
   const g=document.getElementById("gallery");
+  const team=config.teams[currentTeam];
 
-  currentImages.slice(loaded,loaded+40).forEach((img)=>{
+  let n=String(index).padStart(3,"0");
+
+  let thumb=`https://res.cloudinary.com/${cloudName}/image/upload/w_250,q_auto:low/${config.base}/gallery/${team.prefix}${n}.jpg`;
+  let full=`https://res.cloudinary.com/${cloudName}/image/upload/q_auto:good/${config.base}/gallery/${team.prefix}${n}.jpg`;
+
+  let img=new Image();
+
+  img.onload=()=>{
+    failCount=0;
+
     let el=document.createElement("img");
-
-    el.src=img.thumb;
-
-    /* REMOVE broken images */
-    el.onerror=()=>el.remove();
-
-    const index=loaded;
-    el.onclick=()=>openLightbox(index);
-
+    el.src=thumb;
+    el.onclick=()=>openLightbox(full);
     g.appendChild(el);
-    loaded++;
-  });
+  };
+
+  img.onerror=()=>{
+    failCount++;
+  };
+
+  img.src=thumb;
+
+  index++;
 }
 
-function loadTeam(team){
+/* START */
+function startGallery(team){
   document.getElementById("gallery").innerHTML="";
-  currentImages=generateImages(team);
-  loaded=0;
-  loadMore();
+  index=1;
+  failCount=0;
+  currentTeam=team;
+  loadBatch();
 }
 
-/* SCROLL LAZY LOAD */
+/* SCROLL */
 window.addEventListener("scroll",()=>{
   if(window.innerHeight + window.scrollY >= document.body.offsetHeight - 200){
-    loadMore();
+    loadBatch();
   }
 });
 
 /* LIGHTBOX */
-function openLightbox(i){
-  document.getElementById("lightbox-img").src=currentImages[i].full;
+function openLightbox(src){
+  document.getElementById("lightbox-img").src=src;
   document.getElementById("lightbox").classList.add("active");
 }
 
@@ -269,7 +268,7 @@ function closeLightbox(){
 
 /* INIT */
 document.addEventListener("DOMContentLoaded",()=>{
-  loadTeam(Object.keys(config.teams)[0]);
+  startGallery(Object.keys(config.teams)[0]);
 });
 
 </script>
