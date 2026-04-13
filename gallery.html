@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Galería Junior</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    text-align: center;
+}
+
+h1 {
+    margin: 40px 0 10px;
+    font-size: 36px;
+}
+
+.tabs {
+    margin-bottom: 30px;
+}
+
+.tab {
+    padding: 10px 18px;
+    border-radius: 20px;
+    border: none;
+    margin: 5px;
+    cursor: pointer;
+    background: #ddd;
+}
+
+.tab.active {
+    background: #1f5c63;
+    color: white;
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 0 40px 40px;
+}
+
+.gallery img {
+    width: 100%;
+    border-radius: 12px;
+    object-fit: cover;
+}
+</style>
+</head>
+
+<body>
+
+<h1 id="title">GALERÍA JUNIOR</h1>
+
+<div class="tabs">
+    <button class="tab active" onclick="loadGallery('GTO')">vs GTO</button>
+    <button class="tab" onclick="loadGallery('GTO2')">vs GTO2</button>
+    <button class="tab" onclick="loadGallery('UNAM')">vs UNAM</button>
+    <button class="tab" onclick="loadGallery('UNAM2')">vs UNAM2</button>
+</div>
+
+<div class="gallery" id="gallery"></div>
+
+<script>
+const cloudName = "du4pmuch7";
+
+const basePath = "WP 2026/Campeonato Nacional 2026/junior-cdmx/gallery";
+
+const images = [
+"CN2026_JNR_CDMX_GTO_0404_001",
+"CN2026_JNR_CDMX_GTO_0404_002",
+"CN2026_JNR_CDMX_GTO2_0404_001",
+"CN2026_JNR_CDMX_UNAM_0404_001",
+"CN2026_JNR_CDMX_UNAM2_0404_064",
+"CN2026_JNR_CDMX_UNAM2_0404_073"
+];
+
+function loadGallery(team) {
+
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+
+    const gallery = document.getElementById("gallery");
+    gallery.innerHTML = "";
+
+    const filtered = images.filter(img => img.includes(team));
+
+    filtered.forEach(name => {
+        const url = `https://res.cloudinary.com/${cloudName}/image/upload/${basePath}/${name}.jpg`;
+
+        const img = document.createElement("img");
+        img.src = url;
+
+        gallery.appendChild(img);
+    });
+}
+
+// load default
+loadGallery("GTO");
+</script>
+
+</body>
+</html>
