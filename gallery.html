@@ -55,7 +55,8 @@ h1 {
 <h1>GALERÍA JUNIOR</h1>
 
 <div class="tabs">
-    <button class="tab active">3RD</button>
+    <button class="tab active" onclick="loadGallery('GTO')">GTO</button>
+    <button class="tab" onclick="loadGallery('3RD')">Premiación</button>
 </div>
 
 <div class="gallery" id="gallery"></div>
@@ -63,10 +64,9 @@ h1 {
 <script>
 const cloudName = "du4pmuch7";
 
-// ✅ CORRECT PATH (WITH %20 FOR SPACES)
-const basePath = "WP%202026/Campeonato%20Nacional%202026/junior-cdmx/gallery";
-
+// 👇 filenames ONLY (based on your real data)
 const images = [
+"CN2026_JNR_CDMX_GTO_0402_020",
 "CN2026_JNR_CDMX_3RD_0405_001",
 "CN2026_JNR_CDMX_3RD_0405_002",
 "CN2026_JNR_CDMX_3RD_0405_003",
@@ -74,16 +74,28 @@ const images = [
 "CN2026_JNR_CDMX_3RD_0405_005"
 ];
 
-const gallery = document.getElementById("gallery");
+function loadGallery(team) {
 
-images.forEach(name => {
-    const url = `https://res.cloudinary.com/${cloudName}/image/upload/${basePath}/${name}.jpg`;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
 
-    const img = document.createElement("img");
-    img.src = url;
+    const gallery = document.getElementById("gallery");
+    gallery.innerHTML = "";
 
-    gallery.appendChild(img);
-});
+    const filtered = images.filter(img => img.includes(team));
+
+    filtered.forEach(name => {
+        const url = `https://res.cloudinary.com/${cloudName}/image/upload/${name}.jpg`;
+
+        const img = document.createElement("img");
+        img.src = url;
+
+        gallery.appendChild(img);
+    });
+}
+
+// default load
+loadGallery("GTO");
 </script>
 
 </body>
