@@ -1,260 +1,118 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Infantil Menor</title>
+  <meta charset="UTF-8">
+  <title>Galería INF-MENOR</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f5f5f5;
+      text-align: center;
+    }
 
-<style>
+    h1 {
+      margin: 30px 0 10px;
+      font-size: 36px;
+    }
 
-/* (UNCHANGED DESIGN — SAME AS BEFORE) */
-body{
-  margin:0;
-  font-family:'Montserrat',sans-serif;
-  overflow-x:hidden;
-  background:
-    linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.15)),
-    url('background.png');
-  background-size:cover;
-  background-position:center;
-}
+    .filters {
+      margin-bottom: 30px;
+    }
 
-.back{
-  position:fixed;
-  top:20px;
-  left:20px;
-  color:#0a4f73;
-  text-decoration:none;
-  font-weight:600;
-  z-index:10;
-}
+    .filters button {
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 20px;
+      background: #ccc;
+      cursor: pointer;
+      font-weight: bold;
+    }
 
-.header{
-  text-align:center;
-  padding:80px 20px 30px;
-}
+    .filters button.active {
+      background: #2f5d5a;
+      color: white;
+    }
 
-.title{
-  display:inline-block;
-  font-size:42px;
-  font-weight:800;
-  color:#0a4f73;
-  padding:18px 60px;
-  background:rgba(255,255,255,0.25);
-  backdrop-filter:blur(25px);
-  border-radius:30px;
-  border:1px solid rgba(255,255,255,0.6);
-  position:relative;
-  overflow:hidden;
-}
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 15px;
+      padding: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
 
-.title::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,0.6) 50%,transparent 70%);
-  animation:wave 3s infinite linear;
-}
+    .photo {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
 
-@keyframes wave{
-  0%{transform:translateX(-100%)}
-  100%{transform:translateX(100%)}
-}
+    .photo img {
+      width: 100%;
+      display: block;
+    }
 
-.filters{
-  text-align:center;
-  margin:25px 0;
-}
+    .download {
+      display: block;
+      padding: 10px;
+      background: #2f5d5a;
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+    }
 
-.filters button{
-  margin:6px;
-  padding:10px 18px;
-  border-radius:25px;
-  border:1px solid rgba(255,255,255,0.5);
-  background:rgba(255,255,255,0.25);
-  backdrop-filter:blur(10px);
-  color:#0a4f73;
-  font-weight:600;
-  cursor:pointer;
-}
-
-.filters button.active{
-  background:#0a4f73;
-  color:white;
-}
-
-.gallery{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-  gap:16px;
-  padding:30px 30px 80px;
-}
-
-.gallery img{
-  width:100%;
-  height:150px;
-  object-fit:cover;
-  border-radius:14px;
-  cursor:pointer;
-}
-
-.lightbox{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.92);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  opacity:0;
-  pointer-events:none;
-}
-
-.lightbox.active{
-  opacity:1;
-  pointer-events:auto;
-}
-
-.lightbox img{
-  max-width:90%;
-  max-height:85%;
-}
-
-.footer{
-  position:fixed;
-  bottom:0;
-  width:100%;
-  text-align:center;
-  padding:12px;
-  background:rgba(255,255,255,0.85);
-}
-
-.footer img{
-  height:40px;
-  margin:0 12px;
-}
-
-</style>
+    .download:hover {
+      background: #244746;
+    }
+  </style>
 </head>
 
 <body>
 
-<a href="campeonato2026.html" class="back">← Back</a>
+  <h1>GALERÍA INF-MENOR</h1>
 
-<div class="header">
-  <div class="title">Infantil Menor</div>
-</div>
+  <div class="filters">
+    <button class="active">vs GRO</button>
+    <!-- You can add more filters later -->
+  </div>
 
-<div id="filters" class="filters"></div>
-<div id="gallery" class="gallery"></div>
+  <div class="gallery">
 
-<div id="lightbox" class="lightbox">
-  <img id="lightbox-img">
-</div>
+    <!-- PHOTO 001 -->
+    <div class="photo">
+      <img src="https://res.cloudinary.com/du4pmuch7/image/upload/WP2026/CN2026/infmenor/gallery/CN2026_InfMnr_CDMX_GRO_0319_001.jpg">
+      <a class="download" href="https://res.cloudinary.com/du4pmuch7/image/upload/fl_attachment/WP2026/CN2026/infmenor/download/CN2026_InfMnr_CDMX_GRO_0319_001.jpg" target="_blank">
+        Descargar
+      </a>
+    </div>
 
-<div class="footer">
-  <img src="logo-aofm.png">
-  <img src="logo-club.png">
-  <img src="logo-olimpicos.png">
-</div>
+    <!-- DUPLICATE BLOCK TEMPLATE -->
+    <!-- COPY THIS BLOCK AND CHANGE ONLY THE LAST NUMBER -->
 
-<script>
+    <!-- PHOTO 002 -->
+    <div class="photo">
+      <img src="https://res.cloudinary.com/du4pmuch7/image/upload/WP2026/CN2026/infmenor/gallery/CN2026_InfMnr_CDMX_GRO_0319_002.jpg">
+      <a class="download" href="https://res.cloudinary.com/du4pmuch7/image/upload/fl_attachment/WP2026/CN2026/infmenor/download/CN2026_InfMnr_CDMX_GRO_0319_002.jpg" target="_blank">
+        Descargar
+      </a>
+    </div>
 
-const cloudName="du4pmuch7";
-const base="WP%202026/Campeonato%20Nacional%202026/inf-menor-cdmx";
+    <!-- PHOTO 003 -->
+    <div class="photo">
+      <img src="https://res.cloudinary.com/du4pmuch7/image/upload/WP2026/CN2026/infmenor/gallery/CN2026_InfMnr_CDMX_GRO_0319_003.jpg">
+      <a class="download" href="https://res.cloudinary.com/du4pmuch7/image/upload/fl_attachment/WP2026/CN2026/infmenor/download/CN2026_InfMnr_CDMX_GRO_0319_003.jpg" target="_blank">
+        Descargar
+      </a>
+    </div>
 
-const teamConfig={
-  GRO:{prefix:"CN2026_InfMnr_CDMX_GRO_0319_",count:85},
-  GTO:{prefix:"CN2026_InfMnr_CDMX_GTO_0322_",count:79},
-  MIC:{prefix:"CN2026_InfMnr_CDMX_MIC_0321_",count:43},
-  NLE:{prefix:"CN2026_InfMnr_CDMX_NLE_0320_",count:68}
-};
+    <!-- 👉 KEEP ADDING MORE PHOTOS HERE -->
 
-const filtersDiv=document.getElementById("filters");
-
-Object.keys(teamConfig).forEach((team,i)=>{
-  const btn=document.createElement("button");
-  btn.innerText="vs "+team;
-  if(i===0) btn.classList.add("active");
-
-  btn.onclick=()=>{
-    document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
-    btn.classList.add("active");
-    loadTeam(team);
-  };
-
-  filtersDiv.appendChild(btn);
-});
-
-function generateImages(team){
-  const c=teamConfig[team];
-  let arr=[];
-  for(let i=1;i<=c.count;i++){
-    let n=String(i).padStart(3,"0");
-
-    arr.push({
-      thumb:`https://res.cloudinary.com/${cloudName}/image/upload/w_300,q_auto:low,f_auto/${base}/gallery/${c.prefix}${n}.jpg`,
-      lightbox:`https://res.cloudinary.com/${cloudName}/image/upload/w_1200,q_auto:good,f_auto/${base}/gallery/${c.prefix}${n}.jpg`
-    });
-  }
-  return arr;
-}
-
-let currentImages=[];
-let loaded=0;
-let batchSize=30;
-
-/* 🔥 AUTO LOAD FIX */
-function ensureFill(){
-  while(document.body.offsetHeight < window.innerHeight && loaded < currentImages.length){
-    loadMore();
-  }
-}
-
-function loadMore(){
-  const g=document.getElementById("gallery");
-  const next=currentImages.slice(loaded,loaded+batchSize);
-
-  next.forEach((img)=>{
-    let el=document.createElement("img");
-    el.src=img.thumb;
-    el.loading="lazy";
-
-    const index=loaded;
-    el.onclick=()=>openLightbox(index);
-
-    g.appendChild(el);
-    loaded++;
-  });
-}
-
-function loadTeam(team){
-  document.getElementById("gallery").innerHTML="";
-  currentImages=generateImages(team);
-  loaded=0;
-  loadMore();
-  ensureFill(); // 🔥 critical
-}
-
-window.addEventListener("scroll",()=>{
-  if((window.innerHeight+window.scrollY)>=document.body.offsetHeight-300){
-    if(loaded<currentImages.length){
-      loadMore();
-    }
-  }
-});
-
-function openLightbox(i){
-  document.getElementById("lightbox-img").src=currentImages[i].lightbox;
-  document.getElementById("lightbox").classList.add("active");
-}
-
-document.addEventListener("DOMContentLoaded",()=>{
-  loadTeam(Object.keys(teamConfig)[0]);
-});
-
-</script>
+  </div>
 
 </body>
 </html>
