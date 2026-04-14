@@ -2,40 +2,43 @@
 
 const cloudName = "du4pmuch7";
 
-/* ✅ UPDATED BASE PATHS (NO SPACES) */
+/* BASE PATHS (your real folders) */
 const BASE_PATHS = {
   "inf-menor": "WP2026/Campeonato-Nacional-2026/inf-menor-cdmx",
   "inf-mayor": "WP2026/Campeonato-Nacional-2026/inf-mayor-cdmx",
   "junior": "WP2026/Campeonato-Nacional-2026/junior-cdmx"
 };
 
-/* CATEGORY → PREFIX + COUNT */
+/* CONFIG */
 const CONFIG = {
   "inf-menor": {
     GTO: { prefix: "CN2026_InfMnr_CDMX_GTO_0322_", count: 80 },
-    MIC: { prefix: "CN2026_InfMnr_CDMX_MIC_0321_", count: 50 },
-    NLE: { prefix: "CN2026_InfMnr_CDMX_NLE_0320_", count: 70 },
-    GRO: { prefix: "CN2026_InfMnr_CDMX_GRO_0319_", count: 90 }
+    MIC: { prefix: "CN2026_InfMnr_CDMX_MIC_0321_", count: 50 }
   },
   "inf-mayor": {
     ROO: { prefix: "CN2026_InfMyr_CDMX_ROO_0322_", count: 60 },
     COAH: { prefix: "CN2026_InfMyr_CDMX_COA_0320_", count: 60 }
   },
   "junior": {
-    GTO: { prefix: "CN2026_JNR_CDMX_GTO_0403_", count: 120 },
-    UNAM2: { prefix: "CN2026_JNR_CDMX_UNAM2_0404_", count: 80 }
+    GTO: { prefix: "CN2026_JNR_CDMX_GTO_0403_", count: 120 }
   }
 };
 
-/* GET URL PARAM */
+/* SAFE CATEGORY */
 const params = new URLSearchParams(window.location.search);
-const category = params.get("cat");
+let category = params.get("cat");
+
+/* 🔥 FAILSAFE */
+if (!category || !CONFIG[category]) {
+  console.error("Invalid category:", category);
+  category = "inf-menor"; // fallback
+}
 
 /* DOM */
 const gallery = document.getElementById("gallery");
 const filters = document.getElementById("filters");
 
-/* BUILD FILTER BUTTONS */
+/* BUILD FILTERS SAFELY */
 Object.keys(CONFIG[category]).forEach((team, i) => {
   const btn = document.createElement("button");
   btn.innerText = "vs " + team;
@@ -72,6 +75,7 @@ function loadTeam(team) {
 }
 
 /* INIT */
-loadTeam(Object.keys(CONFIG[category])[0]);
+const firstTeam = Object.keys(CONFIG[category])[0];
+loadTeam(firstTeam);
 
 </script>
