@@ -1,81 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Galería</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f4f4f4;
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 40px;
+      font-size: 42px;
+    }
+
+    .filters {
+      margin: 20px 0;
+    }
+
+    .filters button {
+      padding: 10px 20px;
+      border-radius: 20px;
+      border: none;
+      margin: 5px;
+      background: #ccc;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .filters button.active {
+      background: #2f5d62;
+      color: white;
+    }
+
+    #gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+      padding: 20px;
+    }
+
+    #gallery img {
+      width: 100%;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1 id="title">GALERÍA</h1>
+
+<div class="filters" id="filters"></div>
+
+<div id="gallery"></div>
+
 <script>
+document.addEventListener("DOMContentLoaded", function() {
 
-const cloudName = "du4pmuch7";
+  const cloudName = "du4pmuch7";
 
-/* BASE PATHS (your real folders) */
-const BASE_PATHS = {
-  "inf-menor": "WP2026/Campeonato-Nacional-2026/inf-menor-cdmx",
-  "inf-mayor": "WP2026/Campeonato-Nacional-2026/inf-mayor-cdmx",
-  "junior": "WP2026/Campeonato-Nacional-2026/junior-cdmx"
-};
-
-/* CONFIG */
-const CONFIG = {
-  "inf-menor": {
-    GTO: { prefix: "CN2026_InfMnr_CDMX_GTO_0322_", count: 80 },
-    MIC: { prefix: "CN2026_InfMnr_CDMX_MIC_0321_", count: 50 }
-  },
-  "inf-mayor": {
-    ROO: { prefix: "CN2026_InfMyr_CDMX_ROO_0322_", count: 60 },
-    COAH: { prefix: "CN2026_InfMyr_CDMX_COA_0320_", count: 60 }
-  },
-  "junior": {
-    GTO: { prefix: "CN2026_JNR_CDMX_GTO_0403_", count: 120 }
-  }
-};
-
-/* SAFE CATEGORY */
-const params = new URLSearchParams(window.location.search);
-let category = params.get("cat");
-
-/* 🔥 FAILSAFE */
-if (!category || !CONFIG[category]) {
-  console.error("Invalid category:", category);
-  category = "inf-menor"; // fallback
-}
-
-/* DOM */
-const gallery = document.getElementById("gallery");
-const filters = document.getElementById("filters");
-
-/* BUILD FILTERS SAFELY */
-Object.keys(CONFIG[category]).forEach((team, i) => {
-  const btn = document.createElement("button");
-  btn.innerText = "vs " + team;
-
-  if (i === 0) btn.classList.add("active");
-
-  btn.onclick = () => {
-    document.querySelectorAll(".filters button").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    loadTeam(team);
+  const BASE_PATHS = {
+    "inf-menor": "WP2026/Campeonato-Nacional-2026/inf-menor-cdmx",
+    "inf-mayor": "WP2026/Campeonato-Nacional-2026/inf-mayor-cdmx",
+    "junior": "WP2026/Campeonato-Nacional-2026/junior-cdmx"
   };
 
-  filters.appendChild(btn);
-});
+  const CONFIG = {
+    "inf-menor": {
+      GTO: { prefix: "CN2026_InfMnr_CDMX_GTO_0322_", count: 80 },
+      MIC: { prefix: "CN2026_InfMnr_CDMX_MIC_0321_", count: 50 }
+    },
+    "inf-mayor": {
+      ROO: { prefix: "CN2026_InfMyr_CDMX_ROO_0322_", count: 60 },
+      COAH: { prefix: "CN2026_InfMyr_CDMX_COA_0320_", count: 60 }
+    },
+    "junior": {
+      GTO: { prefix: "CN2026_JNR_CDMX_GTO_0403_", count: 120 }
+    }
+  };
 
-/* LOAD TEAM */
-function loadTeam(team) {
-  gallery.innerHTML = "";
+  const params = new URLSearchParams(window.location.search);
+  let category = params.get("cat");
 
-  const base = BASE_PATHS[category];
-  const config = CONFIG[category][team];
-
-  for (let i = 1; i <= config.count; i++) {
-    const num = String(i).padStart(3, "0");
-
-    const url = `https://res.cloudinary.com/${cloudName}/image/upload/${base}/gallery/${config.prefix}${num}.jpg`;
-
-    const img = document.createElement("img");
-    img.src = url;
-    img.loading = "lazy";
-
-    gallery.appendChild(img);
+  if (!category || !CONFIG[category]) {
+    category = "inf-menor";
   }
-}
 
-/* INIT */
-const firstTeam = Object.keys(CONFIG[category])[0];
-loadTeam(firstTeam);
+  const gallery = document.getElementById("gallery");
+  const filters = document.getElementById("filters");
+  const title = document.getElementById("title");
 
+  title.innerText = "GALERÍA " + category.toUpperCase();
+
+  function loadTeam(team) {
+    gallery.innerHTML = "";
+
+    const base = BASE_PATHS[category];
+    const config = CONFIG[category][team];
+
+    for (let i = 1; i <= config.count; i++) {
+      const num = String(i).padStart(3, "0");
+
+      const url = `https://res.cloudinary.com/${cloudName}/image/upload/${base}/gallery/${config.prefix}${num}.jpg`;
+
+      const img = document.createElement("img");
+      img.src = url;
+
+      gallery.appendChild(img);
+    }
+  }
+
+  // Create buttons
+  const teams = Object.keys(CONFIG[category]);
+
+  teams.forEach((team, index) => {
+    const btn = document.createElement("button");
+    btn.innerText = "vs " + team;
+
+    if (index === 0) btn.classList.add("active");
+
+    btn.onclick = () => {
+      document.querySelectorAll(".filters button").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      loadTeam(team);
+    };
+
+    filters.appendChild(btn);
+  });
+
+  // Load first team automatically
+  loadTeam(teams[0]);
+
+});
 </script>
+
+</body>
+</html>
