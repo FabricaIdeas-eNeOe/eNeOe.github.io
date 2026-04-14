@@ -52,13 +52,12 @@ h1 {
 
 <body>
 
-<h1 id="title">GALERÍA JUNIOR</h1>
+<h1>GALERÍA JUNIOR</h1>
 
 <div class="tabs">
-    <button class="tab active" onclick="loadGallery('GTO')">vs GTO</button>
-    <button class="tab" onclick="loadGallery('GTO2')">vs GTO2</button>
-    <button class="tab" onclick="loadGallery('UNAM')">vs UNAM</button>
-    <button class="tab" onclick="loadGallery('UNAM2')">vs UNAM2</button>
+    <button class="tab active" onclick="loadGallery('3RD')">3RD</button>
+    <button class="tab" onclick="loadGallery('UNAM')">UNAM</button>
+    <button class="tab" onclick="loadGallery('UNAM2')">UNAM2</button>
 </div>
 
 <div class="gallery" id="gallery"></div>
@@ -68,13 +67,9 @@ const cloudName = "du4pmuch7";
 
 const basePath = "WP 2026/Campeonato Nacional 2026/junior-cdmx/gallery";
 
+// 🔴 USE YOUR REAL FILES HERE
 const images = [
-"CN2026_JNR_CDMX_GTO_0404_001",
-"CN2026_JNR_CDMX_GTO_0404_002",
-"CN2026_JNR_CDMX_GTO2_0404_001",
-"CN2026_JNR_CDMX_UNAM_0404_001",
-"CN2026_JNR_CDMX_UNAM2_0404_064",
-"CN2026_JNR_CDMX_UNAM2_0404_073"
+"CN2026_JNR_CDMX_3RD_0405_001"
 ];
 
 function loadGallery(team) {
@@ -97,8 +92,8 @@ function loadGallery(team) {
     });
 }
 
-// load default
-loadGallery("GTO");
+// default
+loadGallery("3RD");
 </script>
 
 </body>
