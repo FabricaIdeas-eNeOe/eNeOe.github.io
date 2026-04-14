@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Galería INF-MENOR</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- ✅ Fix favicon error -->
+  <!-- ✅ FIXED FAVICON -->
   <link rel="icon" href="data:,">
 
   <style>
@@ -17,21 +16,19 @@
     }
 
     h1 {
-      margin-top: 40px;
-      font-size: 32px;
+      margin: 30px 0 10px;
     }
 
     .filters {
-      margin: 20px 0;
+      margin-bottom: 20px;
     }
 
     .filters button {
-      margin: 5px;
-      padding: 8px 14px;
+      background: #e0e0e0;
       border: none;
+      padding: 8px 14px;
+      margin: 4px;
       border-radius: 20px;
-      background: #ccc;
-      color: #000;
       cursor: pointer;
       font-weight: bold;
     }
@@ -43,9 +40,9 @@
 
     .gallery {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
-      padding: 0 20px 50px;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 15px;
+      padding: 20px;
       max-width: 1100px;
       margin: auto;
     }
@@ -54,7 +51,7 @@
       background: white;
       border-radius: 10px;
       overflow: hidden;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
 
     .card img {
@@ -62,111 +59,92 @@
       display: block;
     }
 
-    .btn {
+    .card a {
       display: block;
-      padding: 12px;
       background: #2f5d50;
       color: white;
       text-decoration: none;
-      font-weight: bold;
-    }
-
-    .btn:hover {
-      background: #24463c;
+      padding: 10px;
+      font-size: 14px;
     }
   </style>
 </head>
 
 <body>
 
-  <h1>GALERÍA INF-MENOR</h1>
+<h1>GALERÍA INF-MENOR</h1>
 
-  <!-- ✅ Filters -->
-  <div class="filters" id="filters"></div>
+<div class="filters">
+  <button onclick="filterGallery('GRO', this)" class="active">GRO</button>
+  <button onclick="filterGallery('NLE', this)">NLE</button>
+  <button onclick="filterGallery('MIC', this)">MIC</button>
+  <button onclick="filterGallery('GTO', this)">GTO</button>
+</div>
 
-  <!-- ✅ Gallery -->
-  <div class="gallery" id="gallery"></div>
+<div class="gallery" id="gallery"></div>
 
-  <script>
-    const cloudName = "du4pmuch7";
+<script>
+const cloudName = "du4pmuch7";
+const basePath = "WP2026/CN2026/infmenor";
 
-    const basePathGallery = "WP2026/CN2026/infmenor/gallery/";
-    const basePathDownload = "WP2026/CN2026/infmenor/download/";
+const rivals = ["GRO", "NLE", "MIC", "GTO"];
+const start = 1;
+const end = 200;
 
-    const basePrefix = "CN2026_InfMnr_CDMX_";
-    const datePart = "_0319_";
+const gallery = document.getElementById("gallery");
 
-    const start = 1;
-    const end = 200;
+// BUILD GALLERY
+rivals.forEach(rival => {
+  for (let i = start; i <= end; i++) {
 
-    // ✅ ONLY real rivals here
-    const rivals = ["GRO", "NLE", "GTO"];
+    const num = String(i).padStart(3, "0");
 
-    const gallery = document.getElementById("gallery");
-    const filterContainer = document.getElementById("filters");
+    const filename = `CN2026_InfMnr_CDMX_${rival}_03${rival==="MIC" ? "21" : "19"}_${num}.jpg`;
 
-    function pad(num) {
-      return num.toString().padStart(3, "0");
-    }
+    const imgURL = `https://res.cloudinary.com/${cloudName}/image/upload/${basePath}/gallery/${filename}`;
+    const downloadURL = `https://res.cloudinary.com/${cloudName}/image/upload/fl_attachment/${basePath}/download/${filename}`;
 
-    // 🔥 Create buttons
-    function createFilters() {
-      rivals.forEach((rival, index) => {
-        const btn = document.createElement("button");
-        btn.innerText = rival;
+    const card = document.createElement("div");
+    card.className = "card";
+    card.dataset.rival = rival;
 
-        if (index === 0) btn.classList.add("active");
+    const img = document.createElement("img");
+    img.src = imgURL;
+    img.loading = "lazy";
 
-        btn.onclick = () => {
-          document.querySelectorAll(".filters button").forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
-          loadGallery(rival);
-        };
+    // 🔥 KEY: hide broken images automatically
+    img.onerror = () => {
+      card.remove();
+    };
 
-        filterContainer.appendChild(btn);
-      });
-    }
+    const link = document.createElement("a");
+    link.href = downloadURL;
+    link.innerText = "Descargar";
 
-    // 🚀 Optimized loader (lazy + clean)
-    function loadGallery(selectedRival) {
-      gallery.innerHTML = "";
+    card.appendChild(img);
+    card.appendChild(link);
+    gallery.appendChild(card);
+  }
+});
 
-      for (let i = start; i <= end; i++) {
-        const file = `${basePrefix}${selectedRival}${datePart}${pad(i)}.jpg`;
+// FILTER SYSTEM
+function filterGallery(rival, btn) {
+  const cards = document.querySelectorAll(".card");
 
-        const imgUrl = `https://res.cloudinary.com/${cloudName}/image/upload/${basePathGallery}${file}`;
-        const downloadUrl = `https://res.cloudinary.com/${cloudName}/image/upload/${basePathDownload}${file}`;
+  cards.forEach(card => {
+    card.style.display = (card.dataset.rival === rival) ? "block" : "none";
+  });
 
-        const img = new Image();
+  // ACTIVE BUTTON STYLE
+  document.querySelectorAll(".filters button").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+}
 
-        img.loading = "lazy"; // ⚡ performance boost
-
-        img.onload = () => {
-          const card = document.createElement("div");
-          card.className = "card";
-
-          const imageElement = document.createElement("img");
-          imageElement.src = imgUrl;
-          imageElement.loading = "lazy";
-
-          const link = document.createElement("a");
-          link.href = downloadUrl;
-          link.className = "btn";
-          link.innerText = "Descargar";
-
-          card.appendChild(imageElement);
-          card.appendChild(link);
-          gallery.appendChild(card);
-        };
-
-        img.src = imgUrl;
-      }
-    }
-
-    // INIT
-    createFilters();
-    loadGallery(rivals[0]);
-  </script>
+// DEFAULT LOAD → GRO
+window.onload = () => {
+  filterGallery("GRO", document.querySelector(".filters button"));
+};
+</script>
 
 </body>
 </html>
