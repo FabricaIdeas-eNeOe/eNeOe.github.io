@@ -68,53 +68,92 @@
 
   <h1>GALERÍA INF-MENOR</h1>
   <div class="subtitle">vs GRO</div>
-
+  <div id="filters" style="margin-bottom: 20px;"></div>
   <div class="gallery" id="gallery"></div>
 
+
   <script>
-    // 🔧 CONFIGURATION (EDIT ONLY THIS PART)
-    const cloudName = "du4pmuch7";
+  const cloudName = "du4pmuch7";
 
-    const basePathGallery = "WP2026/CN2026/infmenor/gallery/";
-    const basePathDownload = "WP2026/CN2026/infmenor/download/";
+  const basePathGallery = "WP2026/CN2026/infmenor/gallery/";
+  const basePathDownload = "WP2026/CN2026/infmenor/download/";
 
-    const baseName = "CN2026_InfMnr_CDMX_GRO_0319_";
+  const basePrefix = "CN2026_InfMnr_CDMX_";
+  const datePart = "_0319_";
 
-    const start = 1;
-    const end = 120; // 👈 change this to total images
+  const start = 1;
+  const end = 200;
 
-    // 🔢 FUNCTION TO FORMAT NUMBERS (001, 002, etc)
-    function pad(num) {
-      return num.toString().padStart(3, "0");
-    }
+  const rivals = ["ALL", "GRO", "NLE"]; // 👈 ADD MORE HERE
 
-    const gallery = document.getElementById("gallery");
+  const gallery = document.getElementById("gallery");
+  const filterContainer = document.getElementById("filters");
+
+  function pad(num) {
+    return num.toString().padStart(3, "0");
+  }
+
+  function createFilters() {
+    rivals.forEach(rival => {
+      const btn = document.createElement("button");
+      btn.innerText = rival;
+      btn.style.margin = "5px";
+      btn.style.padding = "8px 14px";
+      btn.style.border = "none";
+      btn.style.borderRadius = "20px";
+      btn.style.background = "#2f5d50";
+      btn.style.color = "white";
+      btn.style.cursor = "pointer";
+
+      btn.onclick = () => loadGallery(rival);
+
+      filterContainer.appendChild(btn);
+    });
+  }
+
+  function loadGallery(selectedRival) {
+    gallery.innerHTML = "";
 
     for (let i = start; i <= end; i++) {
-      const file = baseName + pad(i) + ".jpg";
+      rivals.forEach(rival => {
+        if (rival === "ALL" || rival === selectedRival) {
 
-      const imgUrl = `https://res.cloudinary.com/${cloudName}/image/upload/${basePathGallery}${file}`;
-      const downloadUrl = `https://res.cloudinary.com/${cloudName}/image/upload/${basePathDownload}${file}`;
+          const file = `${basePrefix}${rival}${datePart}${pad(i)}.jpg`;
 
-      const card = document.createElement("div");
-      card.className = "card";
+          const imgUrl = `https://res.cloudinary.com/${cloudName}/image/upload/${basePathGallery}${file}`;
+          const downloadUrl = `https://res.cloudinary.com/${cloudName}/image/upload/${basePathDownload}${file}`;
 
-      const img = document.createElement("img");
-      img.src = imgUrl;
+          const img = new Image();
 
-      // 🚫 Skip broken images automatically
-      img.onerror = () => card.remove();
+          img.onload = () => {
+            const card = document.createElement("div");
+            card.className = "card";
 
-      const link = document.createElement("a");
-      link.href = downloadUrl;
-      link.className = "btn";
-      link.innerText = "Descargar";
+            const imageElement = document.createElement("img");
+            imageElement.src = imgUrl;
 
-      card.appendChild(img);
-      card.appendChild(link);
-      gallery.appendChild(card);
+            const link = document.createElement("a");
+            link.href = downloadUrl;
+            link.className = "btn";
+            link.innerText = "Descargar";
+
+            card.appendChild(imageElement);
+            card.appendChild(link);
+            gallery.appendChild(card);
+          };
+
+          img.onerror = () => {};
+
+          img.src = imgUrl;
+        }
+      });
     }
-  </script>
+  }
+
+  // INIT
+  createFilters();
+  loadGallery("ALL");
+</script>
 
 </body>
 </html>
