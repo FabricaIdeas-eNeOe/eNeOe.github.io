@@ -9,7 +9,8 @@
 
 <style>
 
-/* BASE */
+/* (NO CHANGES — EXACT SAME CSS) */
+
 body{
   margin:0;
   font-family:'Montserrat',sans-serif;
@@ -21,16 +22,14 @@ body{
   background-size:cover;
   background-position:center;
   background-repeat:no-repeat;
-  background-attachment:fixed; /* 🔥 KEY FIX */
+  background-attachment:fixed;
 }
 
-/* HEADER */
 .header{
   text-align:center;
   padding:80px 20px 40px;
 }
 
-/* TITLE */
 .title{
   display:inline-block;
   font-size:42px;
@@ -61,7 +60,6 @@ body{
   100%{transform:translateX(100%)}
 }
 
-/* GRID */
 .grid{
   display:grid;
   grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));
@@ -73,7 +71,6 @@ body{
   padding:30px 20px 140px;
 }
 
-/* CARD */
 .card{
   text-decoration:none;
   color:inherit;
@@ -95,14 +92,12 @@ body{
   transform:translateY(-8px) scale(1.02);
 }
 
-/* IMAGE */
 .card img{
   width:100%;
   height:200px;
   object-fit:cover;
 }
 
-/* CONTENT */
 .card-content{
   padding:20px;
   text-align:center;
@@ -120,7 +115,6 @@ body{
   opacity:0.75;
 }
 
-/* FOOTER */
 .footer{
   position:fixed;
   bottom:0;
@@ -135,7 +129,6 @@ body{
   margin:0 8px;
 }
 
-/* 🔒 ADMIN ZONES (INVISIBLE) */
 .admin-bottom-right{
   position:fixed;
   bottom:0;
@@ -163,11 +156,10 @@ body{
   opacity:0;
 }
 
-/* 📱 MOBILE */
 @media (max-width:600px){
 
   body{
-    background-attachment:scroll; /* fix iOS issues */
+    background-attachment:scroll;
   }
 
   .title{
@@ -196,7 +188,8 @@ body{
 
 <div class="grid">
 
-<a href="gallery.html?event=cn2026&cat=inf-menor" class="card">
+<!-- ✅ UPDATED -->
+<a href="inf-menor.html" class="card">
   <img src="infantil-menor.jpg">
   <div class="card-content">
     <h3>Infantil Menor</h3>
@@ -204,7 +197,8 @@ body{
   </div>
 </a>
 
-<a href="gallery.html?event=cn2026&cat=inf-mayor" class="card">
+<!-- ✅ UPDATED -->
+<a href="inf-mayor.html" class="card">
   <img src="infantil-mayor.jpg">
   <div class="card-content">
     <h3>Infantil Mayor</h3>
@@ -212,7 +206,8 @@ body{
   </div>
 </a>
 
-<a href="gallery.html?event=cn2026&cat=junior" class="card">
+<!-- ✅ UPDATED -->
+<a href="junior.html" class="card">
   <img src="waterpolo.jpg">
   <div class="card-content">
     <h3>Junior</h3>
@@ -228,7 +223,6 @@ body{
   <img src="logo-olimpicos.png">
 </div>
 
-<!-- 🔒 ADMIN NAV -->
 <div class="admin-bottom-right" onclick="window.location='index.html'"></div>
 <div class="admin-top-left" onclick="window.location='index.html'"></div>
 <div class="admin-top-right" onclick="window.location.reload()"></div>
