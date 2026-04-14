@@ -1,0 +1,62 @@
+<script>
+
+const cloud="du4pmuch7";
+const base="WP2026/CN2026/junior/gallery";
+
+let currentRival="NLE";
+
+function buildImages(rival){
+
+  let arr=[];
+  const dates=["0319","0320","0321","0322"];
+
+  dates.forEach(date=>{
+    for(let i=1;i<=200;i++){
+
+      let n=String(i).padStart(3,"0");
+
+      let normal=`https://res.cloudinary.com/${cloud}/image/upload/${base}/CN2026_Junior_CDMX_${rival}_${date}_${n}.jpg`;
+      let second=`https://res.cloudinary.com/${cloud}/image/upload/${base}/CN2026_Junior_CDMX_${rival}2_${date}_${n}.jpg`;
+
+      arr.push(normal);
+      arr.push(second);
+    }
+  });
+
+  return arr;
+}
+
+function loadGallery(){
+  const g=document.getElementById("gallery");
+  g.innerHTML="";
+
+  buildImages(currentRival).forEach(src=>{
+    let img=new Image();
+    img.src=src;
+    img.loading="lazy";
+
+    img.onerror=()=>img.remove();
+
+    img.onclick=()=>{
+      document.getElementById("lightbox-img").src=src;
+      document.getElementById("lightbox").classList.add("active");
+    };
+
+    g.appendChild(img);
+  });
+}
+
+function setRival(btn,rival){
+  currentRival=rival;
+
+  document.querySelectorAll(".filters button")
+    .forEach(b=>b.classList.remove("active"));
+
+  btn.classList.add("active");
+
+  loadGallery();
+}
+
+window.onload=loadGallery;
+
+</script>
