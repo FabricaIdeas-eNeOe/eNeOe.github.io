@@ -129,8 +129,7 @@ function loadGallery(team) {
     const num = String(imgIndex).padStart(3, "0");
     const date = dates[dateIndex];
 
-    const url = `https://res.cloudinary.com/${cloudName}/image/upload/${basePath}/${category}-cdmx/gallery/CN2026_${categoryCode}_CDMX_${team}_${date}_${num}.jpg`;
-
+    const url = `https://res.cloudinary.com/${cloudName}/image/upload/CN2026_${categoryCode}_CDMX_${team}_${date}_${num}.jpg`;
     const img = new Image();
 
     img.onload = () => {
