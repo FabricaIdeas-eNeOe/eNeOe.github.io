@@ -4,68 +4,44 @@
   <meta charset="UTF-8">
   <title>Galería INF-MENOR</title>
 
-  <!-- ✅ FIXED FAVICON -->
+  <!-- FIX favicon -->
   <link rel="icon" href="data:,">
 
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background: #f5f5f5;
-      text-align: center;
-    }
+    body { font-family: Arial; background:#f5f5f5; margin:0; text-align:center; }
+    h1 { margin:30px 0 10px; }
 
-    h1 {
-      margin: 30px 0 10px;
-    }
-
-    .filters {
-      margin-bottom: 20px;
-    }
-
+    .filters { margin-bottom:20px; }
     .filters button {
-      background: #e0e0e0;
-      border: none;
-      padding: 8px 14px;
-      margin: 4px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: bold;
+      padding:8px 14px; margin:4px;
+      border:none; border-radius:20px;
+      cursor:pointer; font-weight:bold;
+      background:#e0e0e0;
     }
-
-    .filters button.active {
-      background: #2f5d50;
-      color: white;
-    }
+    .filters .active { background:#2f5d50; color:#fff; }
 
     .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 15px;
-      padding: 20px;
-      max-width: 1100px;
-      margin: auto;
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+      gap:15px; padding:20px; max-width:1100px; margin:auto;
     }
 
     .card {
-      background: white;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      background:#fff;
+      border-radius:10px;
+      overflow:hidden;
+      box-shadow:0 2px 6px rgba(0,0,0,0.1);
     }
 
-    .card img {
-      width: 100%;
-      display: block;
-    }
+    .card img { width:100%; display:block; }
 
     .card a {
-      display: block;
-      background: #2f5d50;
-      color: white;
-      text-decoration: none;
-      padding: 10px;
-      font-size: 14px;
+      display:block;
+      background:#2f5d50;
+      color:#fff;
+      text-decoration:none;
+      padding:10px;
+      font-size:14px;
     }
   </style>
 </head>
@@ -84,25 +60,33 @@
 <div class="gallery" id="gallery"></div>
 
 <script>
-const cloudName = "du4pmuch7";
-const basePath = "WP2026/CN2026/infmenor";
+const cloud = "du4pmuch7";
+const base = "WP2026/CN2026/infmenor";
 
-const rivals = ["GRO", "NLE", "MIC", "GTO"];
-const start = 1;
-const end = 200;
+const rivals = ["GRO","NLE","MIC","GTO"];
+
+// 🔥 DATE PER RIVAL (THIS FIXES EVERYTHING)
+const rivalDates = {
+  GRO: "0319",
+  NLE: "0320",
+  MIC: "0321",
+  GTO: "0320" // adjust if needed
+};
 
 const gallery = document.getElementById("gallery");
 
-// BUILD GALLERY
+// BUILD
 rivals.forEach(rival => {
-  for (let i = start; i <= end; i++) {
+  const date = rivalDates[rival];
 
-    const num = String(i).padStart(3, "0");
+  for (let i = 1; i <= 200; i++) {
 
-    const filename = `CN2026_InfMnr_CDMX_${rival}_03${rival==="MIC" ? "21" : "19"}_${num}.jpg`;
+    const num = String(i).padStart(3,"0");
 
-    const imgURL = `https://res.cloudinary.com/${cloudName}/image/upload/${basePath}/gallery/${filename}`;
-    const downloadURL = `https://res.cloudinary.com/${cloudName}/image/upload/fl_attachment/${basePath}/download/${filename}`;
+    const file = `CN2026_InfMnr_CDMX_${rival}_${date}_${num}.jpg`;
+
+    const imgURL = `https://res.cloudinary.com/${cloud}/image/upload/${base}/gallery/${file}`;
+    const dlURL  = `https://res.cloudinary.com/${cloud}/image/upload/fl_attachment/${base}/download/${file}`;
 
     const card = document.createElement("div");
     card.className = "card";
@@ -112,36 +96,31 @@ rivals.forEach(rival => {
     img.src = imgURL;
     img.loading = "lazy";
 
-    // 🔥 KEY: hide broken images automatically
-    img.onerror = () => {
-      card.remove();
-    };
+    // REMOVE non-existing images
+    img.onerror = () => card.remove();
 
-    const link = document.createElement("a");
-    link.href = downloadURL;
-    link.innerText = "Descargar";
+    const a = document.createElement("a");
+    a.href = dlURL;
+    a.innerText = "Descargar";
 
     card.appendChild(img);
-    card.appendChild(link);
+    card.appendChild(a);
     gallery.appendChild(card);
   }
 });
 
-// FILTER SYSTEM
-function filterGallery(rival, btn) {
-  const cards = document.querySelectorAll(".card");
-
-  cards.forEach(card => {
-    card.style.display = (card.dataset.rival === rival) ? "block" : "none";
+// FILTER
+function filterGallery(rival, btn){
+  document.querySelectorAll(".card").forEach(card=>{
+    card.style.display = (card.dataset.rival===rival) ? "block":"none";
   });
 
-  // ACTIVE BUTTON STYLE
-  document.querySelectorAll(".filters button").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");
 }
 
-// DEFAULT LOAD → GRO
-window.onload = () => {
+// DEFAULT
+window.onload = ()=>{
   filterGallery("GRO", document.querySelector(".filters button"));
 };
 </script>
