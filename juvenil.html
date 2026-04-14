@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infantil Menor</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
+<link rel="icon" href="data:,">
+<style>
+
+/* BACKGROUND */
+body{
+  margin:0;
+  font-family:'Montserrat',sans-serif;
+  overflow-x:hidden;
+
+  background:
+    linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.15)),
+    url('background.png');
+
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
+}
+
+/* HEADER */
+.header{
+  text-align:center;
+  padding:80px 20px 40px;
+}
+
+/* 🔥 GLASS TITLE RESTORED */
+.title{
+  display:inline-block;
+  font-size:42px;
+  font-weight:800;
+  color:#0a4f73;
+  padding:18px 60px;
+
+  background:rgba(255,255,255,0.25);
+  backdrop-filter:blur(25px);
+  border-radius:30px;
+  border:1px solid rgba(255,255,255,0.6);
+
+  position:relative;
+  overflow:hidden;
+}
+
+.title::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    120deg,
+    transparent 30%,
+    rgba(255,255,255,0.6) 50%,
+    transparent 70%
+  );
+  animation:wave 3s infinite linear;
+}
+
+@keyframes wave{
+  0%{transform:translateX(-100%)}
+  100%{transform:translateX(100%)}
+}
+
+/* 🔥 GLASS FILTER BUTTONS */
+.filters{
+  text-align:center;
+  margin:30px 0;
+}
+
+.filters button{
+  margin:6px;
+  padding:10px 20px;
+  border-radius:25px;
+
+  border:1px solid rgba(255,255,255,0.5);
+  background:rgba(255,255,255,0.2);
+  backdrop-filter:blur(12px);
+
+  color:#0a4f73;
+  font-weight:600;
+  cursor:pointer;
+
+  box-shadow:
+    inset 0 1px 3px rgba(255,255,255,0.6),
+    0 4px 10px rgba(0,0,0,0.1);
+
+  transition:0.3s;
+}
+
+.filters button:hover{
+  transform:translateY(-2px);
+}
+
+.filters button.active{
+  background:#0a4f73;
+  color:white;
+  box-shadow:0 6px 16px rgba(0,0,0,0.25);
+}
+
+/* GALLERY */
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:18px;
+  padding:30px 60px 100px;
+}
+
+/* 🔥 PORTRAIT FIX */
+.gallery img{
+  width:100%;
+  height:220px;
+  object-fit:cover;
+  border-radius:16px;
+  cursor:pointer;
+  transition:0.3s;
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+.gallery img:hover{
+  transform:scale(1.05);
+}
+
+/* LIGHTBOX */
+.lightbox{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.92);
+  backdrop-filter:blur(10px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  pointer-events:none;
+  transition:0.3s;
+  z-index:999;
+}
+
+.lightbox.active{
+  opacity:1;
+  pointer-events:auto;
+}
+
+.lightbox img{
+  max-width:90%;
+  max-height:85%;
+}
+
+/* CLOSE */
+.close{
+  position:absolute;
+  top:20px;
+  right:30px;
+  color:white;
+  font-size:30px;
+  cursor:pointer;
+}
+
+/* 🔥 FOOTER RESTORED */
+.footer{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  text-align:center;
+  padding:12px;
+
+  background:rgba(255,255,255,0.85);
+  backdrop-filter:blur(10px);
+}
+
+.footer img{
+  height:40px;
+  margin:0 12px;
+}
+
+</style>
+
+  
+</head>
+  
+<div class="footer">
+  <img src="logo-aofm.png">
+  <img src="logo-club.png">
+  <img src="logo-olimpicos.png">
+</div>
+  
+<body>
+
+<div class="header">
+  <div class="title">Galería INF-MENOR</div>
+</div>
+
+<div class="filters">
+  <button onclick="setRival(this,'GRO')" class="active">GRO</button>
+  <button onclick="setRival(this,'NLE')">NLE</button>
+  <button onclick="setRival(this,'MIC')">MIC</button>
+  <button onclick="setRival(this,'GTO')">GTO</button>
+</div>
+
+<div id="gallery" class="gallery"></div>
+
+<div id="lightbox" class="lightbox" onclick="closeLightbox()">
+  <span class="close">✕</span>
+  <img id="lightbox-img">
+</div>
+
+
+  <script>
+
+const cloud="du4pmuch7";
+const base="WP2026/CN2026/juvenil/gallery";
+
+let currentRival="GRO";
+
+function buildImages(rival){
+
+  let arr=[];
+  const dates=["0319","0320","0321","0322"];
+
+  dates.forEach(date=>{
+    for(let i=1;i<=200;i++){
+      let n=String(i).padStart(3,"0");
+      let url=`https://res.cloudinary.com/${cloud}/image/upload/${base}/CN2026_Juvenil_CDMX_${rival}_${date}_${n}.jpg`;
+      arr.push(url);
+    }
+  });
+
+  return arr;
+}
+
+function loadGallery(){
+  const g=document.getElementById("gallery");
+  g.innerHTML="";
+
+  buildImages(currentRival).forEach(src=>{
+    let img=new Image();
+    img.src=src;
+    img.loading="lazy";
+
+    img.onerror=()=>img.remove();
+
+    img.onclick=()=>{
+      document.getElementById("lightbox-img").src=src;
+      document.getElementById("lightbox").classList.add("active");
+    };
+
+    g.appendChild(img);
+  });
+}
+
+function setRival(btn,rival){
+  currentRival=rival;
+
+  document.querySelectorAll(".filters button")
+    .forEach(b=>b.classList.remove("active"));
+
+  btn.classList.add("active");
+
+  loadGallery();
+}
+
+window.onload=loadGallery;
+
+</script>
+
+
+</body>
+</html>
