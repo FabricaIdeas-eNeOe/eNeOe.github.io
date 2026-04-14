@@ -56,8 +56,6 @@ h1 {
 
 <div class="tabs">
     <button class="tab active" onclick="loadGallery('3RD')">3RD</button>
-    <button class="tab" onclick="loadGallery('UNAM')">UNAM</button>
-    <button class="tab" onclick="loadGallery('UNAM2')">UNAM2</button>
 </div>
 
 <div class="gallery" id="gallery"></div>
@@ -65,11 +63,16 @@ h1 {
 <script>
 const cloudName = "du4pmuch7";
 
-const basePath = "WP 2026/Campeonato Nacional 2026/junior-cdmx/gallery";
+// ⚠️ IMPORTANT: encoded spaces (%20)
+const basePath = "WP%202026/Campeonato%20Nacional%202026/junior-cdmx/gallery";
 
-// 🔴 USE YOUR REAL FILES HERE
+// ✅ YOUR REAL FILES
 const images = [
-"CN2026_JNR_CDMX_3RD_0405_001"
+"CN2026_JNR_CDMX_3RD_0405_001",
+"CN2026_JNR_CDMX_3RD_0405_002",
+"CN2026_JNR_CDMX_3RD_0405_003",
+"CN2026_JNR_CDMX_3RD_0405_004",
+"CN2026_JNR_CDMX_3RD_0405_005"
 ];
 
 function loadGallery(team) {
@@ -92,7 +95,7 @@ function loadGallery(team) {
     });
 }
 
-// default
+// load default
 loadGallery("3RD");
 </script>
 
