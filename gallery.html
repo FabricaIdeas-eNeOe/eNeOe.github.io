@@ -9,7 +9,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
 
 <style>
-
 body{
   margin:0;
   font-family:'Montserrat',sans-serif;
@@ -54,7 +53,6 @@ h1{
   border-radius:12px;
   object-fit:cover;
 }
-
 </style>
 
 </head>
@@ -62,59 +60,63 @@ h1{
 <body>
 
 <h1 id="title">GALERÍA</h1>
-
 <div class="tabs" id="tabs"></div>
-
 <div class="gallery" id="gallery"></div>
 
 <script>
 
 /* =========================
-   CONFIG
+   BASE CONFIG
 ========================= */
 
 const CLOUD = "https://res.cloudinary.com/du4pmuch7/image/upload/";
+const EVENT = "CN2026";
+const TEAM = "CDMX";
 
-/* =========================
-   CATEGORY FROM URL
-========================= */
+/* CATEGORY MAP (your system) */
+
+const CATEGORY_MAP = {
+  "junior": "JNR",
+  "inf-mayor": "InfMyr",
+  "inf-menor": "InfMnr"
+};
+
+/* RIVALS + DATES */
+
+const DATA = {
+
+  junior: {
+    GTO: "0402",
+    "3RD": "0405"
+  },
+
+  "inf-mayor": {
+    COAH: "0320",
+    ROO:  "0321"
+  },
+
+  "inf-menor": {
+    MIC: "0320"
+  }
+
+};
+
+/* ========================= */
 
 const params = new URLSearchParams(window.location.search);
 const category = params.get("cat");
 
-const title = document.getElementById("title");
-const tabs = document.getElementById("tabs");
 const gallery = document.getElementById("gallery");
+const tabs = document.getElementById("tabs");
+const title = document.getElementById("title");
 
 title.innerText = "GALERÍA " + category.toUpperCase();
-
-/* =========================
-   STRUCTURE (AUTO RULES)
-========================= */
-
-const CONFIG = {
-
-  junior: {
-    GTO: { prefix: "CN2026_JNR_CDMX_GTO_0402_", max: 200 },
-    "3RD": { prefix: "CN2026_JNR_CDMX_3RD_0405_", max: 200 }
-  },
-
-  "inf-mayor": {
-    COAH: { prefix: "CN2026_InfMyr_CDMX_COAH_", max: 300 },
-    ROO:  { prefix: "CN2026_InfMyr_CDMX_ROO_",  max: 300 }
-  },
-
-  "inf-menor": {
-    MIC: { prefix: "CN2026_InfMnr_CDMX_MIC_", max: 300 }
-  }
-
-};
 
 /* =========================
    CREATE TABS
 ========================= */
 
-Object.keys(CONFIG[category]).forEach((rival,i)=>{
+Object.keys(DATA[category]).forEach((rival,i)=>{
 
   const tab = document.createElement("button");
   tab.className = "tab" + (i===0 ? " active" : "");
@@ -131,22 +133,24 @@ Object.keys(CONFIG[category]).forEach((rival,i)=>{
 });
 
 /* =========================
-   LOAD IMAGES (AUTO)
+   LOAD IMAGES (AUTO BUILD)
 ========================= */
 
 function loadImages(rival){
 
   gallery.innerHTML = "";
 
-  const { prefix, max } = CONFIG[category][rival];
+  const catCode = CATEGORY_MAP[category];
+  const date = DATA[category][rival];
 
-  for(let i = 1; i <= max; i++){
+  const prefix = `${EVENT}_${catCode}_${TEAM}_${rival}_${date}_`;
+
+  for(let i = 1; i <= 300; i++){
 
     const num = String(i).padStart(3,'0');
     const url = CLOUD + prefix + num + ".jpg";
 
     const img = document.createElement("img");
-
     img.src = url;
 
     img.onload = ()=>{
@@ -156,7 +160,6 @@ function loadImages(rival){
       gallery.appendChild(card);
     };
 
-    // silently ignore missing images
     img.onerror = ()=>{};
   }
 }
@@ -165,7 +168,7 @@ function loadImages(rival){
    INIT
 ========================= */
 
-const first = Object.keys(CONFIG[category])[0];
+const first = Object.keys(DATA[category])[0];
 loadImages(first);
 
 </script>
