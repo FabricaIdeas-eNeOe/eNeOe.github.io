@@ -1,101 +1,189 @@
 <!DOCTYPE html>
+
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Galería Junior</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Galería</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
 
 <style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f5f5f5;
-    text-align: center;
+
+body{
+  margin:0;
+  font-family:'Montserrat',sans-serif;
+  background:#f5f5f5;
+  text-align:center;
 }
 
-h1 {
-    margin: 40px 0 10px;
-    font-size: 36px;
+h1{
+  margin:40px 0 10px;
+  font-size:36px;
+  color:#0a4f73;
 }
 
-.tabs {
-    margin-bottom: 30px;
+.tabs{
+  margin-bottom:30px;
 }
 
-.tab {
-    padding: 10px 18px;
-    border-radius: 20px;
-    border: none;
-    margin: 5px;
-    cursor: pointer;
-    background: #ddd;
+.tab{
+  padding:10px 18px;
+  border-radius:20px;
+  border:none;
+  margin:5px;
+  cursor:pointer;
+  background:#ddd;
+  font-weight:600;
 }
 
-.tab.active {
-    background: #1f5c63;
-    color: white;
+.tab.active{
+  background:#1f5c63;
+  color:white;
 }
 
-.gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-    padding: 0 40px 40px;
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(300px,1fr));
+  gap:20px;
+  padding:0 40px 40px;
 }
 
-.gallery img {
-    width: 100%;
-    border-radius: 12px;
-    object-fit: cover;
+.card{
+  border-radius:12px;
+  overflow:hidden;
 }
+
+.card img{
+  width:100%;
+  object-fit:cover;
+  border-radius:12px;
+}
+
 </style>
+
 </head>
 
 <body>
 
-<h1>GALERÍA JUNIOR</h1>
+<h1 id="title">GALERÍA</h1>
 
-<div class="tabs">
-    <button class="tab active" onclick="loadGallery('GTO')">GTO</button>
-    <button class="tab" onclick="loadGallery('3RD')">Premiación</button>
-</div>
+<div class="tabs" id="tabs"></div>
 
 <div class="gallery" id="gallery"></div>
 
 <script>
-const cloudName = "du4pmuch7";
 
-// 👇 filenames ONLY (based on your real data)
-const images = [
-"CN2026_JNR_CDMX_GTO_0402_020",
-"CN2026_JNR_CDMX_3RD_0405_001",
-"CN2026_JNR_CDMX_3RD_0405_002",
-"CN2026_JNR_CDMX_3RD_0405_003",
-"CN2026_JNR_CDMX_3RD_0405_004",
-"CN2026_JNR_CDMX_3RD_0405_005"
-];
+/* =========================
+   CONFIG
+========================= */
 
-function loadGallery(team) {
+const CLOUD = "https://res.cloudinary.com/du4pmuch7/image/upload/";
 
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    event.target.classList.add('active');
+/* =========================
+   MANIFEST (PUT REAL FILES)
+========================= */
 
-    const gallery = document.getElementById("gallery");
-    gallery.innerHTML = "";
+const MANIFEST = {
 
-    const filtered = images.filter(img => img.includes(team));
+  junior: {
+    GTO: [
+      "CN2026_JNR_CDMX_GTO_0402_020"
+    ],
+    "3RD": [
+      "CN2026_JNR_CDMX_3RD_0405_001",
+      "CN2026_JNR_CDMX_3RD_0405_002",
+      "CN2026_JNR_CDMX_3RD_0405_003",
+      "CN2026_JNR_CDMX_3RD_0405_004",
+      "CN2026_JNR_CDMX_3RD_0405_005"
+    ]
+  },
 
-    filtered.forEach(name => {
-        const url = `https://res.cloudinary.com/${cloudName}/image/upload/${name}.jpg`;
+  "inf-mayor": {
+    COAH: [],
+    ROO: []
+  },
 
-        const img = document.createElement("img");
-        img.src = url;
+  "inf-menor": {
+    MIC: []
+  }
 
-        gallery.appendChild(img);
-    });
+};
+
+/* =========================
+   INIT
+========================= */
+
+const params = new URLSearchParams(window.location.search);
+const category = params.get("cat");
+
+const gallery = document.getElementById("gallery");
+const tabs = document.getElementById("tabs");
+const title = document.getElementById("title");
+
+title.innerText = "GALERÍA " + category.toUpperCase();
+
+/* =========================
+   BUILD TABS
+========================= */
+
+Object.keys(MANIFEST[category]).forEach((rival,i)=>{
+
+  const tab = document.createElement("button");
+  tab.className = "tab" + (i===0 ? " active" : "");
+
+  tab.innerText = rival === "3RD" ? "Premiación" : "vs " + rival;
+
+  tab.onclick = ()=>{
+    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+    tab.classList.add("active");
+    loadImages(rival);
+  };
+
+  tabs.appendChild(tab);
+});
+
+/* =========================
+   LOAD IMAGES
+========================= */
+
+function loadImages(rival){
+
+  gallery.innerHTML = "";
+
+  const list = MANIFEST[category][rival];
+
+  if(!list || list.length === 0){
+    gallery.innerHTML = "<p>No images yet</p>";
+    return;
+  }
+
+  list.forEach(name => {
+
+    const url = CLOUD + name + ".jpg";
+
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const img = document.createElement("img");
+    img.src = url;
+
+    img.onerror = () => {
+      card.remove();
+    };
+
+    card.appendChild(img);
+    gallery.appendChild(card);
+  });
 }
 
-// default load
-loadGallery("GTO");
+/* =========================
+   INIT LOAD
+========================= */
+
+const first = Object.keys(MANIFEST[category])[0];
+loadImages(first);
+
 </script>
 
 </body>
