@@ -53,9 +53,7 @@ h1 {
 <body>
 
 <h1 id="title">GALERÍA</h1>
-
 <div class="tabs" id="tabs"></div>
-
 <div class="gallery" id="gallery"></div>
 
 <script>
@@ -70,7 +68,7 @@ const CATEGORY_MAP = {
   "kids": "Kids"
 };
 
-// TEAMS PER CATEGORY (edit if needed)
+// TEAMS
 const TEAMS = {
   "junior": ["GTO", "3RD"],
   "inf-mayor": ["ROO", "COAH"],
@@ -78,21 +76,11 @@ const TEAMS = {
   "kids": ["FUN"]
 };
 
-// DATES PER MATCH (IMPORTANT)
-const DATES = {
-  "GTO": "0402",
-  "3RD": "0405",
-  "ROO": "0322",
-  "COAH": "0321",
-  "MIC": "0321",
-  "FUN": "0320"
-};
-
-// GET URL PARAMS
+// PARAMS
 const params = new URLSearchParams(window.location.search);
 const category = params.get("cat") || "junior";
 
-// SET TITLE
+// TITLE
 document.getElementById("title").innerText =
   "GALERÍA " + category.toUpperCase();
 
@@ -113,23 +101,38 @@ TEAMS[category].forEach((team, index) => {
   tabsContainer.appendChild(btn);
 });
 
-// LOAD IMAGES AUTOMATICALLY
+// 🔥 FINAL AUTO-DETECT LOAD FUNCTION (NO DATES NEEDED)
 function loadGallery(team) {
 
   const gallery = document.getElementById("gallery");
   gallery.innerHTML = "";
 
   const categoryCode = CATEGORY_MAP[category];
-  const date = DATES[team];
 
-  let index = 1;
+  let imgIndex = 1;
   let fails = 0;
 
-  function loadNext() {
+  function generateDates() {
+    const dates = [];
 
-    if (fails > 5) return; // stop after 5 missing images
+    for (let m = 1; m <= 12; m++) {
+      for (let d = 1; d <= 31; d++) {
+        const mm = String(m).padStart(2, "0");
+        const dd = String(d).padStart(2, "0");
+        dates.push(mm + dd);
+      }
+    }
 
-    const num = String(index).padStart(3, "0");
+    return dates;
+  }
+
+  const ALL_DATES = generateDates();
+  let dateIndex = 0;
+
+  function tryNext() {
+
+    const num = String(imgIndex).padStart(3, "0");
+    const date = ALL_DATES[dateIndex];
 
     const url = `https://res.cloudinary.com/${cloudName}/image/upload/${basePath}/${category}-cdmx/gallery/CN2026_${categoryCode}_CDMX_${team}_${date}_${num}.jpg`;
 
@@ -137,20 +140,29 @@ function loadGallery(team) {
 
     img.onload = () => {
       gallery.appendChild(img);
-      index++;
-      loadNext();
+      imgIndex++;
+      fails = 0;
+      tryNext();
     };
 
     img.onerror = () => {
-      fails++;
-      index++;
-      loadNext();
+      dateIndex++;
+
+      if (dateIndex >= ALL_DATES.length) {
+        dateIndex = 0;
+        imgIndex++;
+        fails++;
+      }
+
+      if (fails > 10) return;
+
+      tryNext();
     };
 
     img.src = url;
   }
 
-  loadNext();
+  tryNext();
 }
 
 // INITIAL LOAD
