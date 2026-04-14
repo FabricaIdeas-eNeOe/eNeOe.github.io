@@ -76,7 +76,15 @@ const TEAMS = {
   "kids": ["FUN"]
 };
 
-// PARAMS
+// ✅ DATE RANGES PER CATEGORY (EDIT PER EVENT)
+const DATES_BY_CATEGORY = {
+  "junior": ["0402","0403","0404","0405"],
+  "inf-mayor": ["0322","0321"],
+  "inf-menor": ["0319","0320","0321","0322"],
+  "kids": ["0320"]
+};
+
+// GET PARAM
 const params = new URLSearchParams(window.location.search);
 const category = params.get("cat") || "junior";
 
@@ -101,38 +109,25 @@ TEAMS[category].forEach((team, index) => {
   tabsContainer.appendChild(btn);
 });
 
-// 🔥 FINAL AUTO-DETECT LOAD FUNCTION (NO DATES NEEDED)
+// ✅ STABLE LOAD FUNCTION
 function loadGallery(team) {
 
   const gallery = document.getElementById("gallery");
   gallery.innerHTML = "";
 
   const categoryCode = CATEGORY_MAP[category];
+  const dates = DATES_BY_CATEGORY[category] || [];
 
   let imgIndex = 1;
-  let fails = 0;
-
-  function generateDates() {
-    const dates = [];
-
-    for (let m = 1; m <= 12; m++) {
-      for (let d = 1; d <= 31; d++) {
-        const mm = String(m).padStart(2, "0");
-        const dd = String(d).padStart(2, "0");
-        dates.push(mm + dd);
-      }
-    }
-
-    return dates;
-  }
-
-  const ALL_DATES = generateDates();
   let dateIndex = 0;
+  let fails = 0;
 
   function tryNext() {
 
+    if (dateIndex >= dates.length) return;
+
     const num = String(imgIndex).padStart(3, "0");
-    const date = ALL_DATES[dateIndex];
+    const date = dates[dateIndex];
 
     const url = `https://res.cloudinary.com/${cloudName}/image/upload/${basePath}/${category}-cdmx/gallery/CN2026_${categoryCode}_CDMX_${team}_${date}_${num}.jpg`;
 
@@ -148,13 +143,13 @@ function loadGallery(team) {
     img.onerror = () => {
       dateIndex++;
 
-      if (dateIndex >= ALL_DATES.length) {
+      if (dateIndex >= dates.length) {
         dateIndex = 0;
         imgIndex++;
         fails++;
       }
 
-      if (fails > 10) return;
+      if (fails > 3) return;
 
       tryNext();
     };
