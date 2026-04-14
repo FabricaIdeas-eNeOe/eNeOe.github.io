@@ -49,15 +49,10 @@ h1{
   padding:0 40px 40px;
 }
 
-.card{
-  border-radius:12px;
-  overflow:hidden;
-}
-
 .card img{
   width:100%;
-  object-fit:cover;
   border-radius:12px;
+  object-fit:cover;
 }
 
 </style>
@@ -81,53 +76,45 @@ h1{
 const CLOUD = "https://res.cloudinary.com/du4pmuch7/image/upload/";
 
 /* =========================
-   MANIFEST (PUT REAL FILES)
-========================= */
-
-const MANIFEST = {
-
-  junior: {
-    GTO: [
-      "CN2026_JNR_CDMX_GTO_0402_020"
-    ],
-    "3RD": [
-      "CN2026_JNR_CDMX_3RD_0405_001",
-      "CN2026_JNR_CDMX_3RD_0405_002",
-      "CN2026_JNR_CDMX_3RD_0405_003",
-      "CN2026_JNR_CDMX_3RD_0405_004",
-      "CN2026_JNR_CDMX_3RD_0405_005"
-    ]
-  },
-
-  "inf-mayor": {
-    COAH: [],
-    ROO: []
-  },
-
-  "inf-menor": {
-    MIC: []
-  }
-
-};
-
-/* =========================
-   INIT
+   CATEGORY FROM URL
 ========================= */
 
 const params = new URLSearchParams(window.location.search);
 const category = params.get("cat");
 
-const gallery = document.getElementById("gallery");
-const tabs = document.getElementById("tabs");
 const title = document.getElementById("title");
+const tabs = document.getElementById("tabs");
+const gallery = document.getElementById("gallery");
 
 title.innerText = "GALERÍA " + category.toUpperCase();
 
 /* =========================
-   BUILD TABS
+   STRUCTURE (AUTO RULES)
 ========================= */
 
-Object.keys(MANIFEST[category]).forEach((rival,i)=>{
+const CONFIG = {
+
+  junior: {
+    GTO: { prefix: "CN2026_JNR_CDMX_GTO_0402_", max: 200 },
+    "3RD": { prefix: "CN2026_JNR_CDMX_3RD_0405_", max: 200 }
+  },
+
+  "inf-mayor": {
+    COAH: { prefix: "CN2026_InfMyr_CDMX_COAH_", max: 300 },
+    ROO:  { prefix: "CN2026_InfMyr_CDMX_ROO_",  max: 300 }
+  },
+
+  "inf-menor": {
+    MIC: { prefix: "CN2026_InfMnr_CDMX_MIC_", max: 300 }
+  }
+
+};
+
+/* =========================
+   CREATE TABS
+========================= */
+
+Object.keys(CONFIG[category]).forEach((rival,i)=>{
 
   const tab = document.createElement("button");
   tab.className = "tab" + (i===0 ? " active" : "");
@@ -144,44 +131,41 @@ Object.keys(MANIFEST[category]).forEach((rival,i)=>{
 });
 
 /* =========================
-   LOAD IMAGES
+   LOAD IMAGES (AUTO)
 ========================= */
 
 function loadImages(rival){
 
   gallery.innerHTML = "";
 
-  const list = MANIFEST[category][rival];
+  const { prefix, max } = CONFIG[category][rival];
 
-  if(!list || list.length === 0){
-    gallery.innerHTML = "<p>No images yet</p>";
-    return;
-  }
+  for(let i = 1; i <= max; i++){
 
-  list.forEach(name => {
-
-    const url = CLOUD + name + ".jpg";
-
-    const card = document.createElement("div");
-    card.className = "card";
+    const num = String(i).padStart(3,'0');
+    const url = CLOUD + prefix + num + ".jpg";
 
     const img = document.createElement("img");
+
     img.src = url;
 
-    img.onerror = () => {
-      card.remove();
+    img.onload = ()=>{
+      const card = document.createElement("div");
+      card.className = "card";
+      card.appendChild(img);
+      gallery.appendChild(card);
     };
 
-    card.appendChild(img);
-    gallery.appendChild(card);
-  });
+    // silently ignore missing images
+    img.onerror = ()=>{};
+  }
 }
 
 /* =========================
-   INIT LOAD
+   INIT
 ========================= */
 
-const first = Object.keys(MANIFEST[category])[0];
+const first = Object.keys(CONFIG[category])[0];
 loadImages(first);
 
 </script>
