@@ -63,8 +63,8 @@ h1 {
 <script>
 const cloudName = "du4pmuch7";
 
-// ⚠️ IMPORTANT: encoded spaces (%20)
-const basePath = "WP%202026/Campeonato%20Nacional%202026/junior-cdmx/gallery";
+// ✅ EXACT PATH (no spaces, with hyphens)
+const basePath = "WP2026/Campeonato-Nacional-2026/junior-cdmx/gallery";
 
 // ✅ YOUR REAL FILES
 const images = [
@@ -76,9 +76,6 @@ const images = [
 ];
 
 function loadGallery(team) {
-
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    event.target.classList.add('active');
 
     const gallery = document.getElementById("gallery");
     gallery.innerHTML = "";
@@ -95,7 +92,7 @@ function loadGallery(team) {
     });
 }
 
-// load default
+// load
 loadGallery("3RD");
 </script>
 
