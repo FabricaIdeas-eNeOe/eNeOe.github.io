@@ -1,141 +1,110 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Galería</title>
+<meta charset="UTF-8">
+<title>Galería</title>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background: #f4f4f4;
-      text-align: center;
-    }
+<style>
+body {
+  font-family: Arial;
+  text-align: center;
+  background: #f5f5f5;
+}
 
-    h1 {
-      margin-top: 40px;
-      font-size: 42px;
-    }
+h1 {
+  margin-top: 40px;
+}
 
-    .filters {
-      margin: 20px 0;
-    }
+.buttons {
+  margin: 20px;
+}
 
-    .filters button {
-      padding: 10px 20px;
-      border-radius: 20px;
-      border: none;
-      margin: 5px;
-      background: #ccc;
-      cursor: pointer;
-      font-weight: bold;
-    }
+button {
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 20px;
+  border: none;
+  background: #ccc;
+  cursor: pointer;
+}
 
-    .filters button.active {
-      background: #2f5d62;
-      color: white;
-    }
+button.active {
+  background: #2f5d62;
+  color: white;
+}
 
-    #gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 10px;
-      padding: 20px;
-    }
+#gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px,1fr));
+  gap: 10px;
+  padding: 20px;
+}
 
-    #gallery img {
-      width: 100%;
-      border-radius: 10px;
-    }
-  </style>
+#gallery img {
+  width: 100%;
+  border-radius: 10px;
+}
+</style>
 </head>
 
 <body>
 
-<h1 id="title">GALERÍA</h1>
+<h1>GALERÍA INF-MENOR</h1>
 
-<div class="filters" id="filters"></div>
+<div class="buttons">
+  <button onclick="loadGTO(this)" class="active">vs GTO</button>
+  <button onclick="loadMIC(this)">vs MIC</button>
+</div>
 
 <div id="gallery"></div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
+const cloudName = "du4pmuch7";
 
-  const cloudName = "du4pmuch7";
+// ⚠️ THIS IS THE REAL FIX (spaces included)
+const basePath = "WP 2026/Campeonato Nacional 2026/inf-menor-cdmx/gallery/";
 
-  const BASE_PATHS = {
-    "inf-menor": "WP2026/Campeonato-Nacional-2026/inf-menor-cdmx",
-    "inf-mayor": "WP2026/Campeonato-Nacional-2026/inf-mayor-cdmx",
-    "junior": "WP2026/Campeonato-Nacional-2026/junior-cdmx"
-  };
+function clearActive(btn) {
+  document.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+}
 
-  const CONFIG = {
-    "inf-menor": {
-      GTO: { prefix: "CN2026_InfMnr_CDMX_GTO_0322_", count: 80 },
-      MIC: { prefix: "CN2026_InfMnr_CDMX_MIC_0321_", count: 50 }
-    },
-    "inf-mayor": {
-      ROO: { prefix: "CN2026_InfMyr_CDMX_ROO_0322_", count: 60 },
-      COAH: { prefix: "CN2026_InfMyr_CDMX_COA_0320_", count: 60 }
-    },
-    "junior": {
-      GTO: { prefix: "CN2026_JNR_CDMX_GTO_0403_", count: 120 }
-    }
-  };
+function loadGTO(btn) {
+  clearActive(btn);
+  loadImages("CN2026_InfMnr_CDMX_GTO_0322_", 120);
+}
 
-  const params = new URLSearchParams(window.location.search);
-  let category = params.get("cat");
+function loadMIC(btn) {
+  clearActive(btn);
+  loadImages("CN2026_InfMnr_CDMX_MIC_0321_", 120);
+}
 
-  if (!category || !CONFIG[category]) {
-    category = "inf-menor";
-  }
-
+function loadImages(prefix, max) {
   const gallery = document.getElementById("gallery");
-  const filters = document.getElementById("filters");
-  const title = document.getElementById("title");
+  gallery.innerHTML = "";
 
-  title.innerText = "GALERÍA " + category.toUpperCase();
+  for (let i = 1; i <= max; i++) {
+    let num = i.toString().padStart(3, "0");
 
-  function loadTeam(team) {
-    gallery.innerHTML = "";
+    let img = document.createElement("img");
 
-    const base = BASE_PATHS[category];
-    const config = CONFIG[category][team];
+    img.src =
+      "https://res.cloudinary.com/" +
+      cloudName +
+      "/image/upload/f_auto,q_auto/" +
+      basePath +
+      prefix +
+      num +
+      ".jpg";
 
-    for (let i = 1; i <= config.count; i++) {
-      const num = String(i).padStart(3, "0");
+    img.onerror = () => img.remove();
 
-      const url = `https://res.cloudinary.com/${cloudName}/image/upload/${base}/gallery/${config.prefix}${num}.jpg`;
-
-      const img = document.createElement("img");
-      img.src = url;
-
-      gallery.appendChild(img);
-    }
+    gallery.appendChild(img);
   }
+}
 
-  // Create buttons
-  const teams = Object.keys(CONFIG[category]);
-
-  teams.forEach((team, index) => {
-    const btn = document.createElement("button");
-    btn.innerText = "vs " + team;
-
-    if (index === 0) btn.classList.add("active");
-
-    btn.onclick = () => {
-      document.querySelectorAll(".filters button").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      loadTeam(team);
-    };
-
-    filters.appendChild(btn);
-  });
-
-  // Load first team automatically
-  loadTeam(teams[0]);
-
-});
+// default load
+loadImages("CN2026_InfMnr_CDMX_GTO_0322_", 120);
 </script>
 
 </body>
