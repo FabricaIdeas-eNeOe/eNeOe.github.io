@@ -84,7 +84,8 @@
   const start = 1;
   const end = 200;
 
-  const rivals = ["ALL", "GRO", "NLE"]; // 👈 ADD MORE HERE
+  // 👇 ONLY REAL rivals here
+  const rivals = ["GRO", "NLE"];
 
   const gallery = document.getElementById("gallery");
   const filterContainer = document.getElementById("filters");
@@ -94,66 +95,69 @@
   }
 
   function createFilters() {
+    const allBtn = document.createElement("button");
+    allBtn.innerText = "ALL";
+    styleButton(allBtn);
+    allBtn.onclick = () => loadGallery("ALL");
+    filterContainer.appendChild(allBtn);
+
     rivals.forEach(rival => {
       const btn = document.createElement("button");
       btn.innerText = rival;
-      btn.style.margin = "5px";
-      btn.style.padding = "8px 14px";
-      btn.style.border = "none";
-      btn.style.borderRadius = "20px";
-      btn.style.background = "#2f5d50";
-      btn.style.color = "white";
-      btn.style.cursor = "pointer";
-
+      styleButton(btn);
       btn.onclick = () => loadGallery(rival);
-
       filterContainer.appendChild(btn);
     });
+  }
+
+  function styleButton(btn) {
+    btn.style.margin = "5px";
+    btn.style.padding = "8px 14px";
+    btn.style.border = "none";
+    btn.style.borderRadius = "20px";
+    btn.style.background = "#2f5d50";
+    btn.style.color = "white";
+    btn.style.cursor = "pointer";
   }
 
   function loadGallery(selectedRival) {
     gallery.innerHTML = "";
 
     for (let i = start; i <= end; i++) {
-      rivals.forEach(rival => {
-        if (rival === "ALL" || rival === selectedRival) {
 
-          const file = `${basePrefix}${rival}${datePart}${pad(i)}.jpg`;
+      const rivalsToLoad = selectedRival === "ALL" ? rivals : [selectedRival];
 
-          const imgUrl = `https://res.cloudinary.com/${cloudName}/image/upload/${basePathGallery}${file}`;
-          const downloadUrl = `https://res.cloudinary.com/${cloudName}/image/upload/${basePathDownload}${file}`;
+      rivalsToLoad.forEach(rival => {
 
-          const img = new Image();
+        const file = `${basePrefix}${rival}${datePart}${pad(i)}.jpg`;
 
-          img.onload = () => {
-            const card = document.createElement("div");
-            card.className = "card";
+        const imgUrl = `https://res.cloudinary.com/${cloudName}/image/upload/${basePathGallery}${file}`;
+        const downloadUrl = `https://res.cloudinary.com/${cloudName}/image/upload/${basePathDownload}${file}`;
 
-            const imageElement = document.createElement("img");
-            imageElement.src = imgUrl;
+        const img = new Image();
 
-            const link = document.createElement("a");
-            link.href = downloadUrl;
-            link.className = "btn";
-            link.innerText = "Descargar";
+        img.onload = () => {
+          const card = document.createElement("div");
+          card.className = "card";
 
-            card.appendChild(imageElement);
-            card.appendChild(link);
-            gallery.appendChild(card);
-          };
+          const imageElement = document.createElement("img");
+          imageElement.src = imgUrl;
 
-          img.onerror = () => {};
+          const link = document.createElement("a");
+          link.href = downloadUrl;
+          link.className = "btn";
+          link.innerText = "Descargar";
 
-          img.src = imgUrl;
-        }
+          card.appendChild(imageElement);
+          card.appendChild(link);
+          gallery.appendChild(card);
+        };
+
+        img.src = imgUrl;
       });
     }
   }
 
-  // INIT
   createFilters();
   loadGallery("ALL");
 </script>
-
-</body>
-</html>
