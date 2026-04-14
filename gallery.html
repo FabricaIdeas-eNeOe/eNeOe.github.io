@@ -55,7 +55,7 @@ h1 {
 <h1>GALERÍA JUNIOR</h1>
 
 <div class="tabs">
-    <button class="tab active" onclick="loadGallery('3RD')">3RD</button>
+    <button class="tab active">3RD</button>
 </div>
 
 <div class="gallery" id="gallery"></div>
@@ -63,10 +63,9 @@ h1 {
 <script>
 const cloudName = "du4pmuch7";
 
-// ✅ EXACT PATH (no spaces, with hyphens)
-const basePath = "WP2026/Campeonato-Nacional-2026/junior-cdmx/gallery";
+// ✅ CORRECT PATH (WITH %20 FOR SPACES)
+const basePath = "WP%202026/Campeonato%20Nacional%202026/junior-cdmx/gallery";
 
-// ✅ YOUR REAL FILES
 const images = [
 "CN2026_JNR_CDMX_3RD_0405_001",
 "CN2026_JNR_CDMX_3RD_0405_002",
@@ -75,25 +74,16 @@ const images = [
 "CN2026_JNR_CDMX_3RD_0405_005"
 ];
 
-function loadGallery(team) {
+const gallery = document.getElementById("gallery");
 
-    const gallery = document.getElementById("gallery");
-    gallery.innerHTML = "";
+images.forEach(name => {
+    const url = `https://res.cloudinary.com/${cloudName}/image/upload/${basePath}/${name}.jpg`;
 
-    const filtered = images.filter(img => img.includes(team));
+    const img = document.createElement("img");
+    img.src = url;
 
-    filtered.forEach(name => {
-        const url = `https://res.cloudinary.com/${cloudName}/image/upload/${basePath}/${name}.jpg`;
-
-        const img = document.createElement("img");
-        img.src = url;
-
-        gallery.appendChild(img);
-    });
-}
-
-// load
-loadGallery("3RD");
+    gallery.appendChild(img);
+});
 </script>
 
 </body>
