@@ -9,7 +9,6 @@
 
 <style>
 
-/* BACKGROUND */
 body{
   margin:0;
   font-family:'Montserrat',sans-serif;
@@ -26,7 +25,7 @@ body{
 /* HEADER */
 .header{
   text-align:center;
-  padding:80px 20px 20px;
+  padding:80px 20px 10px;
 }
 
 .title{
@@ -50,12 +49,7 @@ body{
   content:"";
   position:absolute;
   inset:0;
-  background:linear-gradient(
-    120deg,
-    transparent 30%,
-    rgba(255,255,255,0.6) 50%,
-    transparent 70%
-  );
+  background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,0.6) 50%,transparent 70%);
   animation:wave 3s infinite linear;
 }
 
@@ -70,7 +64,16 @@ body{
   opacity:0.7;
 }
 
-/* GRID (same as campeonato) */
+/* 🔥 NEW: TOURNAMENTS TITLE */
+.section-title{
+  text-align:center;
+  margin-top:20px;
+  font-size:18px;
+  font-weight:600;
+  color:#0a4f73;
+}
+
+/* GRID */
 .grid{
   display:grid;
   grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
@@ -79,10 +82,10 @@ body{
   max-width:1100px;
   margin:0 auto;
 
-  padding:30px 20px 140px;
+  padding:20px 20px 140px;
 }
 
-/* 🔥 FIX: 40% TRANSPARENT CARDS */
+/* CARDS */
 .card{
   text-decoration:none;
   color:inherit;
@@ -90,8 +93,8 @@ body{
   border-radius:28px;
   overflow:hidden;
 
-  background:rgba(255,255,255,0.40); /* 👈 KEY CHANGE */
-  backdrop-filter:blur(12px); /* softer than campeonato */
+  background:rgba(255,255,255,0.40);
+  backdrop-filter:blur(12px);
 
   box-shadow:
     0 15px 35px rgba(0,0,0,0.2),
@@ -127,20 +130,30 @@ body{
   opacity:0.75;
 }
 
-/* FOOTER */
+/* 🔥 FIXED FOOTER (TRANSPARENT) */
 .footer{
   position:fixed;
   bottom:0;
   width:100%;
   text-align:center;
-  padding:10px;
+  padding:12px 10px;
 
-  background:rgba(255,255,255,0.85);
+  background:rgba(255,255,255,0.35);
+  backdrop-filter:blur(10px);
 }
 
+/* logos */
 .footer img{
-  height:36px;
+  height:34px;
   margin:0 8px;
+}
+
+/* 🔥 COPYRIGHT */
+.copyright{
+  font-size:12px;
+  margin-top:6px;
+  color:#0a4f73;
+  opacity:0.8;
 }
 
 /* MOBILE */
@@ -171,6 +184,8 @@ body{
   <div class="subtitle">Official Photo Gallery Platform</div>
 </div>
 
+<div class="section-title">Tournaments</div>
+
 <div class="grid">
 
 <a href="campeonato2026.html" class="card">
@@ -181,16 +196,18 @@ body{
   </div>
 </a>
 
+<!-- ⚠️ CHECK THIS FILE NAME -->
 <a href="#" class="card">
-  <img src="conade.jpg">
+  <img src="polo_conade.png">
   <div class="card-content">
     <h3>Juegos CONADE 2026</h3>
     <p>CDMX • 4 categorías</p>
   </div>
 </a>
 
+<!-- ⚠️ CHECK THIS FILE NAME -->
 <a href="#" class="card">
-  <img src="u16.jpg">
+  <img src="championship_cover.png">
   <div class="card-content">
     <h3>U16 Waterpolo Championships</h3>
     <p>Selección Mexicana Sub16</p>
@@ -200,9 +217,14 @@ body{
 </div>
 
 <div class="footer">
-  <img src="logo-aofm.png">
-  <img src="logo-club.png">
-  <img src="logo-olimpicos.png">
+  <div>
+    <img src="logo-aofm.png">
+    <img src="logo-club.png">
+    <img src="logo-olimpicos.png">
+  </div>
+  <div class="copyright">
+    2026 AOFM WATERPOLO / @eneoe
+  </div>
 </div>
 
 </body>
