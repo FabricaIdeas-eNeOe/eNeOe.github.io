@@ -154,33 +154,37 @@ body{
 }
 
 /* 🔥 COPYRIGHT BELOW BAND */
-.footer-bottom{
-  position:fixed;
-  bottom:6px; /* 👈 bring it INTO view */
-
-  width:100%;
+/* FOOTER */
+footer {
   text-align:center;
-
   font-size:12px;
-  color:#0a4f73;
-  opacity:0.9;
-
-  pointer-events:none;
+  padding:10px;
+  color:#5c7f91;
 }
+  const base = BASE_PATHS[category];
+  const config = CONFIG[category][team];
+
 /* MOBILE */
-@media (max-width:600px){
+@media (max-width: 600px) {
+  for (let i = 1; i <= config.count; i++) {
+    const num = String(i).padStart(3, "0");
 
-  body{
-    background-attachment:scroll;
+  .title {
+    font-size:32px;
+    padding:15px 25px;
   }
+    const url = `https://res.cloudinary.com/${cloudName}/image/upload/${base}/gallery/${config.prefix}${num}.jpg`;
 
-  .title{
-    font-size:28px;
-    padding:14px 30px;
+  .subtitle {
+    font-size:18px;
   }
+    const img = document.createElement("img");
+    img.src = url;
+    img.loading = "lazy";
 
-  .grid{
-    gap:25px;
+  .section {
+    padding:20px 10px;
+    gallery.appendChild(img);
   }
 
 }
