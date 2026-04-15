@@ -31,7 +31,7 @@ body{
   padding:80px 20px 40px;
 }
 
-/* TITLE */
+/* 🔥 MATCH MENOR TITLE */
 .title{
   display:inline-block;
   font-size:42px;
@@ -43,9 +43,30 @@ body{
   backdrop-filter:blur(25px);
   border-radius:30px;
   border:1px solid rgba(255,255,255,0.6);
+
+  position:relative;
+  overflow:hidden;
 }
 
-/* FILTERS */
+.title::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    120deg,
+    transparent 30%,
+    rgba(255,255,255,0.6) 50%,
+    transparent 70%
+  );
+  animation:wave 3s infinite linear;
+}
+
+@keyframes wave{
+  0%{transform:translateX(-100%)}
+  100%{transform:translateX(100%)}
+}
+
+/* 🔥 MATCH MENOR FILTERS */
 .filters{
   text-align:center;
   margin:30px 0;
@@ -55,15 +76,30 @@ body{
   margin:6px;
   padding:10px 20px;
   border-radius:25px;
-  border:none;
-  background:#ffffffaa;
-  cursor:pointer;
+
+  border:1px solid rgba(255,255,255,0.5);
+  background:rgba(255,255,255,0.2);
+  backdrop-filter:blur(12px);
+
+  color:#0a4f73;
   font-weight:600;
+  cursor:pointer;
+
+  box-shadow:
+    inset 0 1px 3px rgba(255,255,255,0.6),
+    0 4px 10px rgba(0,0,0,0.1);
+
+  transition:0.3s;
+}
+
+.filters button:hover{
+  transform:translateY(-2px);
 }
 
 .filters button.active{
   background:#0a4f73;
   color:white;
+  box-shadow:0 6px 16px rgba(0,0,0,0.25);
 }
 
 /* GALLERY */
@@ -74,24 +110,34 @@ body{
   padding:30px 60px 100px;
 }
 
+/* 🔥 PORTRAIT FIX */
 .gallery img{
   width:100%;
   height:220px;
   object-fit:cover;
   border-radius:16px;
   cursor:pointer;
+  transition:0.3s;
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+.gallery img:hover{
+  transform:scale(1.05);
 }
 
 /* LIGHTBOX */
 .lightbox{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.9);
+  background:rgba(0,0,0,0.92);
+  backdrop-filter:blur(10px);
   display:flex;
   align-items:center;
   justify-content:center;
   opacity:0;
   pointer-events:none;
+  transition:0.3s;
+  z-index:999;
 }
 
 .lightbox.active{
@@ -104,14 +150,26 @@ body{
   max-height:85%;
 }
 
-/* FOOTER */
+/* CLOSE */
+.close{
+  position:absolute;
+  top:20px;
+  right:30px;
+  color:white;
+  font-size:30px;
+  cursor:pointer;
+}
+
+/* 🔥 FOOTER (FIXED POSITION) */
 .footer{
   position:fixed;
   bottom:0;
   width:100%;
   text-align:center;
   padding:12px;
-  background:white;
+
+  background:rgba(255,255,255,0.85);
+  backdrop-filter:blur(10px);
 }
 
 .footer img{
@@ -125,7 +183,7 @@ body{
 <body>
 
 <div class="header">
-  <div class="title">Galería INF-MAYOR</div>
+  <div class="title">Infantil Mayor</div>
 </div>
 
 <div class="filters">
@@ -138,6 +196,7 @@ body{
 <div id="gallery" class="gallery"></div>
 
 <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+  <span class="close">✕</span>
   <img id="lightbox-img">
 </div>
 
@@ -153,26 +212,25 @@ const cloud="du4pmuch7";
 const base="WP2026/CN2026/infmayor/gallery";
 
 let currentRival="GRO";
+let images=[];
 
-/* 🔥 AUTO SYSTEM (NO DATES NEEDED) */
+/* 🔥 FIXED: SAME SYSTEM AS MENOR */
 function buildImages(rival){
 
   let arr=[];
 
-  for(let i=1;i<=200;i++){
+  const dates=["0319","0320","0321","0322"];
 
-    let n=String(i).padStart(3,"0");
+  dates.forEach(date=>{
+    for(let i=1;i<=200;i++){
 
-    // try ALL possible dates (system will keep only real ones)
-    for(let d=101; d<=1231; d++){
-
-      let date=String(d).padStart(4,"0");
+      let n=String(i).padStart(3,"0");
 
       let url=`https://res.cloudinary.com/${cloud}/image/upload/${base}/CN2026_InfMyr_CDMX_${rival}_${date}_${n}.jpg`;
 
       arr.push(url);
     }
-  }
+  });
 
   return arr;
 }
@@ -181,8 +239,9 @@ function loadGallery(){
 
   const g=document.getElementById("gallery");
   g.innerHTML="";
+  images=buildImages(currentRival);
 
-  buildImages(currentRival).forEach(src=>{
+  images.forEach((src)=>{
 
     let img=new Image();
     img.src=src;
