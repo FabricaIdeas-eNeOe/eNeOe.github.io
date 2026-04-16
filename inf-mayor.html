@@ -83,11 +83,8 @@ let currentRival = "GRO";
 function setRival(rival){
   currentRival = rival;
 
-  // reset active state
   document.querySelectorAll(".tabs button").forEach(btn=>{
     btn.classList.remove("active");
-
-    // set active based on text
     if(btn.innerText === rival){
       btn.classList.add("active");
     }
@@ -100,18 +97,22 @@ function loadImages(){
   const gallery = document.getElementById("gallery");
   gallery.innerHTML = "";
 
-  for(let i=1;i<=200;i++){
+  // 🔥 FULL AUTO: try all dates and numbers
+  for(let d=101; d<=1231; d++){
+    let date = String(d).padStart(4,'0');
 
-    let num = String(i).padStart(3,'0');
+    for(let i=1;i<=200;i++){
+      let num = String(i).padStart(3,'0');
 
-    let url = `${BASE}CN2026_InfMyr_CDMX_${currentRival}_03${String(Math.floor(i/30)+19)}_${num}.jpg`;
+      let url = `${BASE}CN2026_InfMyr_CDMX_${currentRival}_${date}_${num}.jpg`;
 
-    let img = document.createElement("img");
-    img.src = url;
+      let img = document.createElement("img");
+      img.src = url;
 
-    img.onerror = ()=> img.remove();
+      img.onerror = ()=> img.remove();
 
-    gallery.appendChild(img);
+      gallery.appendChild(img);
+    }
   }
 }
 
