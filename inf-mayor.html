@@ -83,11 +83,15 @@ let currentRival = "GRO";
 function setRival(rival){
   currentRival = rival;
 
+  // reset active state
   document.querySelectorAll(".tabs button").forEach(btn=>{
     btn.classList.remove("active");
-  });
 
-  event.target.classList.add("active");
+    // set active based on text
+    if(btn.innerText === rival){
+      btn.classList.add("active");
+    }
+  });
 
   loadImages();
 }
@@ -96,19 +100,15 @@ function loadImages(){
   const gallery = document.getElementById("gallery");
   gallery.innerHTML = "";
 
-  // loop images 1 → 200 (auto system)
   for(let i=1;i<=200;i++){
 
     let num = String(i).padStart(3,'0');
 
-    // 🔥 FIX IS HERE (InfMyr instead of InfMnr)
     let url = `${BASE}CN2026_InfMyr_CDMX_${currentRival}_03${String(Math.floor(i/30)+19)}_${num}.jpg`;
 
     let img = document.createElement("img");
-
     img.src = url;
 
-    // skip missing images automatically
     img.onerror = ()=> img.remove();
 
     gallery.appendChild(img);
