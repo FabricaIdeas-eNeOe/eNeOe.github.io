@@ -137,7 +137,7 @@ body{
 /* FOOTER BAND */
 .footer{
   position:fixed;
-  bottom:0;
+  bottom:30px; /* 👈 pushes band UP */
   width:100%;
 
   text-align:center;
@@ -147,25 +147,32 @@ body{
   backdrop-filter:blur(12px);
 }
 
+.footer img{
+  height:34px;
+  margin:0 8px;
+}
+
+/* 👇 TEXT BELOW THE BAND */
+.copyright{
+  position:fixed;
+  bottom:5px;
+
+  width:100%;
+  text-align:center;
+
+  font-size:11px; /* 👈 smaller */
+  font-weight:500;
+
+  color:#5c7f91;
+  opacity:0.8;
+}
+
 /* LOGOS */
 .footer img{
   height:34px;
   margin:0 8px;
 }
 
-/* COPYRIGHT TEXT */
-.footer-bottom{
-  position:fixed;
-  bottom:8px;
-  width:100%;
-  text-align:center;
-
-  font-size:13px;
-  font-weight:500;
-
-  color:#5c7f91;
-  opacity:0.85;
-}
 
 /* MOBILE */
 @media (max-width:600px){
@@ -226,16 +233,15 @@ body{
 </div>
 
 <div class="footer">
-  <div>
+  <div class="footer-logos">
     <img src="logo-aofm.png">
     <img src="logo-club.png">
     <img src="logo-olimpicos.png">
   </div>
 </div>
 
-<div class="footer-bottom">
+<div class="copyright">
   © 2026 AOFM WATERPOLO / @eneoe
 </div>
-
 </body>
 </html>
