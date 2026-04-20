@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infantil Menor</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #111;
+  color: white;
+}
+
+h1 {
+  text-align: center;
+  padding: 20px;
+  margin: 0;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 10px;
+  padding: 10px;
+}
+
+.gallery img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.95);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.lightbox img {
+  max-width: 90%;
+  max-height: 80%;
+}
+
+.lightbox button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border: none;
+  background: white;
+  cursor: pointer;
+}
+
+.status {
+  text-align: center;
+  padding: 20px;
+  color: #aaa;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Infantil Menor</h1>
+<div class="status" id="status">Cargando galería...</div>
+<div class="gallery" id="gallery"></div>
+
+<div class="lightbox" id="lightbox">
+  <img id="lightbox-img">
+  <button id="downloadBtn">Descargar</button>
+</div>
+
+<script>
+/* =========================
+   🔧 CONFIG (YA CONFIGURADO)
+========================= */
+
+const CLOUD_NAME = "du4pmuch7";
+
+const BASE_PATH = "WP2026/CN2026/infmenor/gallery/";
+const DOWNLOAD_PATH = "WP2026/CN2026/infmenor/download/";
+
+const JSON_FILE = "images-infmenor.json";
+
+/* =========================
+   ⚙️ SYSTEM
+========================= */
+
+const CLOUD_BASE = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/`;
+const OPT = "f_auto,q_auto,w_800/";
+
+const gallery = document.getElementById("gallery");
+const status = document.getElementById("status");
+const lightbox = document.getElementById("lightbox");
+const lightboxImg = document.getElementById("lightbox-img");
+const downloadBtn = document.getElementById("downloadBtn");
+
+let currentImage = "";
+
+/* LOAD JSON */
+fetch(JSON_FILE)
+  .then(res => {
+    if (!res.ok) throw new Error("JSON no encontrado");
+    return res.json();
+  })
+  .then(images => {
+    if (!Array.isArray(images)) throw new Error("JSON inválido");
+
+    status.textContent = "";
+
+    images.forEach(img => {
+      const el = document.createElement("img");
+
+      el.src = CLOUD_BASE + OPT + BASE_PATH + img;
+      el.loading = "lazy";
+
+      el.onclick = () => {
+        currentImage = img;
+        lightboxImg.src = CLOUD_BASE + BASE_PATH + img;
+        lightbox.style.display = "flex";
+      };
+
+      gallery.appendChild(el);
+    });
+  })
+  .catch(err => {
+    console.error(err);
+    status.textContent = "⚠️ Error cargando la galería";
+  });
+
+/* DOWNLOAD */
+downloadBtn.onclick = () => {
+  const link = document.createElement("a");
+  link.href = CLOUD_BASE + DOWNLOAD_PATH + currentImage;
+  link.download = currentImage;
+  link.click();
+};
+
+/* CLOSE LIGHTBOX */
+lightbox.onclick = (e) => {
+  if (e.target !== lightboxImg && e.target !== downloadBtn) {
+    lightbox.style.display = "none";
+  }
+};
+</script>
+
+</body>
+</html>
