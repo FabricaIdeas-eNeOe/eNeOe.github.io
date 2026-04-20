@@ -26,7 +26,7 @@ body{
   padding:80px 20px 30px;
 }
 
-/* 🔥 TITLE (REAL GLASS + FLOAT) */
+/* TITLE */
 .title{
   display:inline-block;
   font-size:42px;
@@ -46,13 +46,12 @@ body{
   animation:float 6s ease-in-out infinite;
 }
 
-/* FLOAT ANIMATION */
 @keyframes float{
   0%,100%{transform:translateY(0)}
   50%{transform:translateY(-8px)}
 }
 
-/* 🔥 FILTERS (FLOATING GLASS) */
+/* FILTERS */
 .filters{
   text-align:center;
   margin:25px 0 10px;
@@ -175,7 +174,7 @@ body{
   max-height:85%;
 }
 
-/* 🔥 FIXED FOOTER */
+/* FOOTER */
 .footer{
   position:fixed;
   bottom:0;
@@ -229,10 +228,16 @@ const cloud="du4pmuch7";
 const params=new URLSearchParams(window.location.search);
 const category=params.get("cat");
 
-if(!category){
+// 🔒 BLOCK direct access (no ?cat)
+const validCats = ["infmenor","infmayor","juvenil","junior"];
+
+if(!category || !validCats.includes(category)){
   document.body.innerHTML="";
-  throw new Error("No access");
+  document.body.style.background="#0b2c3d";
+  throw new Error("Blocked access");
 }
+
+// NORMAL FLOW CONTINUES
 
 document.getElementById("title").innerText=category.toUpperCase();
 
