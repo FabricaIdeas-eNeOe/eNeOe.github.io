@@ -157,63 +157,56 @@ body{
 const cloud="du4pmuch7";
 const base="WP2026/CN2026/infmenor/gallery";
 
+/* 🔥 DEFINE YOUR MATCHES HERE */
+const matches = [
+  { rival: "GRO", date: "0322" },
+  { rival: "GTO", date: "0322" },
+  { rival: "NLE", date: "0404" }
+];
+
 let currentRival="GRO";
-let loading=false;
 
-/* 🔥 LOAD IMAGES UNTIL THEY STOP EXISTING */
 function loadImages(){
-
-  if(loading) return;
-  loading=true;
 
   const g=document.getElementById("gallery");
   g.innerHTML="";
 
-  const dates=["0319","0320","0321","0322"];
+  matches
+    .filter(m => m.rival === currentRival)
+    .forEach(match => {
 
-  dates.forEach(date=>{
+      let i = 1;
 
-    let i=1;
-    let fails=0;
+      function loadNext(){
 
-    function loadNext(){
+        let n = String(i).padStart(3,"0");
 
-      if(fails>15) return; // stop when no more images
+        let src = `https://res.cloudinary.com/${cloud}/image/upload/${base}/CN2026_InfMnr_CDMX_${match.rival}_${match.date}_${n}.jpg`;
 
-      let n=String(i).padStart(3,"0");
+        let img = new Image();
+        img.src = src;
+        img.loading = "lazy";
 
-      let src=`https://res.cloudinary.com/${cloud}/image/upload/${base}/CN2026_InfMnr_CDMX_${currentRival}_${date}_${n}.jpg`;
+        img.onload = () => {
 
-      let img=new Image();
-      img.src=src;
-      img.loading="lazy";
+          img.onclick = () => {
+            document.getElementById("lightbox-img").src = src;
+            document.getElementById("lightbox").classList.add("active");
+          };
 
-      img.onload=()=>{
-        fails=0;
+          g.appendChild(img);
 
-        img.onclick=()=>{
-          document.getElementById("lightbox-img").src=src;
-          document.getElementById("lightbox").classList.add("active");
+          i++;
+          loadNext();
         };
 
-        g.appendChild(img);
+        img.onerror = () => {
+          // stop when sequence ends
+        };
+      }
 
-        i++;
-        loadNext();
-      };
-
-      img.onerror=()=>{
-        fails++;
-        i++;
-        loadNext();
-      };
-    }
-
-    loadNext();
-
-  });
-
-  loading=false;
+      loadNext();
+    });
 }
 
 function closeLightbox(){
