@@ -6,16 +6,18 @@
 <title>Galería</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
-<link rel="icon" href="data:,">
 
 <style>
 
+/* BACKGROUND */
 body{
   margin:0;
   font-family:'Montserrat',sans-serif;
+
   background:
     linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.15)),
     url('background.png');
+
   background-size:cover;
   background-position:center;
   background-attachment:fixed;
@@ -27,15 +29,39 @@ body{
   padding:80px 20px 40px;
 }
 
+/* 🔥 GLASS TITLE */
 .title{
   display:inline-block;
   font-size:42px;
   font-weight:800;
   color:#0a4f73;
   padding:18px 60px;
+
   background:rgba(255,255,255,0.25);
   backdrop-filter:blur(25px);
   border-radius:30px;
+  border:1px solid rgba(255,255,255,0.6);
+
+  position:relative;
+  overflow:hidden;
+}
+
+.title::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    120deg,
+    transparent 30%,
+    rgba(255,255,255,0.6) 50%,
+    transparent 70%
+  );
+  animation:wave 3s infinite linear;
+}
+
+@keyframes wave{
+  0%{transform:translateX(-100%)}
+  100%{transform:translateX(100%)}
 }
 
 /* FILTERS */
@@ -48,10 +74,15 @@ body{
   margin:6px;
   padding:10px 20px;
   border-radius:25px;
-  border:none;
-  background:rgba(255,255,255,0.3);
-  cursor:pointer;
+
+  border:1px solid rgba(255,255,255,0.5);
+  background:rgba(255,255,255,0.2);
+  backdrop-filter:blur(12px);
+
+  color:#0a4f73;
   font-weight:600;
+  cursor:pointer;
+  transition:0.3s;
 }
 
 .filters button.active{
@@ -59,24 +90,37 @@ body{
   color:white;
 }
 
-/* GALLERY */
-.gallery{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-  gap:18px;
-  padding:30px 60px 100px;
+/* MATCH SECTION */
+.match{
+  margin:40px 60px 10px;
 }
 
-.gallery img{
+.match-title{
+  font-size:20px;
+  font-weight:700;
+  color:#0a4f73;
+  margin-bottom:15px;
+}
+
+/* GALLERY GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:14px;
+}
+
+/* IMAGE */
+.grid img{
   width:100%;
-  height:220px;
+  height:200px;
   object-fit:cover;
-  border-radius:16px;
+  border-radius:14px;
   cursor:pointer;
   transition:0.3s;
+  box-shadow:0 8px 20px rgba(0,0,0,0.2);
 }
 
-.gallery img:hover{
+.grid img:hover{
   transform:scale(1.05);
 }
 
@@ -84,7 +128,7 @@ body{
 .lightbox{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.92);
+  background:rgba(0,0,0,0.9);
   display:flex;
   align-items:center;
   justify-content:center;
@@ -129,7 +173,7 @@ body{
 
 <div id="filters" class="filters"></div>
 
-<div id="gallery" class="gallery"></div>
+<div id="gallery"></div>
 
 <div id="lightbox" class="lightbox" onclick="closeLightbox()">
   <img id="lightbox-img">
@@ -143,58 +187,54 @@ body{
 
 <script>
 
-// 🔥 CONFIG
-const cloud = "du4pmuch7";
+const cloud="du4pmuch7";
 
-// 🔥 GET CATEGORY FROM URL
-const params = new URLSearchParams(window.location.search);
-const category = params.get("cat") || "infmenor";
+// CATEGORY FROM URL
+const params=new URLSearchParams(window.location.search);
+const category=params.get("cat")||"infmenor";
 
 // TITLE
-document.getElementById("title").innerText =
-  category.replace(/^\w/, c => c.toUpperCase());
+document.getElementById("title").innerText=
+  category.replace(/^\w/,c=>c.toUpperCase());
 
 // API
-const API = `https://wp-aofm-cdmx.vercel.app/api/images?folder=WP2026/CN2026/${category}/gallery`;
+const API=`https://wp-aofm-cdmx.vercel.app/api/images?folder=WP2026/CN2026/${category}/gallery`;
 
-let ALL_IMAGES = [];
-let currentRival = "";
+let ALL=[];
+let currentRival="";
 
 // LOAD
 async function load(){
-  const res = await fetch(API);
-  ALL_IMAGES = await res.json();
-
+  const res=await fetch(API);
+  ALL=await res.json();
   buildFilters();
 }
 
-// BUILD FILTER BUTTONS AUTOMATICALLY
+// FILTERS
 function buildFilters(){
 
-  const rivals = new Set();
+  const rivals=new Set();
 
-  ALL_IMAGES.forEach(img=>{
-    const parts = img.split("_");
-    const rival = parts[3];
-    rivals.add(rival);
+  ALL.forEach(img=>{
+    const p=img.split("_");
+    rivals.add(p[3]);
   });
 
-  const container = document.getElementById("filters");
-  container.innerHTML = "";
+  const container=document.getElementById("filters");
+  container.innerHTML="";
 
-  let first = true;
+  let first=true;
 
-  rivals.forEach(rival => {
+  rivals.forEach(r=>{
+    const btn=document.createElement("button");
+    btn.innerText=r;
 
-    const btn = document.createElement("button");
-    btn.innerText = rival;
-
-    btn.onclick = () => setRival(btn, rival);
+    btn.onclick=()=>setRival(btn,r);
 
     if(first){
       btn.classList.add("active");
-      currentRival = rival;
-      first = false;
+      currentRival=r;
+      first=false;
     }
 
     container.appendChild(btn);
@@ -203,41 +243,80 @@ function buildFilters(){
   render();
 }
 
-// RENDER
+// GROUP + RENDER
 function render(){
 
-  const g = document.getElementById("gallery");
-  g.innerHTML = "";
+  const container=document.getElementById("gallery");
+  container.innerHTML="";
 
-  const filtered = ALL_IMAGES.filter(img =>
-    img.includes(`_${currentRival}_`)
-  );
+  // filter by rival
+  const filtered=ALL.filter(img=>img.includes(`_${currentRival}_`));
 
-  filtered.forEach(public_id => {
+  // group by date
+  const groups={};
 
-    const url = `https://res.cloudinary.com/${cloud}/image/upload/f_auto,q_auto,w_400/${public_id}.jpg`;
+  filtered.forEach(img=>{
+    const parts=img.split("_");
+    const date=parts[4];
 
-    let img = new Image();
-    img.src = url;
-    img.loading = "lazy";
+    if(!groups[date]) groups[date]=[];
+    groups[date].push(img);
+  });
 
-    img.onclick = () => {
-      document.getElementById("lightbox-img").src =
-        url.replace("w_400","w_1200");
-      document.getElementById("lightbox").classList.add("active");
-    };
+  Object.keys(groups).sort().forEach(date=>{
 
-    g.appendChild(img);
+    const section=document.createElement("div");
+    section.className="match";
+
+    const title=document.createElement("div");
+    title.className="match-title";
+    title.innerText=`${currentRival} · ${formatDate(date)}`;
+
+    const grid=document.createElement("div");
+    grid.className="grid";
+
+    groups[date].forEach(id=>{
+
+      const url=`https://res.cloudinary.com/${cloud}/image/upload/f_auto,q_auto,w_400/${id}.jpg`;
+
+      const img=new Image();
+      img.src=url;
+      img.loading="lazy";
+
+      img.onclick=()=>{
+        document.getElementById("lightbox-img").src=url.replace("w_400","w_1200");
+        document.getElementById("lightbox").classList.add("active");
+      };
+
+      grid.appendChild(img);
+    });
+
+    section.appendChild(title);
+    section.appendChild(grid);
+    container.appendChild(section);
+
   });
 }
 
-// FILTER CHANGE
-function setRival(btn, rival){
+// FORMAT DATE
+function formatDate(d){
+  const day=d.slice(2);
+  const month=d.slice(0,2);
 
-  currentRival = rival;
+  const months={
+    "03":"MAR",
+    "04":"APR"
+  };
+
+  return `${day} ${months[month]||month}`;
+}
+
+// CHANGE RIVAL
+function setRival(btn,r){
+  currentRival=r;
 
   document.querySelectorAll(".filters button")
-    .forEach(b => b.classList.remove("active"));
+    .forEach(b=>b.classList.remove("active"));
 
   btn.classList.add("active");
 
@@ -249,8 +328,8 @@ function closeLightbox(){
   document.getElementById("lightbox").classList.remove("active");
 }
 
-// START
-window.onload = load;
+// INIT
+window.onload=load;
 
 </script>
 
