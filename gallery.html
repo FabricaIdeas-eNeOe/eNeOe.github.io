@@ -39,7 +39,7 @@ body{
   z-index:1;
 }
 
-/* 🔥 TITLE (FLOAT RESTORED) */
+/* TITLE */
 .title{
   display:inline-block;
   font-size:42px;
@@ -58,6 +58,34 @@ body{
     0 10px 30px rgba(0,0,0,0.25);
 
   animation:floatTitle 6s ease-in-out infinite;
+  position:relative;
+  overflow:hidden;
+}
+
+/* ✨ SHIMMER */
+.title::after{
+  content:"";
+  position:absolute;
+  top:0;
+  left:-120%;
+  width:80%;
+  height:100%;
+
+  background:linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.6),
+    transparent
+  );
+
+  transform:skewX(-25deg);
+  animation:shimmer 6s infinite;
+}
+
+@keyframes shimmer{
+  0%{left:-120%}
+  60%{left:120%}
+  100%{left:120%}
 }
 
 @keyframes floatTitle{
@@ -78,7 +106,7 @@ body{
   z-index:1;
 }
 
-/* 🔵 TABS (FLOAT RESTORED + BLUE GLASS) */
+/* TABS */
 .filters button{
   margin:6px;
   padding:10px 22px;
@@ -104,6 +132,26 @@ body{
 
   position:relative;
   overflow:hidden;
+}
+
+/* ✨ SHIMMER FOR TABS */
+.filters button::after{
+  content:"";
+  position:absolute;
+  top:0;
+  left:-120%;
+  width:80%;
+  height:100%;
+
+  background:linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.6),
+    transparent
+  );
+
+  transform:skewX(-25deg);
+  animation:shimmer 7s infinite;
 }
 
 /* RIPPLE */
@@ -141,7 +189,6 @@ body{
   z-index:1;
 }
 
-/* COVER */
 .cover{
   height:260px;
   border-radius:18px;
@@ -212,7 +259,7 @@ body{
   max-height:85%;
 }
 
-/* 🔥 FOOTER FIXED (NOT TRANSPARENT ANYMORE) */
+/* FOOTER */
 .footer{
   position:fixed;
   bottom:0;
