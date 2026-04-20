@@ -227,7 +227,12 @@ body{
 const cloud="du4pmuch7";
 
 const params=new URLSearchParams(window.location.search);
-const category=params.get("cat")||"infmenor";
+const category=params.get("cat");
+
+if(!category){
+  document.body.innerHTML="";
+  throw new Error("No access");
+}
 
 document.getElementById("title").innerText=category.toUpperCase();
 
