@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Infantil Menor</title>
+
+<style>
+body {
+  margin:0;
+  font-family: Arial;
+  background:#0b1e2d;
+  color:white;
+}
+
+h1 {
+  text-align:center;
+  padding:30px;
+}
+
+.tabs {
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.tabs button {
+  padding:10px 20px;
+  margin:5px;
+  border:none;
+  border-radius:20px;
+  cursor:pointer;
+}
+
+.gallery {
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  justify-content:center;
+  padding:20px;
+}
+
+.gallery img {
+  width:200px;
+  border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Infantil Menor</h1>
+
+<div class="tabs" id="tabs"></div>
+
+<div class="gallery" id="gallery"></div>
+
+<script>
+
+const FOLDER = "WP2026/CN2026/infmenor/gallery";
+
+async function loadImages() {
+
+  const res = await fetch(`/api/images?folder=${FOLDER}`);
+  const images = await res.json();
+
+  // 🔥 GROUP BY RIVAL
+  const groups = {};
+
+  images.forEach(img => {
+    const parts = img.split("_");
+    const rival = parts[3]; // GRO, NLE, etc
+
+    if (!groups[rival]) groups[rival] = [];
+    groups[rival].push(img);
+  });
+
+  createTabs(groups);
+  showGallery(Object.keys(groups)[0], groups);
+}
+
+function createTabs(groups) {
+  const tabs = document.getElementById("tabs");
+
+  Object.keys(groups).forEach(rival => {
+    const btn = document.createElement("button");
+    btn.innerText = rival;
+
+    btn.onclick = () => showGallery(rival, groups);
+
+    tabs.appendChild(btn);
+  });
+}
+
+function showGallery(rival, groups) {
+  const gallery = document.getElementById("gallery");
+  gallery.innerHTML = "";
+
+  groups[rival].forEach(img => {
+    const image = document.createElement("img");
+
+    image.src = `https://res.cloudinary.com/du4pmuch7/image/upload/f_auto,q_auto,w_400/${img}.jpg`;
+
+    gallery.appendChild(image);
+  });
+}
+
+loadImages();
+
+</script>
+
+</body>
+</html>
