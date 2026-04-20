@@ -21,40 +21,22 @@ body{
   background-attachment:fixed;
 }
 
+/* PARALLAX LIGHT */
+.light{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:radial-gradient(circle at 50% 50%, rgba(255,255,255,0.25), transparent 60%);
+  mix-blend-mode:soft-light;
+  z-index:0;
+}
+
 /* HEADER */
 .header{
   text-align:center;
   padding:80px 20px 20px;
-}
-
-/* 🔥 LIQUID GLASS BASE */
-.liquid{
   position:relative;
-  overflow:hidden;
-}
-
-.liquid::before{
-  content:"";
-  position:absolute;
-  inset:-50%;
-
-  background:
-    radial-gradient(circle at 30% 30%, rgba(255,255,255,0.7), transparent 40%),
-    radial-gradient(circle at 70% 70%, rgba(255,255,255,0.5), transparent 40%),
-    linear-gradient(120deg,
-      rgba(255,255,255,0.4),
-      rgba(255,255,255,0.1),
-      rgba(255,255,255,0.3)
-    );
-
-  animation:liquidMove 12s linear infinite;
-  opacity:0.5;
-}
-
-@keyframes liquidMove{
-  0%{transform:translate(-10%, -10%) rotate(0deg)}
-  50%{transform:translate(10%, 10%) rotate(180deg)}
-  100%{transform:translate(-10%, -10%) rotate(360deg)}
+  z-index:1;
 }
 
 /* TITLE */
@@ -64,30 +46,16 @@ body{
   font-weight:800;
   color:#0a4f73;
   padding:18px 60px;
-
   border-radius:30px;
   border:1px solid rgba(255,255,255,0.7);
-
-  background:
-    linear-gradient(145deg, rgba(255,255,255,0.65), rgba(255,255,255,0.2));
-
+  background:linear-gradient(145deg, rgba(255,255,255,0.65), rgba(255,255,255,0.2));
   box-shadow:
     inset 0 2px 8px rgba(255,255,255,0.9),
     inset 0 -6px 15px rgba(0,0,0,0.15),
     0 10px 30px rgba(0,0,0,0.25);
-
   animation:float1 6s ease-in-out infinite;
 }
 
-.title.liquid::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(120deg, transparent, rgba(255,255,255,0.8), transparent);
-  opacity:0.4;
-}
-
-/* FLOAT ANIMATIONS (UNCHANGED) */
 @keyframes float1{
   0%,100%{transform:translateY(0)}
   50%{transform:translateY(-10px)}
@@ -102,6 +70,8 @@ body{
 .filters{
   text-align:center;
   margin:25px 0;
+  position:relative;
+  z-index:1;
 }
 
 .filters button{
@@ -112,28 +82,40 @@ body{
   border:1px solid rgba(255,255,255,0.7);
 
   background:
-    linear-gradient(145deg, rgba(255,255,255,0.6), rgba(255,255,255,0.15));
+    linear-gradient(145deg, rgba(120,180,255,0.7), rgba(0,120,255,0.3));
 
-  color:#0a4f73;
+  color:#083b5c;
   font-weight:600;
 
   cursor:pointer;
   transition:all 0.3s ease;
 
   box-shadow:
-    inset 0 2px 6px rgba(255,255,255,0.9),
-    inset 0 -4px 10px rgba(0,0,0,0.15),
-    0 6px 20px rgba(0,0,0,0.2);
+    inset 0 2px 8px rgba(255,255,255,0.9),
+    inset 0 -6px 15px rgba(0,80,150,0.3),
+    0 8px 25px rgba(0,80,150,0.3);
 
   animation:float2 5s ease-in-out infinite;
+
+  position:relative;
+  overflow:hidden;
 }
 
-.filters button.liquid::after{
+/* RIPPLE */
+.filters button::before{
   content:"";
   position:absolute;
-  inset:0;
-  background:linear-gradient(120deg, transparent, rgba(255,255,255,0.7), transparent);
-  opacity:0.4;
+  width:200%;
+  height:200%;
+  top:-50%;
+  left:-50%;
+  background:radial-gradient(circle, rgba(255,255,255,0.5), transparent 60%);
+  transform:scale(0);
+  transition:transform 0.4s ease;
+}
+
+.filters button:hover::before{
+  transform:scale(1);
 }
 
 .filters button:hover{
@@ -141,7 +123,8 @@ body{
 }
 
 .filters button.active{
-  background:#0a4f73;
+  background:
+    linear-gradient(145deg, rgba(0,120,255,0.95), rgba(0,60,140,0.85));
   color:white;
   transform:scale(1.15);
 }
@@ -149,9 +132,10 @@ body{
 /* MATCH */
 .match{
   margin:50px 60px;
+  position:relative;
+  z-index:1;
 }
 
-/* COVER */
 .cover{
   height:260px;
   border-radius:18px;
@@ -161,38 +145,22 @@ body{
   align-items:flex-end;
   position:relative;
   overflow:hidden;
-  box-shadow:0 12px 30px rgba(0,0,0,0.3);
 }
 
 .cover::before{
   content:"";
   position:absolute;
   inset:0;
-  background:linear-gradient(
-    to top,
-    rgba(0,0,0,0.75),
-    rgba(0,0,0,0.2),
-    transparent
-  );
+  background:linear-gradient(to top, rgba(0,0,0,0.75), transparent);
 }
 
 .cover span{
   position:relative;
   margin:15px;
   padding:10px 20px;
-
   border-radius:20px;
-  border:1px solid rgba(255,255,255,0.7);
-
-  background:
-    linear-gradient(145deg, rgba(255,255,255,0.6), rgba(255,255,255,0.2));
-
+  background:rgba(255,255,255,0.3);
   color:white;
-  font-weight:700;
-
-  box-shadow:
-    inset 0 2px 6px rgba(255,255,255,0.9),
-    inset 0 -3px 10px rgba(0,0,0,0.25);
 }
 
 /* GRID */
@@ -242,23 +210,13 @@ body{
 .footer{
   position:fixed;
   bottom:0;
-  left:0;
   width:100%;
-
   display:flex;
   justify-content:center;
   gap:40px;
-
   padding:12px;
-
-  border-top:1px solid rgba(255,255,255,0.7);
-
-  background:
-    linear-gradient(145deg, rgba(255,255,255,0.6), rgba(255,255,255,0.15));
-
-  box-shadow:0 -5px 20px rgba(0,0,0,0.2);
-
-  z-index:999;
+  background:rgba(255,255,255,0.2);
+  z-index:2;
 }
 
 .footer img{
@@ -270,15 +228,16 @@ body{
 
 <body>
 
+<div class="light" id="light"></div>
+
 <div class="header">
-  <div id="title" class="title liquid"></div>
+  <div id="title" class="title"></div>
 </div>
 
 <div id="filters" class="filters"></div>
-
 <div id="gallery"></div>
 
-<div class="footer liquid">
+<div class="footer">
   <img src="logo-olimpicos.png">
   <img src="logo-club.png">
   <img src="logo-aofm.png">
@@ -289,6 +248,17 @@ body{
 </div>
 
 <script>
+
+/* PARALLAX LIGHT */
+const light = document.getElementById("light");
+
+document.addEventListener("mousemove", e=>{
+  const x = (e.clientX / window.innerWidth) * 100;
+  const y = (e.clientY / window.innerHeight) * 100;
+  light.style.background = `radial-gradient(circle at ${x}% ${y}%, rgba(255,255,255,0.25), transparent 60%)`;
+});
+
+/* ORIGINAL SYSTEM (UNCHANGED) */
 
 const cloud="du4pmuch7";
 
@@ -324,7 +294,6 @@ function buildFilters(){
   rivals.forEach(r=>{
     const btn=document.createElement("button");
     btn.innerText=r;
-    btn.classList.add("liquid");
 
     btn.onclick=()=>setRival(btn,r);
 
