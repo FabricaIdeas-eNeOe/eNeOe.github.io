@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:'Montserrat',sans-serif;
+  background:
+    linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.15)),
+    url('background.png');
+  background-size:cover;
+  background-attachment:fixed;
+}
+
+/* HEADER */
+.header{
+  text-align:center;
+  padding:80px 20px 30px;
+}
+
+/* 🔥 TITLE (REAL GLASS + FLOAT) */
+.title{
+  display:inline-block;
+  font-size:42px;
+  font-weight:800;
+  color:#0a4f73;
+  padding:18px 60px;
+
+  background:rgba(255,255,255,0.25);
+  backdrop-filter:blur(35px);
+  border-radius:30px;
+  border:1px solid rgba(255,255,255,0.6);
+
+  box-shadow:
+    0 10px 40px rgba(0,0,0,0.2),
+    inset 0 2px 6px rgba(255,255,255,0.4);
+
+  animation:float 6s ease-in-out infinite;
+}
+
+/* FLOAT ANIMATION */
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-8px)}
+}
+
+/* 🔥 FILTERS (FLOATING GLASS) */
+.filters{
+  text-align:center;
+  margin:25px 0 10px;
+}
+
+.filters button{
+  margin:6px;
+  padding:10px 22px;
+  border-radius:25px;
+
+  background:rgba(255,255,255,0.25);
+  backdrop-filter:blur(25px);
+  border:1px solid rgba(255,255,255,0.6);
+
+  color:#0a4f73;
+  font-weight:600;
+
+  cursor:pointer;
+  transition:all 0.3s ease;
+
+  animation:float 6s ease-in-out infinite;
+}
+
+.filters button:hover{
+  transform:scale(1.1);
+}
+
+.filters button.active{
+  background:#0a4f73;
+  color:white;
+  transform:scale(1.15);
+  box-shadow:0 8px 25px rgba(0,0,0,0.3);
+}
+
+/* MATCH */
+.match{
+  margin:50px 60px;
+}
+
+/* COVER */
+.cover{
+  height:260px;
+  border-radius:18px;
+  background-size:cover;
+  background-position:center;
+  display:flex;
+  align-items:flex-end;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 12px 30px rgba(0,0,0,0.3);
+}
+
+.cover::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    to top,
+    rgba(0,0,0,0.7),
+    rgba(0,0,0,0.2),
+    transparent
+  );
+}
+
+.cover span{
+  position:relative;
+  margin:15px;
+  padding:10px 20px;
+
+  background:rgba(255,255,255,0.3);
+  backdrop-filter:blur(15px);
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,0.5);
+
+  color:white;
+  font-weight:700;
+}
+
+/* GRID */
+.grid{
+  margin-top:15px;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:12px;
+}
+
+.grid img{
+  width:100%;
+  height:200px;
+  object-fit:cover;
+  border-radius:14px;
+  cursor:pointer;
+  transition:transform 0.25s ease;
+}
+
+.grid img:hover{
+  transform:scale(1.05);
+}
+
+/* LIGHTBOX */
+.lightbox{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.9);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.3s ease;
+}
+
+.lightbox.active{
+  opacity:1;
+  pointer-events:auto;
+}
+
+.lightbox img{
+  max-width:90%;
+  max-height:85%;
+}
+
+/* 🔥 FIXED FOOTER */
+.footer{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  padding:12px;
+
+  display:flex;
+  justify-content:center;
+  gap:30px;
+
+  background:rgba(255,255,255,0.25);
+  backdrop-filter:blur(25px);
+  border-top:1px solid rgba(255,255,255,0.5);
+
+  z-index:999;
+}
+
+.footer img{
+  height:40px;
+  opacity:0.9;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <div id="title" class="title"></div>
+</div>
+
+<div id="filters" class="filters"></div>
+
+<div id="gallery"></div>
+
+<div class="footer">
+  <img src="logo-olimpicos.png">
+  <img src="logo-club.png">
+  <img src="logo-aofm.png">
+</div>
+
+<div id="lightbox" class="lightbox" onclick="this.classList.remove('active')">
+  <img id="lightbox-img">
+</div>
+
+<script>
+
+const cloud="du4pmuch7";
+
+const params=new URLSearchParams(window.location.search);
+const category=params.get("cat")||"infmenor";
+
+document.getElementById("title").innerText=category.toUpperCase();
+
+const API=`https://wp-aofm-cdmx.vercel.app/api/images?folder=WP2026/CN2026/${category}/gallery`;
+
+let ALL=[];
+let currentRival="";
+let matches=[];
+let loadedIndex=0;
+const batchSize=2;
+
+async function load(){
+  const res=await fetch(API);
+  ALL=await res.json();
+  buildFilters();
+}
+
+function buildFilters(){
+  const rivals=new Set();
+
+  ALL.forEach(img=>{
+    rivals.add(img.split("_")[3]);
+  });
+
+  const f=document.getElementById("filters");
+  let first=true;
+
+  rivals.forEach(r=>{
+    const btn=document.createElement("button");
+    btn.innerText=r;
+
+    btn.onclick=()=>setRival(btn,r);
+
+    if(first){
+      btn.classList.add("active");
+      currentRival=r;
+      first=false;
+    }
+
+    f.appendChild(btn);
+  });
+
+  prepareMatches();
+}
+
+function prepareMatches(){
+
+  const filtered=ALL.filter(img=>img.includes(`_${currentRival}_`));
+  const groups={};
+
+  filtered.forEach(img=>{
+    const date=img.split("_")[4];
+    if(!groups[date]) groups[date]=[];
+    groups[date].push(img);
+  });
+
+  matches=Object.keys(groups).sort().map(date=>({
+    date,
+    images:groups[date]
+  }));
+
+  loadedIndex=0;
+  document.getElementById("gallery").innerHTML="";
+  loadMore();
+}
+
+function loadMore(){
+
+  const container=document.getElementById("gallery");
+
+  for(let i=0;i<batchSize;i++){
+
+    if(loadedIndex>=matches.length) return;
+
+    const match=matches[loadedIndex++];
+
+    const section=document.createElement("div");
+    section.className="match";
+
+    const cover=document.createElement("div");
+    cover.className="cover";
+
+    cover.style.backgroundImage=
+      `url(https://res.cloudinary.com/${cloud}/image/upload/w_800/${match.images[0]}.jpg)`;
+
+    cover.innerHTML=`<span>${currentRival} · ${match.date}</span>`;
+
+    const grid=document.createElement("div");
+    grid.className="grid";
+
+    match.images.forEach(id=>{
+      const url=`https://res.cloudinary.com/${cloud}/image/upload/w_400/${id}.jpg`;
+
+      const img=new Image();
+      img.src=url;
+
+      img.onclick=()=>{
+        document.getElementById("lightbox-img").src=url.replace("w_400","w_1200");
+        document.getElementById("lightbox").classList.add("active");
+      };
+
+      grid.appendChild(img);
+    });
+
+    section.appendChild(cover);
+    section.appendChild(grid);
+    container.appendChild(section);
+  }
+}
+
+window.addEventListener("scroll",()=>{
+  if(window.innerHeight + window.scrollY >= document.body.offsetHeight - 200){
+    loadMore();
+  }
+});
+
+function setRival(btn,r){
+  currentRival=r;
+  document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  prepareMatches();
+}
+
+window.onload=load;
+
+</script>
+
+</body>
+</html>
