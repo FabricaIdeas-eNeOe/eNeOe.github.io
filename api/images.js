@@ -1,4 +1,8 @@
 export default async function handler(req, res) {
+  // ✅ FIX CORS
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET");
+
   try {
     const cloud = "du4pmuch7";
     const apiKey = process.env.CLOUDINARY_API_KEY;
@@ -33,13 +37,14 @@ export default async function handler(req, res) {
       }
 
       allImages = allImages.concat(data.resources);
-
       nextCursor = data.next_cursor || null;
+
     } while (nextCursor);
 
     const images = allImages.map((r) => r.public_id);
 
     res.status(200).json(images);
+
   } catch (err) {
     res.status(500).json({
       error: err.message,
