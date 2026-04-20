@@ -3,157 +3,171 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Infantil Menor</title>
+<title>Gallery</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
-<link rel="icon" href="data:,">
 
 <style>
 body{
   margin:0;
   font-family:'Montserrat',sans-serif;
-  overflow-x:hidden;
-  background:
-    linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.15)),
-    url('background.png');
-  background-size:cover;
-  background-position:center;
-  background-attachment:fixed;
+  background:url('background.png') center/cover fixed;
 }
 
 .header{text-align:center;padding:80px 20px 40px;}
 .title{
-  display:inline-block;
-  font-size:42px;
-  font-weight:800;
-  color:#0a4f73;
-  padding:18px 60px;
-  background:rgba(255,255,255,0.25);
-  backdrop-filter:blur(25px);
-  border-radius:30px;
+  font-size:42px;font-weight:800;color:#0a4f73;
+  background:rgba(255,255,255,0.3);
+  padding:18px 60px;border-radius:30px;
 }
 
-.filters{text-align:center;margin:30px 0;}
-.filters button{
-  margin:6px;padding:10px 20px;border-radius:25px;
-  border:1px solid rgba(255,255,255,0.5);
-  background:rgba(255,255,255,0.2);
-  color:#0a4f73;font-weight:600;cursor:pointer;
+.filters{
+  text-align:center;
+  margin:30px 0;
 }
-.filters button.active{background:#0a4f73;color:white;}
+
+.filters button{
+  margin:6px;
+  padding:10px 20px;
+  border-radius:25px;
+  border:none;
+  background:#ddd;
+  cursor:pointer;
+}
+
+.filters button.active{
+  background:#0a4f73;
+  color:white;
+}
 
 .gallery{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-  gap:18px;padding:30px 60px 100px;
+  gap:18px;
+  padding:30px;
 }
 
 .gallery img{
-  width:100%;height:220px;object-fit:cover;
-  border-radius:16px;cursor:pointer;
+  width:100%;
+  height:220px;
+  object-fit:cover;
+  border-radius:12px;
 }
-
-.lightbox{
-  position:fixed;inset:0;background:rgba(0,0,0,0.92);
-  display:flex;align-items:center;justify-content:center;
-  opacity:0;pointer-events:none;transition:0.3s;
-}
-.lightbox.active{opacity:1;pointer-events:auto;}
-.lightbox img{max-width:90%;max-height:85%;}
-
-.footer{
-  position:fixed;bottom:0;width:100%;text-align:center;
-  padding:12px;background:rgba(255,255,255,0.85);
-}
-.footer img{height:40px;margin:0 12px;}
 </style>
 </head>
 
 <body>
 
 <div class="header">
-  <div class="title">Infantil Menor</div>
+  <div class="title" id="title">Gallery</div>
 </div>
 
-<div class="filters">
-  <button onclick="setRival(this,'GRO')" class="active">GRO</button>
-  <button onclick="setRival(this,'NLE')">NLE</button>
-  <button onclick="setRival(this,'MIC')">MIC</button>
-  <button onclick="setRival(this,'GTO')">GTO</button>
-</div>
+<div class="filters" id="filters"></div>
 
 <div id="gallery" class="gallery"></div>
 
-<div id="lightbox" class="lightbox" onclick="this.classList.remove('active')">
-  <img id="lightbox-img">
-</div>
-
-<div class="footer">
-  <img src="logo-aofm.png">
-  <img src="logo-club.png">
-  <img src="logo-olimpicos.png">
-</div>
-
 <script>
 const cloud="du4pmuch7";
-const base="WP2026/CN2026/infmenor/gallery";
+const base="WP2026/CN2026";
 
-/* 🔥 ONLY EDIT THIS */
-const matches = [
-  { rival: "GRO", date: "0319" },
-  { rival: "GTO", date: "0322" },
-  { rival: "NLE", date: "0404" }
-];
+/* 🔥 ONLY CHANGE THIS PER PAGE */
+const CATEGORY = "InfMnr";
 
-let currentRival="GRO";
+/* INTERNAL */
+let currentRival=null;
+let detectedRivals = {};
 
+/* SCAN IMAGES */
+function scanImages(){
+
+  const maxScan = 400;
+
+  for(let i=1;i<=maxScan;i++){
+
+    let n = String(i).padStart(3,"0");
+
+    const rivals = ["AGS","GRO","NLE","MIC","GTO","JAL","BCN","UNAM","IPN"];
+
+    rivals.forEach(rival=>{
+      const dates = ["0319","0320","0321","0322","0402","0404","0405"];
+
+      dates.forEach(date=>{
+
+        let src=`https://res.cloudinary.com/${cloud}/image/upload/${base}/infmenor/gallery/CN2026_${CATEGORY}_CDMX_${rival}_${date}_${n}.jpg`;
+
+        let img=new Image();
+
+        img.onload=()=>{
+          if(!detectedRivals[rival]) detectedRivals[rival]=new Set();
+          detectedRivals[rival].add(date);
+          buildFilters();
+        };
+
+        img.src=src;
+
+      });
+
+    });
+
+  }
+}
+
+/* BUILD FILTER BUTTONS */
+function buildFilters(){
+
+  const f=document.getElementById("filters");
+  f.innerHTML="";
+
+  Object.keys(detectedRivals).forEach(rival=>{
+
+    const btn=document.createElement("button");
+    btn.textContent=rival;
+
+    btn.onclick=()=>{
+      document.querySelectorAll("button").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      currentRival=rival;
+      loadImages();
+    };
+
+    f.appendChild(btn);
+  });
+
+}
+
+/* LOAD IMAGES */
 function loadImages(){
 
   const g=document.getElementById("gallery");
   g.innerHTML="";
 
-  matches
-    .filter(m => m.rival === currentRival)
-    .forEach(match => {
+  const dates = detectedRivals[currentRival] || [];
 
-      let failCount = 0;
+  dates.forEach(date=>{
 
-      for(let i=1;i<=300;i++){
+    for(let i=1;i<=300;i++){
 
-        let n = String(i).padStart(3,"0");
+      let n = String(i).padStart(3,"0");
 
-        let src = `https://res.cloudinary.com/${cloud}/image/upload/f_auto,q_auto/${base}/CN2026_InfMnr_CDMX_${match.rival}_${match.date}_${n}.jpg`;
+      let src=`https://res.cloudinary.com/${cloud}/image/upload/f_auto,q_auto/${base}/infmenor/gallery/CN2026_${CATEGORY}_CDMX_${currentRival}_${date}_${n}.jpg`;
 
-        let img = new Image();
-        img.src = src;
-        img.loading = "lazy";
+      let img=new Image();
+      img.src=src;
+      img.loading="lazy";
 
-        img.onerror = () => {
-          img.remove();
-          failCount++;
-        };
+      img.onerror=()=>img.remove();
 
-        img.onload = () => {
-          img.onclick = () => {
-            document.getElementById("lightbox-img").src = src;
-            document.getElementById("lightbox").classList.add("active");
-          };
-        };
+      g.appendChild(img);
+    }
 
-        g.appendChild(img);
-      }
+  });
 
-    });
 }
 
-function setRival(btn,rival){
-  currentRival=rival;
-  document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-  loadImages();
-}
-
-window.onload=loadImages;
+window.onload=()=>{
+  document.getElementById("title").textContent=CATEGORY;
+  scanImages();
+};
 </script>
 
 </body>
