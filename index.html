@@ -204,12 +204,15 @@ body{
 <body>
 
 <div class="header">
-  <div id="title" class="title"></div>
+  <div id="title" class="title">AOFM CDMX</div>
 </div>
 
-<div id="filters" class="filters"></div>
-
-<div id="gallery"></div>
+<div class="filters">
+  <button onclick="go('infmenor')">INF MENOR</button>
+  <button onclick="go('infmayor')">INF MAYOR</button>
+  <button onclick="go('juvenil')">JUVENIL</button>
+  <button onclick="go('junior')">JUNIOR</button>
+</div>
 
 <div class="footer">
   <img src="logo-olimpicos.png">
@@ -217,151 +220,11 @@ body{
   <img src="logo-aofm.png">
 </div>
 
-<div id="lightbox" class="lightbox" onclick="this.classList.remove('active')">
-  <img id="lightbox-img">
-</div>
-
 <script>
 
-const cloud="du4pmuch7";
-
-const params=new URLSearchParams(window.location.search);
-const category=params.get("cat");
-
-// 🔒 BLOCK direct access (no ?cat)
-const validCats = ["infmenor","infmayor","juvenil","junior"];
-
-if(!category || !validCats.includes(category)){
-  document.body.innerHTML="";
-  document.body.style.background="#0b2c3d";
-  throw new Error("Blocked access");
+function go(cat){
+  window.location.href = `gallery.html?cat=${cat}`;
 }
-
-// NORMAL FLOW CONTINUES
-
-document.getElementById("title").innerText=category.toUpperCase();
-
-const API=`https://wp-aofm-cdmx.vercel.app/api/images?folder=WP2026/CN2026/${category}/gallery`;
-
-let ALL=[];
-let currentRival="";
-let matches=[];
-let loadedIndex=0;
-const batchSize=2;
-
-async function load(){
-  const res=await fetch(API);
-  ALL=await res.json();
-  buildFilters();
-}
-
-function buildFilters(){
-  const rivals=new Set();
-
-  ALL.forEach(img=>{
-    rivals.add(img.split("_")[3]);
-  });
-
-  const f=document.getElementById("filters");
-  let first=true;
-
-  rivals.forEach(r=>{
-    const btn=document.createElement("button");
-    btn.innerText=r;
-
-    btn.onclick=()=>setRival(btn,r);
-
-    if(first){
-      btn.classList.add("active");
-      currentRival=r;
-      first=false;
-    }
-
-    f.appendChild(btn);
-  });
-
-  prepareMatches();
-}
-
-function prepareMatches(){
-
-  const filtered=ALL.filter(img=>img.includes(`_${currentRival}_`));
-  const groups={};
-
-  filtered.forEach(img=>{
-    const date=img.split("_")[4];
-    if(!groups[date]) groups[date]=[];
-    groups[date].push(img);
-  });
-
-  matches=Object.keys(groups).sort().map(date=>({
-    date,
-    images:groups[date]
-  }));
-
-  loadedIndex=0;
-  document.getElementById("gallery").innerHTML="";
-  loadMore();
-}
-
-function loadMore(){
-
-  const container=document.getElementById("gallery");
-
-  for(let i=0;i<batchSize;i++){
-
-    if(loadedIndex>=matches.length) return;
-
-    const match=matches[loadedIndex++];
-
-    const section=document.createElement("div");
-    section.className="match";
-
-    const cover=document.createElement("div");
-    cover.className="cover";
-
-    cover.style.backgroundImage=
-      `url(https://res.cloudinary.com/${cloud}/image/upload/w_800/${match.images[0]}.jpg)`;
-
-    cover.innerHTML=`<span>${currentRival} · ${match.date}</span>`;
-
-    const grid=document.createElement("div");
-    grid.className="grid";
-
-    match.images.forEach(id=>{
-      const url=`https://res.cloudinary.com/${cloud}/image/upload/w_400/${id}.jpg`;
-
-      const img=new Image();
-      img.src=url;
-
-      img.onclick=()=>{
-        document.getElementById("lightbox-img").src=url.replace("w_400","w_1200");
-        document.getElementById("lightbox").classList.add("active");
-      };
-
-      grid.appendChild(img);
-    });
-
-    section.appendChild(cover);
-    section.appendChild(grid);
-    container.appendChild(section);
-  }
-}
-
-window.addEventListener("scroll",()=>{
-  if(window.innerHeight + window.scrollY >= document.body.offsetHeight - 200){
-    loadMore();
-  }
-});
-
-function setRival(btn,r){
-  currentRival=r;
-  document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-  prepareMatches();
-}
-
-window.onload=load;
 
 </script>
 
