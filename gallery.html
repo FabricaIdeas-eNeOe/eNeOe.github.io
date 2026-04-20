@@ -20,36 +20,79 @@ body{
 }
 
 /* HEADER */
-.header{text-align:center;padding:80px 20px 40px;}
+.header{
+  text-align:center;
+  padding:80px 20px 40px;
+}
 
+/* 🔥 GLASS TITLE + ANIMATION */
 .title{
   display:inline-block;
   font-size:42px;
   font-weight:800;
   color:#0a4f73;
   padding:18px 60px;
+
   background:rgba(255,255,255,0.25);
   backdrop-filter:blur(25px);
   border-radius:30px;
+  border:1px solid rgba(255,255,255,0.4);
+
+  box-shadow:0 8px 30px rgba(0,0,0,0.15);
+
+  animation:fadeSlide 1s ease;
 }
 
-/* FILTERS */
-.filters{text-align:center;margin:30px 0;}
+/* ANIMATION */
+@keyframes fadeSlide{
+  from{
+    opacity:0;
+    transform:translateY(-20px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+/* 🔥 FILTER TABS (GLASS STYLE) */
+.filters{
+  text-align:center;
+  margin:30px 0;
+}
+
 .filters button{
   margin:6px;
-  padding:10px 20px;
+  padding:10px 22px;
   border-radius:25px;
-  background:rgba(255,255,255,0.2);
-  border:none;
+
+  background:rgba(255,255,255,0.25);
+  backdrop-filter:blur(15px);
+  border:1px solid rgba(255,255,255,0.4);
+
+  color:#0a4f73;
+  font-weight:600;
+
   cursor:pointer;
+  transition:all 0.3s ease;
 }
+
+.filters button:hover{
+  transform:scale(1.05);
+  background:rgba(255,255,255,0.4);
+}
+
 .filters button.active{
   background:#0a4f73;
   color:white;
+  transform:scale(1.08);
+  box-shadow:0 6px 20px rgba(0,0,0,0.25);
 }
 
 /* MATCH */
-.match{margin:50px 60px}
+.match{
+  margin:50px 60px;
+}
 
 /* 🔥 COVER WITH BLUR OVERLAY */
 .cover{
@@ -82,10 +125,12 @@ body{
   position:relative;
   margin:15px;
   padding:10px 20px;
+
   background:rgba(255,255,255,0.25);
   backdrop-filter:blur(12px);
   border-radius:20px;
   border:1px solid rgba(255,255,255,0.4);
+
   color:white;
   font-weight:700;
   font-size:16px;
@@ -105,6 +150,11 @@ body{
   object-fit:cover;
   border-radius:14px;
   cursor:pointer;
+  transition:transform 0.25s ease;
+}
+
+.grid img:hover{
+  transform:scale(1.05);
 }
 
 /* LIGHTBOX */
@@ -117,6 +167,7 @@ body{
   justify-content:center;
   opacity:0;
   pointer-events:none;
+  transition:opacity 0.3s ease;
 }
 
 .lightbox.active{
@@ -224,7 +275,7 @@ function prepareMatches(){
   loadMore();
 }
 
-/* LOAD MORE (INFINITE SCROLL) */
+/* INFINITE SCROLL */
 function loadMore(){
 
   const container=document.getElementById("gallery");
@@ -233,16 +284,14 @@ function loadMore(){
 
     if(loadedIndex>=matches.length) return;
 
-    const match=matches[loadedIndex];
-    loadedIndex++;
-
+    const match=matches[loadedIndex++];
     const section=document.createElement("div");
     section.className="match";
 
-    const firstImage=match.images[0];
-
     const cover=document.createElement("div");
     cover.className="cover";
+
+    const firstImage=match.images[0];
     cover.style.backgroundImage=
       `url(https://res.cloudinary.com/${cloud}/image/upload/w_800/${firstImage}.jpg)`;
 
@@ -271,7 +320,6 @@ function loadMore(){
   }
 }
 
-/* SCROLL */
 window.addEventListener("scroll",()=>{
   if(window.innerHeight + window.scrollY >= document.body.offsetHeight - 200){
     loadMore();
@@ -286,7 +334,7 @@ function formatDate(d){
   return `${day} ${map[month]||month}`;
 }
 
-/* FILTER CHANGE */
+/* FILTER SWITCH */
 function setRival(btn,r){
   currentRival=r;
   document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
