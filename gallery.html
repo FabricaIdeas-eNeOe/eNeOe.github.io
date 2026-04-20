@@ -8,6 +8,9 @@
 
 <style>
 
+/* RESET CACHE SAFE */
+*{box-sizing:border-box}
+
 /* BACKGROUND */
 body{
   margin:0;
@@ -25,37 +28,31 @@ body{
   padding:80px 20px 40px;
 }
 
-/* 🔥 GLASS TITLE + ANIMATION */
+/* 🔥 TITLE (FORCED GLASS STYLE) */
 .title{
-  display:inline-block;
-  font-size:42px;
-  font-weight:800;
-  color:#0a4f73;
-  padding:18px 60px;
+  display:inline-block !important;
+  font-size:42px !important;
+  font-weight:800 !important;
+  color:#0a4f73 !important;
+  padding:18px 60px !important;
 
-  background:rgba(255,255,255,0.25);
-  backdrop-filter:blur(25px);
-  border-radius:30px;
-  border:1px solid rgba(255,255,255,0.4);
+  background:rgba(255,255,255,0.35) !important;
+  backdrop-filter:blur(30px) !important;
+  border-radius:30px !important;
+  border:1px solid rgba(255,255,255,0.5) !important;
 
-  box-shadow:0 8px 30px rgba(0,0,0,0.15);
+  box-shadow:0 10px 35px rgba(0,0,0,0.2) !important;
 
   animation:fadeSlide 1s ease;
 }
 
 /* ANIMATION */
 @keyframes fadeSlide{
-  from{
-    opacity:0;
-    transform:translateY(-20px);
-  }
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
+  from{opacity:0;transform:translateY(-25px);}
+  to{opacity:1;transform:translateY(0);}
 }
 
-/* 🔥 FILTER TABS (GLASS STYLE) */
+/* 🔥 FILTERS */
 .filters{
   text-align:center;
   margin:30px 0;
@@ -66,9 +63,9 @@ body{
   padding:10px 22px;
   border-radius:25px;
 
-  background:rgba(255,255,255,0.25);
-  backdrop-filter:blur(15px);
-  border:1px solid rgba(255,255,255,0.4);
+  background:rgba(255,255,255,0.3);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.5);
 
   color:#0a4f73;
   font-weight:600;
@@ -78,15 +75,15 @@ body{
 }
 
 .filters button:hover{
-  transform:scale(1.05);
-  background:rgba(255,255,255,0.4);
+  transform:scale(1.08);
+  background:rgba(255,255,255,0.5);
 }
 
 .filters button.active{
   background:#0a4f73;
   color:white;
-  transform:scale(1.08);
-  box-shadow:0 6px 20px rgba(0,0,0,0.25);
+  transform:scale(1.1);
+  box-shadow:0 6px 20px rgba(0,0,0,0.3);
 }
 
 /* MATCH */
@@ -94,7 +91,7 @@ body{
   margin:50px 60px;
 }
 
-/* 🔥 COVER WITH BLUR OVERLAY */
+/* COVER */
 .cover{
   height:260px;
   border-radius:18px;
@@ -107,33 +104,31 @@ body{
   box-shadow:0 12px 30px rgba(0,0,0,0.3);
 }
 
-/* DARK GRADIENT */
 .cover::before{
   content:"";
   position:absolute;
   inset:0;
   background:linear-gradient(
     to top,
-    rgba(0,0,0,0.65),
+    rgba(0,0,0,0.7),
     rgba(0,0,0,0.2),
     transparent
   );
 }
 
-/* GLASS LABEL */
+/* LABEL */
 .cover span{
   position:relative;
   margin:15px;
   padding:10px 20px;
 
-  background:rgba(255,255,255,0.25);
-  backdrop-filter:blur(12px);
+  background:rgba(255,255,255,0.3);
+  backdrop-filter:blur(15px);
   border-radius:20px;
-  border:1px solid rgba(255,255,255,0.4);
+  border:1px solid rgba(255,255,255,0.5);
 
   color:white;
   font-weight:700;
-  font-size:16px;
 }
 
 /* GRID */
@@ -180,6 +175,21 @@ body{
   max-height:85%;
 }
 
+/* 🔥 FOOTER LOGOS (RESTORED) */
+.footer{
+  margin-top:80px;
+  padding:30px;
+  text-align:center;
+
+  background:rgba(255,255,255,0.3);
+  backdrop-filter:blur(20px);
+}
+
+.footer img{
+  height:50px;
+  margin:0 15px;
+}
+
 </style>
 </head>
 
@@ -192,6 +202,13 @@ body{
 <div id="filters" class="filters"></div>
 
 <div id="gallery"></div>
+
+<!-- 🔥 FOOTER BACK -->
+<div class="footer">
+  <img src="logo-olimpicos.png">
+  <img src="logo-club.png">
+  <img src="logo-aofm.png">
+</div>
 
 <div id="lightbox" class="lightbox" onclick="this.classList.remove('active')">
   <img id="lightbox-img">
@@ -214,24 +231,20 @@ let matches=[];
 let loadedIndex=0;
 const batchSize=2;
 
-/* LOAD */
 async function load(){
   const res=await fetch(API);
   ALL=await res.json();
   buildFilters();
 }
 
-/* FILTERS */
 function buildFilters(){
   const rivals=new Set();
 
   ALL.forEach(img=>{
-    const p=img.split("_");
-    rivals.add(p[3]);
+    rivals.add(img.split("_")[3]);
   });
 
   const f=document.getElementById("filters");
-
   let first=true;
 
   rivals.forEach(r=>{
@@ -252,11 +265,9 @@ function buildFilters(){
   prepareMatches();
 }
 
-/* GROUP */
 function prepareMatches(){
 
   const filtered=ALL.filter(img=>img.includes(`_${currentRival}_`));
-
   const groups={};
 
   filtered.forEach(img=>{
@@ -275,7 +286,6 @@ function prepareMatches(){
   loadMore();
 }
 
-/* INFINITE SCROLL */
 function loadMore(){
 
   const container=document.getElementById("gallery");
@@ -285,17 +295,17 @@ function loadMore(){
     if(loadedIndex>=matches.length) return;
 
     const match=matches[loadedIndex++];
+
     const section=document.createElement("div");
     section.className="match";
 
     const cover=document.createElement("div");
     cover.className="cover";
 
-    const firstImage=match.images[0];
     cover.style.backgroundImage=
-      `url(https://res.cloudinary.com/${cloud}/image/upload/w_800/${firstImage}.jpg)`;
+      `url(https://res.cloudinary.com/${cloud}/image/upload/w_800/${match.images[0]}.jpg)`;
 
-    cover.innerHTML=`<span>${currentRival} · ${formatDate(match.date)}</span>`;
+    cover.innerHTML=`<span>${currentRival} · ${match.date}</span>`;
 
     const grid=document.createElement("div");
     grid.className="grid";
@@ -326,15 +336,6 @@ window.addEventListener("scroll",()=>{
   }
 });
 
-/* DATE FORMAT */
-function formatDate(d){
-  const day=d.slice(2);
-  const month=d.slice(0,2);
-  const map={ "03":"MAR","04":"APR" };
-  return `${day} ${map[month]||month}`;
-}
-
-/* FILTER SWITCH */
 function setRival(btn,r){
   currentRival=r;
   document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
