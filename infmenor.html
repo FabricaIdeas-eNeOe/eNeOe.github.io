@@ -3,25 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Infantil Menor</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
-<link rel="icon" href="data:,">
 
 <style>
+
+/* RESET CACHE SAFE */
+*{box-sizing:border-box}
 
 /* BACKGROUND */
 body{
   margin:0;
   font-family:'Montserrat',sans-serif;
-  overflow-x:hidden;
-
   background:
     linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.15)),
     url('background.png');
-
   background-size:cover;
-  background-position:center;
   background-attachment:fixed;
 }
 
@@ -31,20 +28,31 @@ body{
   padding:80px 20px 40px;
 }
 
-/* TITLE */
+/* 🔥 TITLE (FORCED GLASS STYLE) */
 .title{
-  display:inline-block;
-  font-size:42px;
-  font-weight:800;
-  color:#0a4f73;
-  padding:18px 60px;
-  background:rgba(255,255,255,0.25);
-  backdrop-filter:blur(25px);
-  border-radius:30px;
-  border:1px solid rgba(255,255,255,0.6);
+  display:inline-block !important;
+  font-size:42px !important;
+  font-weight:800 !important;
+  color:#0a4f73 !important;
+  padding:18px 60px !important;
+
+  background:rgba(255,255,255,0.35) !important;
+  backdrop-filter:blur(30px) !important;
+  border-radius:30px !important;
+  border:1px solid rgba(255,255,255,0.5) !important;
+
+  box-shadow:0 10px 35px rgba(0,0,0,0.2) !important;
+
+  animation:fadeSlide 1s ease;
 }
 
-/* FILTERS */
+/* ANIMATION */
+@keyframes fadeSlide{
+  from{opacity:0;transform:translateY(-25px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* 🔥 FILTERS */
 .filters{
   text-align:center;
   margin:30px 0;
@@ -52,40 +60,95 @@ body{
 
 .filters button{
   margin:6px;
-  padding:10px 20px;
+  padding:10px 22px;
   border-radius:25px;
+
+  background:rgba(255,255,255,0.3);
+  backdrop-filter:blur(20px);
   border:1px solid rgba(255,255,255,0.5);
-  background:rgba(255,255,255,0.2);
-  backdrop-filter:blur(12px);
+
   color:#0a4f73;
   font-weight:600;
+
   cursor:pointer;
+  transition:all 0.3s ease;
+}
+
+.filters button:hover{
+  transform:scale(1.08);
+  background:rgba(255,255,255,0.5);
 }
 
 .filters button.active{
   background:#0a4f73;
   color:white;
+  transform:scale(1.1);
+  box-shadow:0 6px 20px rgba(0,0,0,0.3);
 }
 
-/* GALLERY */
-.gallery{
+/* MATCH */
+.match{
+  margin:50px 60px;
+}
+
+/* COVER */
+.cover{
+  height:260px;
+  border-radius:18px;
+  background-size:cover;
+  background-position:center;
+  display:flex;
+  align-items:flex-end;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 12px 30px rgba(0,0,0,0.3);
+}
+
+.cover::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    to top,
+    rgba(0,0,0,0.7),
+    rgba(0,0,0,0.2),
+    transparent
+  );
+}
+
+/* LABEL */
+.cover span{
+  position:relative;
+  margin:15px;
+  padding:10px 20px;
+
+  background:rgba(255,255,255,0.3);
+  backdrop-filter:blur(15px);
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,0.5);
+
+  color:white;
+  font-weight:700;
+}
+
+/* GRID */
+.grid{
+  margin-top:15px;
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-  gap:18px;
-  padding:30px 60px 100px;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:12px;
 }
 
-.gallery img{
+.grid img{
   width:100%;
-  height:220px;
+  height:200px;
   object-fit:cover;
-  border-radius:16px;
+  border-radius:14px;
   cursor:pointer;
-  transition:0.3s;
-  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+  transition:transform 0.25s ease;
 }
 
-.gallery img:hover{
+.grid img:hover{
   transform:scale(1.05);
 }
 
@@ -93,13 +156,13 @@ body{
 .lightbox{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.92);
+  background:rgba(0,0,0,0.9);
   display:flex;
   align-items:center;
   justify-content:center;
   opacity:0;
   pointer-events:none;
-  transition:0.3s;
+  transition:opacity 0.3s ease;
 }
 
 .lightbox.active{
@@ -112,19 +175,19 @@ body{
   max-height:85%;
 }
 
-/* FOOTER */
+/* 🔥 FOOTER LOGOS (RESTORED) */
 .footer{
-  position:fixed;
-  bottom:0;
-  width:100%;
+  margin-top:80px;
+  padding:30px;
   text-align:center;
-  padding:12px;
-  background:rgba(255,255,255,0.85);
+
+  background:rgba(255,255,255,0.3);
+  backdrop-filter:blur(20px);
 }
 
 .footer img{
-  height:40px;
-  margin:0 12px;
+  height:50px;
+  margin:0 15px;
 }
 
 </style>
@@ -133,84 +196,154 @@ body{
 <body>
 
 <div class="header">
-  <div class="title">Infantil Menor</div>
+  <div id="title" class="title"></div>
 </div>
 
-<div class="filters">
-  <button onclick="setRival(this,'GRO')" class="active">GRO</button>
-  <button onclick="setRival(this,'NLE')">NLE</button>
-  <button onclick="setRival(this,'MIC')">MIC</button>
-  <button onclick="setRival(this,'GTO')">GTO</button>
-</div>
+<div id="filters" class="filters"></div>
 
-<div id="gallery" class="gallery"></div>
+<div id="gallery"></div>
 
-<div id="lightbox" class="lightbox" onclick="closeLightbox()">
-  <img id="lightbox-img">
-</div>
-
+<!-- 🔥 FOOTER BACK -->
 <div class="footer">
-  <img src="logo-aofm.png">
-  <img src="logo-club.png">
   <img src="logo-olimpicos.png">
+  <img src="logo-club.png">
+  <img src="logo-aofm.png">
+</div>
+
+<div id="lightbox" class="lightbox" onclick="this.classList.remove('active')">
+  <img id="lightbox-img">
 </div>
 
 <script>
 
-const API = "https://wp-aofm-cdmx.vercel.app/api/images?folder=WP2026/CN2026/infmenor/gallery";
+const cloud="du4pmuch7";
 
-let ALL_IMAGES = [];
-let currentRival = "GRO";
+const params=new URLSearchParams(window.location.search);
+const category=params.get("cat")||"infmenor";
 
-async function loadFromAPI(){
-  const res = await fetch(API);
-  ALL_IMAGES = await res.json();
-  render();
+document.getElementById("title").innerText=category.toUpperCase();
+
+const API=`https://wp-aofm-cdmx.vercel.app/api/images?folder=WP2026/CN2026/${category}/gallery`;
+
+let ALL=[];
+let currentRival="";
+let matches=[];
+let loadedIndex=0;
+const batchSize=2;
+
+async function load(){
+  const res=await fetch(API);
+  ALL=await res.json();
+  buildFilters();
 }
 
-function render(){
+function buildFilters(){
+  const rivals=new Set();
 
-  const g = document.getElementById("gallery");
-  g.innerHTML = "";
-
-  const filtered = ALL_IMAGES.filter(img =>
-    img.includes(`_${currentRival}_`)
-  );
-
-  filtered.forEach(public_id => {
-
-    const url = `https://res.cloudinary.com/du4pmuch7/image/upload/f_auto,q_auto,w_400/${public_id}.jpg`;
-
-    let img = new Image();
-    img.src = url;
-    img.loading = "lazy";
-
-    img.onclick = () => {
-      document.getElementById("lightbox-img").src =
-        url.replace("w_400","w_1200");
-      document.getElementById("lightbox").classList.add("active");
-    };
-
-    g.appendChild(img);
+  ALL.forEach(img=>{
+    rivals.add(img.split("_")[3]);
   });
+
+  const f=document.getElementById("filters");
+  let first=true;
+
+  rivals.forEach(r=>{
+    const btn=document.createElement("button");
+    btn.innerText=r;
+
+    btn.onclick=()=>setRival(btn,r);
+
+    if(first){
+      btn.classList.add("active");
+      currentRival=r;
+      first=false;
+    }
+
+    f.appendChild(btn);
+  });
+
+  prepareMatches();
 }
 
-function setRival(btn, rival){
-  currentRival = rival;
+function prepareMatches(){
 
-  document.querySelectorAll(".filters button")
-    .forEach(b => b.classList.remove("active"));
+  const filtered=ALL.filter(img=>img.includes(`_${currentRival}_`));
+  const groups={};
 
+  filtered.forEach(img=>{
+    const date=img.split("_")[4];
+    if(!groups[date]) groups[date]=[];
+    groups[date].push(img);
+  });
+
+  matches=Object.keys(groups).sort().map(date=>({
+    date,
+    images:groups[date]
+  }));
+
+  loadedIndex=0;
+  document.getElementById("gallery").innerHTML="";
+  loadMore();
+}
+
+function loadMore(){
+
+  const container=document.getElementById("gallery");
+
+  for(let i=0;i<batchSize;i++){
+
+    if(loadedIndex>=matches.length) return;
+
+    const match=matches[loadedIndex++];
+
+    const section=document.createElement("div");
+    section.className="match";
+
+    const cover=document.createElement("div");
+    cover.className="cover";
+
+    cover.style.backgroundImage=
+      `url(https://res.cloudinary.com/${cloud}/image/upload/w_800/${match.images[0]}.jpg)`;
+
+    cover.innerHTML=`<span>${currentRival} · ${match.date}</span>`;
+
+    const grid=document.createElement("div");
+    grid.className="grid";
+
+    match.images.forEach(id=>{
+      const url=`https://res.cloudinary.com/${cloud}/image/upload/w_400/${id}.jpg`;
+
+      const img=new Image();
+      img.src=url;
+
+      img.onclick=()=>{
+        document.getElementById("lightbox-img").src=url.replace("w_400","w_1200");
+        document.getElementById("lightbox").classList.add("active");
+      };
+
+      grid.appendChild(img);
+    });
+
+    section.appendChild(cover);
+    section.appendChild(grid);
+    container.appendChild(section);
+  }
+}
+
+window.addEventListener("scroll",()=>{
+  if(window.innerHeight + window.scrollY >= document.body.offsetHeight - 200){
+    loadMore();
+  }
+});
+
+function setRival(btn,r){
+  currentRival=r;
+  document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");
-
-  render();
+  prepareMatches();
 }
 
-function closeLightbox(){
-  document.getElementById("lightbox").classList.remove("active");
-}
-
-window.onload = loadFromAPI;
+window.onload=load;
 
 </script>
 
