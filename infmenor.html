@@ -5,151 +5,234 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Infantil Menor</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
+<link rel="icon" href="data:,">
+
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #111;
-  color: white;
+body{
+  margin:0;
+  font-family:'Montserrat',sans-serif;
+  overflow-x:hidden;
+  background:
+    linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.15)),
+    url('background.png');
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
 }
 
-h1 {
-  text-align: center;
-  padding: 20px;
-  margin: 0;
+.header{
+  text-align:center;
+  padding:80px 20px 40px;
 }
 
-.gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 10px;
-  padding: 10px;
+.title{
+  display:inline-block;
+  font-size:42px;
+  font-weight:800;
+  color:#0a4f73;
+  padding:18px 60px;
+  background:rgba(255,255,255,0.25);
+  backdrop-filter:blur(25px);
+  border-radius:30px;
+  border:1px solid rgba(255,255,255,0.6);
 }
 
-.gallery img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  cursor: pointer;
+.filters{
+  text-align:center;
+  margin:30px 0;
 }
 
-.lightbox {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.95);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
+.filters button{
+  margin:6px;
+  padding:10px 20px;
+  border-radius:25px;
+  border:1px solid rgba(255,255,255,0.5);
+  background:rgba(255,255,255,0.2);
+  backdrop-filter:blur(12px);
+  color:#0a4f73;
+  font-weight:600;
+  cursor:pointer;
 }
 
-.lightbox img {
-  max-width: 90%;
-  max-height: 80%;
+.filters button.active{
+  background:#0a4f73;
+  color:white;
 }
 
-.lightbox button {
-  margin-top: 20px;
-  padding: 10px 20px;
-  border: none;
-  background: white;
-  cursor: pointer;
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:18px;
+  padding:30px 60px 100px;
 }
 
-.status {
-  text-align: center;
-  padding: 20px;
-  color: #aaa;
+.gallery img{
+  width:100%;
+  height:220px;
+  object-fit:cover;
+  border-radius:16px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.gallery img:hover{
+  transform:scale(1.05);
+}
+
+.lightbox{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.92);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  pointer-events:none;
+  transition:0.3s;
+}
+
+.lightbox.active{
+  opacity:1;
+  pointer-events:auto;
+}
+
+.lightbox img{
+  max-width:90%;
+  max-height:85%;
+}
+
+.close{
+  position:absolute;
+  top:20px;
+  right:30px;
+  color:white;
+  font-size:30px;
+  cursor:pointer;
+}
+
+.footer{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  text-align:center;
+  padding:12px;
+  background:rgba(255,255,255,0.85);
+}
+
+.footer img{
+  height:40px;
+  margin:0 12px;
 }
 </style>
 </head>
 
 <body>
 
-<h1>Infantil Menor</h1>
-<div class="status" id="status">Cargando galería...</div>
-<div class="gallery" id="gallery"></div>
+<div class="header">
+  <div class="title">Infantil Menor</div>
+</div>
 
-<div class="lightbox" id="lightbox">
+<div class="filters">
+  <button onclick="setRival(this,'GRO')" class="active">GRO</button>
+  <button onclick="setRival(this,'NLE')">NLE</button>
+  <button onclick="setRival(this,'MIC')">MIC</button>
+  <button onclick="setRival(this,'GTO')">GTO</button>
+</div>
+
+<div id="gallery" class="gallery"></div>
+
+<div id="lightbox" class="lightbox" onclick="closeLightbox()">
+  <span class="close">✕</span>
   <img id="lightbox-img">
-  <button id="downloadBtn">Descargar</button>
+</div>
+
+<div class="footer">
+  <img src="logo-aofm.png">
+  <img src="logo-club.png">
+  <img src="logo-olimpicos.png">
 </div>
 
 <script>
-/* =========================
-   🔧 CONFIG (YA CONFIGURADO)
-========================= */
+const cloud="du4pmuch7";
+const base="WP2026/CN2026/infmenor/gallery";
 
-const CLOUD_NAME = "du4pmuch7";
+let currentRival="GRO";
+let loading=false;
 
-const BASE_PATH = "WP2026/CN2026/infmenor/gallery/";
-const DOWNLOAD_PATH = "WP2026/CN2026/infmenor/download/";
+/* 🔥 LOAD IMAGES UNTIL THEY STOP EXISTING */
+function loadImages(){
 
-const JSON_FILE = "images-infmenor.json";
+  if(loading) return;
+  loading=true;
 
-/* =========================
-   ⚙️ SYSTEM
-========================= */
+  const g=document.getElementById("gallery");
+  g.innerHTML="";
 
-const CLOUD_BASE = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/`;
-const OPT = "f_auto,q_auto,w_800/";
+  const dates=["0319","0320","0321","0322"];
 
-const gallery = document.getElementById("gallery");
-const status = document.getElementById("status");
-const lightbox = document.getElementById("lightbox");
-const lightboxImg = document.getElementById("lightbox-img");
-const downloadBtn = document.getElementById("downloadBtn");
+  dates.forEach(date=>{
 
-let currentImage = "";
+    let i=1;
+    let fails=0;
 
-/* LOAD JSON */
-fetch(JSON_FILE)
-  .then(res => {
-    if (!res.ok) throw new Error("JSON no encontrado");
-    return res.json();
-  })
-  .then(images => {
-    if (!Array.isArray(images)) throw new Error("JSON inválido");
+    function loadNext(){
 
-    status.textContent = "";
+      if(fails>15) return; // stop when no more images
 
-    images.forEach(img => {
-      const el = document.createElement("img");
+      let n=String(i).padStart(3,"0");
 
-      el.src = CLOUD_BASE + OPT + BASE_PATH + img;
-      el.loading = "lazy";
+      let src=`https://res.cloudinary.com/${cloud}/image/upload/${base}/CN2026_InfMnr_CDMX_${currentRival}_${date}_${n}.jpg`;
 
-      el.onclick = () => {
-        currentImage = img;
-        lightboxImg.src = CLOUD_BASE + BASE_PATH + img;
-        lightbox.style.display = "flex";
+      let img=new Image();
+      img.src=src;
+      img.loading="lazy";
+
+      img.onload=()=>{
+        fails=0;
+
+        img.onclick=()=>{
+          document.getElementById("lightbox-img").src=src;
+          document.getElementById("lightbox").classList.add("active");
+        };
+
+        g.appendChild(img);
+
+        i++;
+        loadNext();
       };
 
-      gallery.appendChild(el);
-    });
-  })
-  .catch(err => {
-    console.error(err);
-    status.textContent = "⚠️ Error cargando la galería";
+      img.onerror=()=>{
+        fails++;
+        i++;
+        loadNext();
+      };
+    }
+
+    loadNext();
+
   });
 
-/* DOWNLOAD */
-downloadBtn.onclick = () => {
-  const link = document.createElement("a");
-  link.href = CLOUD_BASE + DOWNLOAD_PATH + currentImage;
-  link.download = currentImage;
-  link.click();
-};
+  loading=false;
+}
 
-/* CLOSE LIGHTBOX */
-lightbox.onclick = (e) => {
-  if (e.target !== lightboxImg && e.target !== downloadBtn) {
-    lightbox.style.display = "none";
-  }
-};
+function closeLightbox(){
+  document.getElementById("lightbox").classList.remove("active");
+}
+
+function setRival(btn,rival){
+
+  currentRival=rival;
+
+  document.querySelectorAll(".filters button")
+    .forEach(b=>b.classList.remove("active"));
+
+  btn.classList.add("active");
+
+  loadImages();
+}
+
+window.onload=loadImages;
 </script>
 
 </body>
