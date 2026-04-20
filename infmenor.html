@@ -59,7 +59,7 @@ const FOLDER = "WP2026/CN2026/infmenor/gallery";
 
 async function loadImages() {
 
-  const res = await fetch(`/api/images?folder=${FOLDER}`);
+  const res = await fetch(`https://wp-aofm-cdmx.vercel.app/api/images?folder=${FOLDER}`);
   const images = await res.json();
 
   // 🔥 GROUP BY RIVAL
