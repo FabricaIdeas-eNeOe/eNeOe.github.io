@@ -14,86 +14,30 @@ body{
   margin:0;
   font-family:'Montserrat',sans-serif;
   background:
-    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.25), transparent 40%),
-    radial-gradient(circle at 80% 30%, rgba(255,255,255,0.2), transparent 40%),
+    linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.15)),
     url('background.png');
   background-size:cover;
   background-attachment:fixed;
 }
 
-/* PARALLAX LIGHT */
-.light{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  background:radial-gradient(circle at 50% 50%, rgba(255,255,255,0.25), transparent 60%);
-  mix-blend-mode:soft-light;
-  z-index:0;
-}
-
-/* HEADER */
+/* TITLE */
 .header{
   text-align:center;
-  padding:80px 20px 20px;
-  position:relative;
-  z-index:1;
+  padding:60px 20px 20px;
 }
 
-/* TITLE */
 .title{
   display:inline-block;
-  font-size:42px;
+  font-size:32px;
   font-weight:800;
   color:#0a4f73;
-  padding:18px 60px;
-
-  border-radius:30px;
-  border:1px solid rgba(255,255,255,0.7);
-
-  background:linear-gradient(145deg, rgba(255,255,255,0.65), rgba(255,255,255,0.2));
-
-  box-shadow:
-    inset 0 2px 8px rgba(255,255,255,0.9),
-    inset 0 -6px 15px rgba(0,0,0,0.15),
-    0 10px 30px rgba(0,0,0,0.25);
-
-  animation:floatTitle 6s ease-in-out infinite;
-  position:relative;
-  overflow:hidden;
+  padding:14px 40px;
+  background:rgba(255,255,255,0.25);
+  border-radius:25px;
+  animation:float 6s ease-in-out infinite;
 }
 
-/* ✨ SHIMMER */
-.title::after{
-  content:"";
-  position:absolute;
-  top:0;
-  left:-120%;
-  width:80%;
-  height:100%;
-
-  background:linear-gradient(
-    120deg,
-    transparent,
-    rgba(255,255,255,0.6),
-    transparent
-  );
-
-  transform:skewX(-25deg);
-  animation:shimmer 6s infinite;
-}
-
-@keyframes shimmer{
-  0%{left:-120%}
-  60%{left:120%}
-  100%{left:120%}
-}
-
-@keyframes floatTitle{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-10px)}
-}
-
-@keyframes floatTabs{
+@keyframes float{
   0%,100%{transform:translateY(0)}
   50%{transform:translateY(-6px)}
 }
@@ -101,152 +45,91 @@ body{
 /* FILTERS */
 .filters{
   text-align:center;
-  margin:25px 0;
-  position:relative;
-  z-index:1;
+  margin-bottom:10px;
 }
 
-/* TABS */
 .filters button{
-  margin:6px;
-  padding:10px 22px;
-  border-radius:25px;
-
-  border:1px solid rgba(255,255,255,0.7);
-
-  background:
-    linear-gradient(145deg, rgba(120,180,255,0.75), rgba(0,120,255,0.35));
-
-  color:#083b5c;
+  margin:5px;
+  padding:8px 18px;
+  border-radius:20px;
+  border:none;
+  background:#ffffff60;
+  color:#0a4f73;
   font-weight:600;
-
   cursor:pointer;
-  transition:all 0.3s ease;
-
-  box-shadow:
-    inset 0 2px 8px rgba(255,255,255,0.9),
-    inset 0 -6px 15px rgba(0,80,150,0.3),
-    0 8px 25px rgba(0,80,150,0.3);
-
-  animation:floatTabs 5s ease-in-out infinite;
-
-  position:relative;
-  overflow:hidden;
-}
-
-/* ✨ SHIMMER FOR TABS */
-.filters button::after{
-  content:"";
-  position:absolute;
-  top:0;
-  left:-120%;
-  width:80%;
-  height:100%;
-
-  background:linear-gradient(
-    120deg,
-    transparent,
-    rgba(255,255,255,0.6),
-    transparent
-  );
-
-  transform:skewX(-25deg);
-  animation:shimmer 7s infinite;
-}
-
-/* RIPPLE */
-.filters button::before{
-  content:"";
-  position:absolute;
-  width:200%;
-  height:200%;
-  top:-50%;
-  left:-50%;
-  background:radial-gradient(circle, rgba(255,255,255,0.5), transparent 60%);
-  transform:scale(0);
-  transition:transform 0.4s ease;
-}
-
-.filters button:hover::before{
-  transform:scale(1);
-}
-
-.filters button:hover{
-  transform:scale(1.12);
 }
 
 .filters button.active{
-  background:
-    linear-gradient(145deg, rgba(0,120,255,0.95), rgba(0,60,140,0.85));
+  background:#0a4f73;
   color:white;
-  transform:scale(1.15);
 }
 
 /* MATCH */
 .match{
-  margin:50px 60px;
-  position:relative;
-  z-index:1;
+  margin:30px 20px;
 }
 
+/* COVER */
 .cover{
-  height:260px;
-  border-radius:18px;
+  height:200px;
+  border-radius:16px;
   background-size:cover;
   background-position:center;
   display:flex;
   align-items:flex-end;
-  position:relative;
   overflow:hidden;
+  position:relative;
 }
 
 .cover::before{
   content:"";
   position:absolute;
   inset:0;
-  background:linear-gradient(to top, rgba(0,0,0,0.75), transparent);
+  background:linear-gradient(to top,rgba(0,0,0,0.7),transparent);
 }
 
 .cover span{
   position:relative;
-  margin:15px;
-  padding:10px 20px;
+  margin:10px;
+  padding:8px 16px;
   border-radius:20px;
-  background:rgba(255,255,255,0.35);
+  background:rgba(255,255,255,0.3);
   color:white;
+  font-weight:600;
 }
 
 /* GRID */
 .grid{
-  margin-top:15px;
+  margin-top:10px;
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
-  gap:12px;
+  grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
+  gap:10px;
 }
 
 .grid img{
   width:100%;
-  height:200px;
+  height:120px;
   object-fit:cover;
-  border-radius:14px;
+  border-radius:12px;
   cursor:pointer;
-  transition:transform 0.25s ease;
-}
-
-.grid img:hover{
-  transform:scale(1.05);
 }
 
 /* LIGHTBOX */
 .lightbox{
   position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.9);
+  top:0;
+  left:0;
+  width:100vw;
+  height:100vh;
+  background:rgba(0,0,0,0.95);
   display:flex;
   align-items:center;
   justify-content:center;
+  z-index:99999;
+
   opacity:0;
   pointer-events:none;
+  transition:opacity 0.3s ease;
 }
 
 .lightbox.active{
@@ -255,40 +138,20 @@ body{
 }
 
 .lightbox img{
-  max-width:90%;
+  max-width:95%;
   max-height:85%;
+  border-radius:10px;
 }
 
-/* FOOTER */
-.footer{
-  position:fixed;
-  bottom:0;
-  width:100%;
-  display:flex;
-  justify-content:center;
-  gap:40px;
-  padding:12px;
-
-  background:linear-gradient(
-    to top,
-    rgba(255,255,255,0.95),
-    rgba(255,255,255,0.75)
-  );
-
-  box-shadow:0 -4px 20px rgba(0,0,0,0.2);
-  z-index:2;
-}
-
-.footer img{
-  height:42px;
+/* LOCK SCROLL */
+body.lightbox-open{
+  overflow:hidden;
 }
 
 </style>
 </head>
 
 <body>
-
-<div class="light" id="light"></div>
 
 <div class="header">
   <div id="title" class="title"></div>
@@ -297,33 +160,22 @@ body{
 <div id="filters" class="filters"></div>
 <div id="gallery"></div>
 
-<div class="footer">
-  <img src="logo-olimpicos.png">
-  <img src="logo-club.png">
-  <img src="logo-aofm.png">
-</div>
-
-<div id="lightbox" class="lightbox" onclick="this.classList.remove('active')">
+<!-- LIGHTBOX -->
+<div id="lightbox" class="lightbox">
   <img id="lightbox-img">
 </div>
 
 <script>
 
-/* PARALLAX LIGHT */
-const light = document.getElementById("light");
-
-document.addEventListener("mousemove", e=>{
-  const x = (e.clientX / window.innerWidth) * 100;
-  const y = (e.clientY / window.innerHeight) * 100;
-  light.style.background = `radial-gradient(circle at ${x}% ${y}%, rgba(255,255,255,0.25), transparent 60%)`;
-});
-
-/* ORIGINAL SYSTEM (UNCHANGED) */
-
 const cloud="du4pmuch7";
 
 const params=new URLSearchParams(window.location.search);
-const category=params.get("cat")||"infmenor";
+const category=params.get("cat");
+
+if(!category){
+  document.body.innerHTML="";
+  throw new Error("Blocked");
+}
 
 document.getElementById("title").innerText=category.toUpperCase();
 
@@ -333,7 +185,8 @@ let ALL=[];
 let currentRival="";
 let matches=[];
 let loadedIndex=0;
-const batchSize=2;
+let currentImages=[];
+let currentIndex=0;
 
 async function load(){
   const res=await fetch(API);
@@ -370,7 +223,6 @@ function buildFilters(){
 }
 
 function prepareMatches(){
-
   const filtered=ALL.filter(img=>img.includes(`_${currentRival}_`));
   const groups={};
 
@@ -391,60 +243,108 @@ function prepareMatches(){
 }
 
 function loadMore(){
-
   const container=document.getElementById("gallery");
 
-  for(let i=0;i<batchSize;i++){
+  if(loadedIndex>=matches.length) return;
 
-    if(loadedIndex>=matches.length) return;
+  const match=matches[loadedIndex++];
 
-    const match=matches[loadedIndex++];
+  const section=document.createElement("div");
+  section.className="match";
 
-    const section=document.createElement("div");
-    section.className="match";
+  const cover=document.createElement("div");
+  cover.className="cover";
 
-    const cover=document.createElement("div");
-    cover.className="cover";
+  cover.style.backgroundImage=
+    `url(https://res.cloudinary.com/${cloud}/image/upload/w_800/${match.images[0]}.jpg)`;
 
-    cover.style.backgroundImage=
-      `url(https://res.cloudinary.com/${cloud}/image/upload/w_800/${match.images[0]}.jpg)`;
+  cover.innerHTML=`<span>${currentRival} · ${match.date}</span>`;
 
-    cover.innerHTML=`<span>${currentRival} · ${match.date}</span>`;
+  const grid=document.createElement("div");
+  grid.className="grid";
 
-    const grid=document.createElement("div");
-    grid.className="grid";
+  match.images.forEach((id,i)=>{
+    const url=`https://res.cloudinary.com/${cloud}/image/upload/w_400/${id}.jpg`;
 
-    match.images.forEach(id=>{
-      const url=`https://res.cloudinary.com/${cloud}/image/upload/w_400/${id}.jpg`;
+    const img=new Image();
+    img.src=url;
 
-      const img=new Image();
-      img.src=url;
+    img.onclick=()=>{
+      openLightbox(match.images,i);
+    };
 
-      img.onclick=()=>{
-        document.getElementById("lightbox-img").src=url.replace("w_400","w_1200");
-        document.getElementById("lightbox").classList.add("active");
-      };
+    grid.appendChild(img);
+  });
 
-      grid.appendChild(img);
-    });
-
-    section.appendChild(cover);
-    section.appendChild(grid);
-    container.appendChild(section);
-  }
+  section.appendChild(cover);
+  section.appendChild(grid);
+  container.appendChild(section);
 }
-
-window.addEventListener("scroll",()=>{
-  if(window.innerHeight + window.scrollY >= document.body.offsetHeight - 200){
-    loadMore();
-  }
-});
 
 function setRival(btn,r){
   currentRival=r;
   document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");
   prepareMatches();
+}
+
+/* LIGHTBOX LOGIC */
+
+const lightbox=document.getElementById("lightbox");
+const lightboxImg=document.getElementById("lightbox-img");
+
+function openLightbox(images,index){
+  currentImages=images;
+  currentIndex=index;
+  showImage();
+  lightbox.classList.add("active");
+  document.body.classList.add("lightbox-open");
+}
+
+function closeLightbox(){
+  lightbox.classList.remove("active");
+  document.body.classList.remove("lightbox-open");
+}
+
+function showImage(){
+  const id=currentImages[currentIndex];
+  const url=`https://res.cloudinary.com/${cloud}/image/upload/w_1200/${id}.jpg`;
+  lightboxImg.src=url;
+
+  // preload next
+  const next=new Image();
+  const nextIndex=(currentIndex+1)%currentImages.length;
+  next.src=`https://res.cloudinary.com/${cloud}/image/upload/w_1200/${currentImages[nextIndex]}.jpg`;
+}
+
+lightbox.onclick=closeLightbox;
+
+/* SWIPE SUPPORT */
+
+let startX=0;
+
+lightbox.addEventListener("touchstart",(e)=>{
+  startX=e.touches[0].clientX;
+});
+
+lightbox.addEventListener("touchend",(e)=>{
+  let endX=e.changedTouches[0].clientX;
+
+  if(endX < startX - 50){
+    nextImage();
+  }else if(endX > startX + 50){
+    prevImage();
+  }
+});
+
+function nextImage(){
+  currentIndex=(currentIndex+1)%currentImages.length;
+  showImage();
+}
+
+function prevImage(){
+  currentIndex=(currentIndex-1+currentImages.length)%currentImages.length;
+  showImage();
 }
 
 window.onload=load;
